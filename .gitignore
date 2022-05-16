@@ -133,4 +133,10 @@ dmypy.json
 *.tif
 *.jpg
 
+# vs
 .vscode
+
+# yaml
+*.yaml
+!configs/config.yaml
+!configs/hydra/job_logging/custom_logging.yaml

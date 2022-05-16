@@ -1,0 +1,12 @@
+defaults:
+    - dataset: dataset1
+    - override hydra/job_logging: custom_logging
+    - _self_
+
+num_samples: 2
+dataset:
+    feature_size: 10
+
+hydra:
+  run:
+    dir: outputs/${hydra.job.name}/${now:%Y-%m-%d_%H-%M-%S}
