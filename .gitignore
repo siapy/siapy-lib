@@ -136,7 +136,5 @@ dmypy.json
 # vs
 .vscode
 
-# yaml
-*.yaml
-!configs/config.yaml
-!configs/hydra/job_logging/custom_logging.yaml
+# outputs
+outputs

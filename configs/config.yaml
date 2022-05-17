@@ -1,12 +1,10 @@
 defaults:
-    - dataset: dataset1
+    - cameras/camera_nir
+    - cameras/camera_swir
+    - data_loaders/data_loader
+    - custom_config
+    - hydra/run/dir
     - override hydra/job_logging: custom_logging
     - _self_
 
-num_samples: 2
-dataset:
-    feature_size: 10
-
-hydra:
-  run:
-    dir: outputs/${hydra.job.name}/${now:%Y-%m-%d_%H-%M-%S}
+program: ???

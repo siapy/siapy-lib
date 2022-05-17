@@ -1,0 +1,4 @@
+camera_swir:
+    name: swir
+    feature: 1
+

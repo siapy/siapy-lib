@@ -1,0 +1,4 @@
+cameras:
+    camera_nir:
+        feature: 100
+        faet: 10
