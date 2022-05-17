@@ -1,4 +1,13 @@
-cameras:
-    camera_nir:
-        feature: 100
-        faet: 10
+defaults:
+    - cameras/camera_nir
+    - cameras/camera_swir
+    - data_loaders/data_loader
+
+# cameras:
+#     camera_nir:
+#         feature: 100
+#         faet: 10
+
+# data_loaders:
+#     data_loader:
+#         data_dir_path: 'C:\\Users\\janezla\\Documents\\DATA\\test'

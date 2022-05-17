@@ -2,18 +2,17 @@ import logging
 import os
 
 import hydra
+from hydra.core.config_store import ConfigStore
 from omegaconf import DictConfig, OmegaConf
 
-from scripts import *
+from scripts import show_image
 
-log = logging.getLogger(__name__)
+logger = logging.getLogger("main")
+
 
 @hydra.main(config_path="configs", config_name="config.yaml")
 def main(cfg: DictConfig):
     print(OmegaConf.to_yaml(cfg))
-    # log.debug("Debug level message")
-    # log.info("Info level message")
-    # log.warning("Warning level message")
 
     if cfg.program == "show_image":
         show_image.show(cfg)
@@ -21,4 +20,8 @@ def main(cfg: DictConfig):
 
 if __name__ == "__main__":
     main()
+
+
+
+
 

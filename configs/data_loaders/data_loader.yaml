@@ -1,2 +1,8 @@
-name: data_loader
+defaults:
+    - base_data_loader
+
+data_loader:
+    name: data_loader
+    data_dir_path: 'C:\\Users\\janezla\\Documents\\DATA\\test'
+
 
