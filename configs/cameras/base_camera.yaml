@@ -1,7 +1,0 @@
-camera:
-    name: Camera
-    camera_id: ???
-    no_bands: ???
-    wavelength: ???
-    default_bands: ???
-    data_ignore_value: ???

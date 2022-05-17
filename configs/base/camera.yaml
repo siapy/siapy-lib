@@ -1,0 +1,7 @@
+camera:
+    name: str
+    camera_id: str
+    no_bands: int
+    wavelength: list
+    default_bands: list
+    data_ignore_value: float

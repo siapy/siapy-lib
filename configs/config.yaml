@@ -1,5 +1,7 @@
 defaults:
-    - custom_config
+    - base/camera
+    - base/data_loader
+    - custom
     - hydra/run/dir
     - override hydra/job_logging: custom_logging
     - _self_

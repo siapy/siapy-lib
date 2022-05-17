@@ -1,0 +1,3 @@
+data_loader:
+    name: str
+    data_dir_path: str
