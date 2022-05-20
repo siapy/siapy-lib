@@ -1,3 +1,4 @@
-camera_nir:
-    name: nir
-    model: NIR-1600
+camera1:
+    name: vnir
+    model: VNIR-1600
+    default_channels: ???

@@ -1,8 +1,11 @@
-from data_loader import data_loader
+from data_loader.data_loader import DataLoader
 from utils import utils
 
 logger = utils.get_logger(name="show")
 
 def show(cfg):
-    dl = data_loader.DataLoader(cfg)
-    dl.load_data()
+    data_loader = DataLoader(cfg)
+    pass
+
+
+

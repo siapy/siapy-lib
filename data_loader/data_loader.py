@@ -1,16 +1,53 @@
+import glob
+import logging
+import os
+from types import SimpleNamespace
+
 import spectral as sp
+from funcy import log_durations
 from tqdm import tqdm
+import numpy as np
 
 from utils import utils
+from data_loader.sp_image import SPImage
+
 
 logger = utils.get_logger(name="data_loader")
-# logger.info("Init")
-# logger.warning("Warning level message")
 
 class DataLoader():
-    def __init__(self, cfg):
-        self.cfg = cfg
+    def __init__(self, config):
+        self._cfg = config
+        self._paths = self._load_images_paths()
+        self._images = self._import_spectral_images()
 
-    def load_data(self):
-        logger.info("Init")
-        pass
+    @log_durations(logging.info)
+    def _load_images_paths(self):
+        logger.info("Loading images paths")
+        cfg_data_loader = self._cfg.data_loaders.data_loader
+        paths_cam1 = sorted(glob.glob(os.path.join(cfg_data_loader.data_dir_path, "*" +
+                                                      cfg_data_loader.data_sources.path_ending_camera1)))
+        paths_cam2 = sorted(glob.glob(os.path.join(cfg_data_loader.data_dir_path, "*" +
+                                                      cfg_data_loader.data_sources.path_ending_camera2)))
+        paths = {
+            "cam1": paths_cam1,
+            "cam2": paths_cam2
+        }
+        return SimpleNamespace(**paths)
+
+    @log_durations(logging.info)
+    def _import_spectral_images(self):
+        cfg_cam1 = self._cfg.cameras.camera1
+        cfg_cam2 = self._cfg.cameras.camera2
+        images_cam1 = [SPImage(sp.envi.open(path), cfg_cam1) for path in self._paths.cam1]
+        images_cam2 = [SPImage(sp.envi.open(path), cfg_cam2) for path in self._paths.cam2]
+
+        images = {
+            "cam1": images_cam1,
+            "cam2": images_cam2
+        }
+        return SimpleNamespace(**images)
+
+    @property
+    def images(self):
+        return self._images
+
