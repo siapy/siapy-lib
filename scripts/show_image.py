@@ -18,7 +18,7 @@ def show(cfg):
 
     images_display = [image_cam1, image_cam2]
     images_selected_areas = [selected_areas_cam1]
-    colors = ["red", "blue"]
+    colors = [["red", "blue", "blue", "blue"]]
 
     plot_utils.display_images(images_display, images_selected_areas, colors)
     plt.show()

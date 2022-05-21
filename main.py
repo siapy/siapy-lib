@@ -5,7 +5,7 @@ import hydra
 from hydra.core.config_store import ConfigStore
 from omegaconf import DictConfig, OmegaConf
 
-from scripts import show_image
+from scripts import corregistrate, select_signatures, show_image
 
 logger = logging.getLogger("main")
 
@@ -16,6 +16,10 @@ def main(cfg: DictConfig):
 
     if cfg.program == "show_image":
         show_image.show(cfg)
+    if cfg.program == "select_signatures":
+        select_signatures.select(cfg)
+    if cfg.program == "corregistrate":
+        corregistrate.select(cfg)
 
 
 if __name__ == "__main__":

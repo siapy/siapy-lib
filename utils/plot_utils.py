@@ -1,9 +1,11 @@
+import logging
 from itertools import product
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import spectral as sp
+from funcy import log_durations
 from matplotlib.path import Path
 from matplotlib.widgets import LassoSelector
 
@@ -15,7 +17,10 @@ logger = utils.get_logger(name="plot_utils")
 def pixels_select_click(image):
     image_display = image.to_display()
     coordinates_list = np.empty([0,3])
-    fig = plt.figure()
+    fig, ax = plt.subplots(1, 1)
+    ax.imshow(image_display)
+    fig.tight_layout()
+
     def onclick(event):
         nonlocal coordinates_list, fig
         if plt.get_current_fig_manager().toolbar.mode != '': return
@@ -24,9 +29,21 @@ def pixels_select_click(image):
         y_coor = event.ydata
         coordinates_list = np.vstack((coordinates_list, [x_coor, y_coor, 1]))
 
+        ax.scatter(
+            int(x_coor),
+            int(y_coor),
+            marker='x',
+            c="red",
+        )
+        fig.canvas.draw()
+
+    def accept(event):
+        if event.key == "enter":
+            plt.close()
+
     fig.canvas.mpl_connect('button_press_event', onclick)
-    plt.imshow(image_display)
-    plt.show()
+    fig.canvas.mpl_connect("key_press_event", accept)
+    plt.show(block=True)
 
     return pd.DataFrame(coordinates_list.astype("int"), columns=["x","y","z"])
 
@@ -70,6 +87,7 @@ def pixels_select_lasso(image):
     return selected_areas
 
 
+@log_durations(logging.info)
 def display_images(images, images_selected_areas, colors):
     num_images = len(images)
     fig, axes = plt.subplots(1, num_images)
@@ -90,7 +108,8 @@ def display_images(images, images_selected_areas, colors):
                     selected_area.x,
                     selected_area.y,
                     lw=0,
-                    c=colors[area_idx],
+                    marker='o',
+                    c=colors[image_idx][area_idx],
                     s=(72.0 / fig.dpi) ** 2,
                 )
 

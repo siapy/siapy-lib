@@ -3,24 +3,22 @@ import logging
 import os
 from types import SimpleNamespace
 
+import numpy as np
 import spectral as sp
 from funcy import log_durations
 from tqdm import tqdm
-import numpy as np
 
-from utils import utils
 from data_loader.sp_image import SPImage
-
+from utils import utils
 
 logger = utils.get_logger(name="data_loader")
 
 class DataLoader():
     def __init__(self, config):
         self._cfg = config
-        self._paths = self._load_images_paths()
-        self._images = self._import_spectral_images()
+        self._paths = None
+        self._images = None
 
-    @log_durations(logging.info)
     def _load_images_paths(self):
         logger.info("Loading images paths")
         cfg_data_loader = self._cfg.data_loaders.data_loader
@@ -34,7 +32,6 @@ class DataLoader():
         }
         return SimpleNamespace(**paths)
 
-    @log_durations(logging.info)
     def _import_spectral_images(self):
         cfg_cam1 = self._cfg.cameras.camera1
         cfg_cam2 = self._cfg.cameras.camera2
@@ -50,4 +47,16 @@ class DataLoader():
     @property
     def images(self):
         return self._images
+
+    def load_images(self):
+        self._paths = self._load_images_paths()
+        self._images = self._import_spectral_images()
+
+    def change_dir(self, dir_name):
+        cfg_data_loader = self._cfg.data_loaders.data_loader
+        if dir_name == "corregistrate":
+            data_dir_path = os.path.join(cfg_data_loader.data_dir_path,
+                                        cfg_data_loader.corregistrate_dir_name)
+        self._cfg.data_loaders.data_loader.data_dir_path = data_dir_path
+        return self
 
