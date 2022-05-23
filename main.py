@@ -17,9 +17,9 @@ def main(cfg: DictConfig):
     if cfg.program == "show_image":
         show_image.show(cfg)
     if cfg.program == "select_signatures":
-        select_signatures.select(cfg)
+        select_signatures.main(cfg)
     if cfg.program == "corregistrate":
-        corregistrate.select(cfg)
+        corregistrate.main(cfg)
 
 
 if __name__ == "__main__":

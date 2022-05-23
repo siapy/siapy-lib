@@ -7,3 +7,4 @@ defaults:
     - _self_
 
 program: ???
+image_idx: ???

@@ -1,1 +1,1 @@
-dir: outputs/hydra/${now:%Y-%m-%d_%H-%M-%S}
+dir: outputs/logs/${now:%Y-%m-%d_%H-%M-%S}

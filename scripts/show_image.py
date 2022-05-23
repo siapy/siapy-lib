@@ -7,6 +7,7 @@ logger = utils.get_logger(name="show")
 
 def show(cfg):
     data_loader = DataLoader(cfg)
+    data_loader.load_images()
     images_cam1 = data_loader.images.cam1
     images_cam2 = data_loader.images.cam2
 
