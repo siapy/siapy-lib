@@ -3,9 +3,11 @@ import matplotlib.pyplot as plt
 
 from data_loader.data_loader import DataLoader
 from initializer.cameras_corregistration import CamerasCorregistrator
-from utils import plot_utils, utils
+from utils.plot_utils import display_images, pixels_select_lasso
+from utils.signature_utils import average_signatures
+from utils.utils import get_logger, load_data, save_data
 
-logger = utils.get_logger(name="select_signatures")
+logger = get_logger(name="select_signatures")
 
 def main(cfg):
     data_loader = DataLoader(cfg)
@@ -15,20 +17,45 @@ def main(cfg):
 
     images_cam1 = data_loader.images.cam1
     images_cam2 = data_loader.images.cam2
+
     image_cam1 = images_cam1[cfg.image_idx]
-    image_cam2 = images_cam2[cfg.image_idx]
+    selected_areas_cam1 = pixels_select_lasso(image_cam1)
 
+    # create images list to display
+    images_display = [image_cam1]
+    # create list of areas which will be shown on the images
+    selected_areas_display = [selected_areas_cam1]
+    # dictionary of signatures for each image
+    selected_signatures = {
+        "cam1": [image_cam1.to_signatures(area_pix) for area_pix in selected_areas_cam1]
+    }
 
-    selected_areas_cam1 = plot_utils.pixels_select_lasso(image_cam1)
-    selected_areas_cam2 = list(map(corregistrator.transform, selected_areas_cam1))
+    # perform if images from both cameras are available
+    if images_cam2:
+        image_cam2 = images_cam2[cfg.image_idx]
+        selected_areas_cam2 = list(map(corregistrator.transform, selected_areas_cam1))
+        images_display.append(image_cam2)
+        selected_areas_display.append(selected_areas_cam2)
+        selected_signatures["cam2"] = [image_cam2.to_signatures(area_pix)
+                                       for area_pix in selected_areas_cam2]
 
-    # selected_areas_cam2 = corregistrator.transform(selected_areas_cam1[0])
-    # selected_areas_cam2 = [iPtsMov_t]
+	# perform averaging of signatures per area selected
+    if cfg.misc.selector.average:
+        selected_signatures["cam1"] = [average_signatures(area_sig)
+                                       for area_sig in selected_signatures["cam1"]]
+        selected_signatures["cam2"] = [average_signatures(area_sig)
+                                        for area_sig in selected_signatures["cam2"]]
 
-    images_display = [image_cam1, image_cam2]
-    # images_selected_areas = [selected_areas_cam1]
-    images_selected_areas = [selected_areas_cam1, selected_areas_cam2]
-    colors = [["red", "blue", "blue", "blue"], ["red", "blue", "blue", "blue"]]
+    # save signatures
+    save_data(cfg, data=selected_signatures,
+                    data_file_name=f"signatures/{cfg.misc.selector.item}/img_{cfg.image_idx}")
 
-    plot_utils.display_images(images_display, images_selected_areas, colors)
+    # colors = [["red", "blue", "blue", "blue"], ["red", "blue", "blue", "blue"]]
+    display_images(images_display, selected_areas_display, colors=cfg.misc.selector.color)
     plt.show()
+
+
+    # selected_pixels = load_data(cfg, data_file_name=
+    #                                   f"signatures/{cfg.misc.selector.item}/img_{cfg.image_idx}")
+
+

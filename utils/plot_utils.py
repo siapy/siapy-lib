@@ -1,3 +1,4 @@
+import collections
 import logging
 from itertools import product
 
@@ -9,9 +10,9 @@ from funcy import log_durations
 from matplotlib.path import Path
 from matplotlib.widgets import LassoSelector
 
-from utils import utils
+from utils.utils import get_logger
 
-logger = utils.get_logger(name="plot_utils")
+logger = get_logger(name="plot_utils")
 
 
 def pixels_select_click(image):
@@ -91,6 +92,9 @@ def pixels_select_lasso(image):
 def display_images(images, images_selected_areas, colors):
     num_images = len(images)
     fig, axes = plt.subplots(1, num_images)
+    # in case only images from one camera provided
+    if not isinstance(axes, (collections.Sequence, np.ndarray)):
+        axes = [axes]
 
     for image_idx, image in enumerate(images):
         image_display = image.to_display()
@@ -104,14 +108,21 @@ def display_images(images, images_selected_areas, colors):
     for image_idx, selected_areas in enumerate(images_selected_areas):
         if selected_areas:
             for area_idx, selected_area in enumerate(selected_areas):
+                if not isinstance(colors, list):
+                    color = colors
+                else:
+                    color = colors[image_idx][area_idx]
                 axes[image_idx].scatter(
                     selected_area.x,
                     selected_area.y,
                     lw=0,
                     marker='o',
-                    c=colors[image_idx][area_idx],
+                    c=color,
                     s=(72.0 / fig.dpi) ** 2,
                 )
 
-
+    def accept(event):
+        if event.key == "enter":
+            plt.close()
+    fig.canvas.mpl_connect("key_press_event", accept)
 

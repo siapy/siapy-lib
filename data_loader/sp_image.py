@@ -1,10 +1,10 @@
-
+import pandas as pd
 
 class SPImage():
     def __init__(self, sp_file, config):
         self._sp_file = sp_file
         self._cfg = config
-        self._np_array = None
+        self._image_arr = None
         self._brightness = config.image_display_brightness
 
     def __repr__(self):
@@ -20,9 +20,15 @@ class SPImage():
         return image_3ch.astype("uint8")
 
     def to_numpy(self):
-        if self._np_array is None:
-            self._np_array = self._sp_file[:,:,:]
-        return self._np_array
+        if self._image_arr is None:
+            self._image_arr = self._sp_file[:,:,:]
+        return self._image_arr
+
+    def to_signatures(self, pixels_loc):
+        image_arr = self.to_numpy()
+        signatures = image_arr[pixels_loc.y, pixels_loc.x, :]
+        data = {"x": pixels_loc.x, "y": pixels_loc.y, "signature": list(signatures)}
+        return pd.DataFrame(data, columns=["x", "y", "signature"])
 
     @property
     def file(self):

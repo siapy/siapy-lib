@@ -2,5 +2,6 @@ defaults:
     - cameras/camera_nir
     - cameras/camera_swir
     - data_loaders/data_loader
+    - misc/selector
 
 name: "krompir-ana-1-22"

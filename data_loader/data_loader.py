@@ -9,9 +9,9 @@ from funcy import log_durations
 from tqdm import tqdm
 
 from data_loader.sp_image import SPImage
-from utils import utils
+from utils.utils import get_logger
 
-logger = utils.get_logger(name="data_loader")
+logger = get_logger(name="data_loader")
 
 class DataLoader():
     def __init__(self, config):
@@ -20,7 +20,6 @@ class DataLoader():
         self._images = None
 
     def _load_images_paths(self):
-        logger.info("Loading images paths")
         cfg_data_loader = self._cfg.data_loaders.data_loader
         paths_cam1 = sorted(glob.glob(os.path.join(cfg_data_loader.data_dir_path, "*" +
                                                       cfg_data_loader.data_sources.path_ending_camera1)))
@@ -51,6 +50,7 @@ class DataLoader():
     def load_images(self):
         self._paths = self._load_images_paths()
         self._images = self._import_spectral_images()
+        logger.info("Spectral images loaded to memory")
 
     def change_dir(self, dir_name):
         cfg_data_loader = self._cfg.data_loaders.data_loader

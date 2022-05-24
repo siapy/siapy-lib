@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-from utils import utils
+from utils.utils import save_data, load_data
 
 
 class CamerasCorregistrator():
@@ -10,7 +10,7 @@ class CamerasCorregistrator():
         self.cfg = config
         self.matx_2d_combined = None
         self.errors = None
-        self.save_dir_name = "corregistration"
+        self.save_file_name = "corregistration/corregistration_params"
 
     def _find_corresponding_points(self, points_ref, points_mov, points_ordered=False):
         points_ref = np.array(points_ref)
@@ -95,7 +95,7 @@ class CamerasCorregistrator():
                 ax.plot(points_ref[:,0], points_ref[:,1], 'ob')
                 ax.plot(points_mov_corr[:,0], points_mov_corr[:,1],'om')
                 fig.canvas.draw()
-                plt.pause(3)
+                plt.pause(1)
 
             # multiply all matrices to get the final transformation
             matx_2d_combined = np.dot(matx_2d, matx_2d_combined)
@@ -110,11 +110,14 @@ class CamerasCorregistrator():
         return points_transformed
 
     def save_params(self):
-        params = {"matx_2d": self.matx_2d_combined.tolist(),
+        params = {"matx_2d": self.matx_2d_combined,
                   "errors": self.errors}
-        utils.save_data(self.cfg, params, self.save_dir_name)
+        save_data(self.cfg, data=params, data_file_name=self.save_file_name)
 
     def load_params(self):
-        params = utils.load_data(self.cfg, self.save_dir_name)
-        self.matx_2d_combined = np.matrix(params["matx_2d"])
-        self.errors = params["errors"]
+        params = load_data(self.cfg, data_file_name=self.save_file_name)
+        self.matx_2d_combined = params.matx_2d
+        self.errors = params.errors
+
+
+
