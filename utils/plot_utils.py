@@ -71,7 +71,7 @@ def pixels_select_lasso(image):
         nonlocal indices, selected_areas
         coordinates_list = np.hstack((pix[indices], np.ones((pix[indices].shape[0], 1))))
         coordinates_df = pd.DataFrame(coordinates_list.astype("int"), columns=["x","y","z"])
-        selected_areas.append(coordinates_df)
+        selected_areas.append(coordinates_df.drop_duplicates())
 
     def accept(event):
         if event.key == "enter":

@@ -107,7 +107,7 @@ class CamerasCorregistrator():
         """Transform points"""
         points_transformed = np.dot(points.to_numpy(), self.matx_2d_combined.transpose())
         points_transformed = pd.DataFrame(points_transformed.astype("int"), columns=["x","y","z"])
-        return points_transformed
+        return points_transformed.drop_duplicates()
 
     def save_params(self):
         params = {"matx_2d": self.matx_2d_combined,

@@ -3,8 +3,8 @@ import matplotlib.pyplot as plt
 
 from data_loader.data_loader import DataLoader
 from initializer.cameras_corregistration import CamerasCorregistrator
+from utils.image_utils import average_signatures, limit_to_bounds
 from utils.plot_utils import display_images, pixels_select_lasso
-from utils.signature_utils import average_signatures
 from utils.utils import get_logger, load_data, save_data
 
 logger = get_logger(name="select_signatures")
@@ -27,24 +27,25 @@ def main(cfg):
     selected_areas_display = [selected_areas_cam1]
     # dictionary of signatures for each image
     selected_signatures = {
-        "cam1": [image_cam1.to_signatures(area_pix) for area_pix in selected_areas_cam1]
+        "cam1": list(map(image_cam1.to_signatures, selected_areas_cam1))
     }
 
     # perform if images from both cameras are available
     if images_cam2:
         image_cam2 = images_cam2[cfg.image_idx]
+        # tranform coordinates from cam1 to cam2
         selected_areas_cam2 = list(map(corregistrator.transform, selected_areas_cam1))
+        # limit coordinates to the image size
+        selected_areas_cam2 = list(map(limit_to_bounds(image_cam2.shape), selected_areas_cam2))
+
         images_display.append(image_cam2)
         selected_areas_display.append(selected_areas_cam2)
-        selected_signatures["cam2"] = [image_cam2.to_signatures(area_pix)
-                                       for area_pix in selected_areas_cam2]
+        selected_signatures["cam2"] = list(map(image_cam2.to_signatures, selected_areas_cam2))
 
 	# perform averaging of signatures per area selected
     if cfg.misc.selector.average:
-        selected_signatures["cam1"] = [average_signatures(area_sig)
-                                       for area_sig in selected_signatures["cam1"]]
-        selected_signatures["cam2"] = [average_signatures(area_sig)
-                                        for area_sig in selected_signatures["cam2"]]
+        selected_signatures["cam1"] = list(map(average_signatures, selected_signatures["cam1"]))
+        selected_signatures["cam2"] = list(map(average_signatures, selected_signatures["cam2"]))
 
     # save signatures
     save_data(cfg, data=selected_signatures,

@@ -34,5 +34,12 @@ class SPImage():
     def file(self):
         return self._sp_file
 
+    @property
+    def shape(self):
+        rows = self._sp_file.nrows
+        samples = self._sp_file.ncols
+        bands = self._sp_file.nbands
+        return (rows, samples, bands)
+
 
 
