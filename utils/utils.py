@@ -2,6 +2,8 @@ import json
 import logging
 import os
 import pickle
+from functools import partial
+from pathlib import Path
 from types import SimpleNamespace
 
 import hydra
@@ -59,6 +61,24 @@ def load_data(config, data_file_name, loader="pickle"):
 
     logger.info(f"Data loaded from {file}")
     return SimpleNamespace(**data)
+
+def init_obj(module, module_name, module_args=None, *args, **kwargs):
+    if module_args is None:
+        module_args = {}
+    assert all([k not in module_args for k in kwargs]), 'Overwriting kwargs given in config file is not allowed'
+    module_args.update(kwargs)
+    return getattr(module, module_name)(*args, **module_args)
+
+def init_ftn(module, module_name, module_args=None, *args, **kwargs):
+    if module_args is None:
+        module_args = {}
+    assert all([k not in module_args for k in kwargs]), 'Overwriting kwargs given in config file is not allowed'
+    module_args.update(kwargs)
+    return partial(getattr(module, module_name), *args, **module_args)
+
+def get_project_root() -> Path:
+    return Path(__file__).parent.parent
+
 
 
 

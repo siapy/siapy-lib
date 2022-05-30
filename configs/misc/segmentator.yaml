@@ -1,0 +1,3 @@
+segmentator:
+    decision_function: lda
+    classes: [object, background]

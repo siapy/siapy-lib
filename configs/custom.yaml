@@ -3,5 +3,6 @@ defaults:
     - cameras/camera_swir
     - data_loaders/data_loader
     - misc/selector
+    - misc/segmentator
 
 name: "krompir-ana-1-22"

@@ -27,7 +27,8 @@ def main(cfg):
     selected_areas_display = [selected_areas_cam1]
     # dictionary of signatures for each image
     selected_signatures = {
-        "cam1": list(map(image_cam1.to_signatures, selected_areas_cam1))
+        "cam1": list(map(image_cam1.to_signatures, selected_areas_cam1)),
+        "cam2": None
     }
 
     # perform if images from both cameras are available
@@ -56,7 +57,5 @@ def main(cfg):
     plt.show()
 
 
-    # selected_pixels = load_data(cfg, data_file_name=
-    #                                   f"signatures/{cfg.misc.selector.item}/img_{cfg.image_idx}")
 
 

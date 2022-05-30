@@ -89,7 +89,9 @@ def pixels_select_lasso(image):
 
 
 @log_durations(logging.info)
-def display_images(images, images_selected_areas, colors):
+def display_images(images, images_selected_areas=None, colors="red"):
+    if images_selected_areas is None:
+        images_selected_areas = []
     num_images = len(images)
     fig, axes = plt.subplots(1, num_images)
     # in case only images from one camera provided

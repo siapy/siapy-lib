@@ -2,14 +2,17 @@ import pandas as pd
 
 
 def average_signatures(area_of_signatures):
-    x_center = area_of_signatures.x.min() + (area_of_signatures.x.max()
-                                          - area_of_signatures.x.min()) / 2
-    y_center = area_of_signatures.y.min() + (area_of_signatures.y.max()
-                                            - area_of_signatures.y.min()) / 2
-    signatures_mean = [list(area_of_signatures.signature.mean())]
+    if area_of_signatures:
+        x_center = area_of_signatures.x.min() + (area_of_signatures.x.max()
+                                            - area_of_signatures.x.min()) / 2
+        y_center = area_of_signatures.y.min() + (area_of_signatures.y.max()
+                                                - area_of_signatures.y.min()) / 2
+        signatures_mean = [list(area_of_signatures.signature.mean())]
 
-    data = {"x": int(x_center), "y": int(y_center), "signature": signatures_mean}
-    return pd.DataFrame(data, columns=["x", "y", "signature"])
+        data = {"x": int(x_center), "y": int(y_center), "signature": signatures_mean}
+        return pd.DataFrame(data, columns=["x", "y", "signature"])
+    else:
+        return list()
 
 def limit_to_bounds(image_shape):
     y_max = image_shape[0]
@@ -21,3 +24,6 @@ def limit_to_bounds(image_shape):
                         (points.y < y_max)]
         return points
     return _limit
+
+
+

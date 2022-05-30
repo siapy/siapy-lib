@@ -118,6 +118,7 @@ class CamerasCorregistrator():
         params = load_data(self.cfg, data_file_name=self.save_file_name)
         self.matx_2d_combined = params.matx_2d
         self.errors = params.errors
+        return self
 
 
 

@@ -51,6 +51,7 @@ class DataLoader():
         self._paths = self._load_images_paths()
         self._images = self._import_spectral_images()
         logger.info("Spectral images loaded to memory")
+        return self
 
     def change_dir(self, dir_name):
         cfg_data_loader = self._cfg.data_loaders.data_loader
