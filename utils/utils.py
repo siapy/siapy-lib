@@ -4,7 +4,9 @@ import os
 import pickle
 from functools import partial
 from pathlib import Path
+from timeit import default_timer
 from types import SimpleNamespace
+from dataclasses import dataclass, field
 
 import hydra
 
@@ -78,6 +80,20 @@ def init_ftn(module, module_name, module_args=None, *args, **kwargs):
 
 def get_project_root() -> Path:
     return Path(__file__).parent.parent
+
+@dataclass
+class Timer():
+    name: str = field(default="")
+    logger: logging.Logger = field(default=logger)
+
+    def __post_init__(self):
+        self.start = default_timer()
+        self.end = None
+
+    def stop(self):
+        self.end = default_timer()
+        self.logger.info(f"{self.name} took {self.end - self.start:.2f} seconds.")
+
 
 
 

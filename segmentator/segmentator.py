@@ -1,12 +1,17 @@
 import glob
+import logging
+import multiprocessing
 import os
 from types import SimpleNamespace
 
+import numpy as np
 import pandas as pd
+from funcy import log_durations
 
 import segmentator.decision_algos as module
-from utils.utils import get_project_root, init_obj, load_data
+from utils.utils import get_logger, get_project_root, init_obj, load_data, Timer
 
+logger = get_logger(name="segmentator")
 
 class Segmentator():
     def __init__(self, cfg):
@@ -55,6 +60,34 @@ class Segmentator():
 
         return data
 
-    def segment_image(self, images, selected_areas=None):
+    def predict(self, algorithm, signatures):
+        parallelize = self.cfg.misc.segmentator.parallelize
+        num_cpus = multiprocessing.cpu_count()
+        if parallelize == 0:
+            return list(map(algorithm.predict, signatures))
+        if parallelize == -1:
+            parallelize = num_cpus
+        elif 1 <= parallelize <= num_cpus:
+            pass
+        else:
+            raise ValueError('Parallelize should be in range [-1, number of cpus]')
+
+        with multiprocessing.Pool(processes=parallelize) as p:
+            targets = p.map(algorithm.predict, signatures)
+        return targets
+
+    def segment_images(self, images, selected_areas):
+        keep = self.cfg.misc.segmentator.classes_keep
+        remove = self.cfg.misc.segmentator.classes_remove
+
+        timer = Timer(name="Classification of signatures", logger=logger)
+        for area_pix in selected_areas.cam1:
+            signatures_df = images.cam1.to_signatures(area_pix)
+            signatures = signatures_df.signature.to_list()
+            targets = self.predict(self.algos.cam1, signatures)
+        timer.stop()
+        pass
+
+
 
 

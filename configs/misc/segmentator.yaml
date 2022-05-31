@@ -1,3 +1,8 @@
 segmentator:
-    decision_function: lda
+    decision_function: svm
     classes: [object, background]
+    classes_keep: [object]
+    classes_remove: [background]
+    parallelize: 10
+
+
