@@ -1,8 +1,10 @@
+from types import SimpleNamespace
+
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-from utils.utils import save_data, load_data
+from utils.utils import load_data, save_data
 
 
 class CamerasCorregistrator():
@@ -112,7 +114,7 @@ class CamerasCorregistrator():
     def save_params(self):
         params = {"matx_2d": self.matx_2d_combined,
                   "errors": self.errors}
-        save_data(self.cfg, data=params, data_file_name=self.save_file_name)
+        save_data(self.cfg, data=SimpleNamespace(**params), data_file_name=self.save_file_name)
 
     def load_params(self):
         params = load_data(self.cfg, data_file_name=self.save_file_name)

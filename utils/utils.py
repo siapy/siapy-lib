@@ -2,11 +2,11 @@ import json
 import logging
 import os
 import pickle
+from dataclasses import dataclass, field
 from functools import partial
 from pathlib import Path
 from timeit import default_timer
 from types import SimpleNamespace
-from dataclasses import dataclass, field
 
 import hydra
 
@@ -25,11 +25,11 @@ def parse_data_file_name(data_file_name):
 
 def save_data(config, data, data_file_name, saver="pickle"):
     #TODO: change first subfolder to name of a project used
-    """ Save data in json format
+    """ Save data
 
     Args:
         config (DictConfig): hydra config file
-        data (dict): data stored in dictionary
+        data: data to be stored
         data_dir_name (str): name of directory where data will be stored
     """
     dfn = parse_data_file_name(data_file_name)
@@ -62,7 +62,7 @@ def load_data(config, data_file_name, loader="pickle"):
         logger.exception("Posible loader options: pickle, json")
 
     logger.info(f"Data loaded from {file}")
-    return SimpleNamespace(**data)
+    return data
 
 def init_obj(module, module_name, module_args=None, *args, **kwargs):
     if module_args is None:

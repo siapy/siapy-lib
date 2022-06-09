@@ -1,8 +1,8 @@
 segmentator:
-    decision_function: svm
+    decision_function: Sid
     classes: [object, background]
     classes_keep: [object]
     classes_remove: [background]
-    parallelize: 10
+    parallelize: 0
 
 

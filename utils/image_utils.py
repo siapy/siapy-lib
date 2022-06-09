@@ -2,7 +2,7 @@ import pandas as pd
 
 
 def average_signatures(area_of_signatures):
-    if area_of_signatures:
+    if area_of_signatures is not None:
         x_center = area_of_signatures.x.min() + (area_of_signatures.x.max()
                                             - area_of_signatures.x.min()) / 2
         y_center = area_of_signatures.y.min() + (area_of_signatures.y.max()

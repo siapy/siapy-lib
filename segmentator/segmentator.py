@@ -9,7 +9,8 @@ import pandas as pd
 from funcy import log_durations
 
 import segmentator.decision_algos as module
-from utils.utils import get_logger, get_project_root, init_obj, load_data, Timer
+from utils.utils import (Timer, get_logger, get_project_root, init_obj,
+                         load_data)
 
 logger = get_logger(name="segmentator")
 
@@ -19,13 +20,14 @@ class Segmentator():
         self.algos = None
 
     def init_decision_function(self):
+        cfg_arg = {'cfg': self.cfg}
         data = self._load_data()
         self.algos = SimpleNamespace(cam1=None, cam2=None)
-        self.algos.cam1 = init_obj(module, self.cfg.misc.segmentator.decision_function)
+        self.algos.cam1 = init_obj(module, self.cfg.misc.segmentator.decision_function, cfg_arg)
         self.algos.cam1.fit(data.cam1)
 
         if data.cam2:
-            self.algos.cam2 = init_obj(module, self.cfg.misc.segmentator.decision_function)
+            self.algos.cam2 = init_obj(module, self.cfg.misc.segmentator.decision_function, cfg_arg)
             self.algos.cam2.fit(data.cam2)
         return self
 
@@ -60,9 +62,8 @@ class Segmentator():
 
         return data
 
-    def predict(self, algorithm, signatures):
-        parallelize = self.cfg.misc.segmentator.parallelize
-        num_cpus = multiprocessing.cpu_count()
+    @staticmethod
+    def predict(algorithm, signatures, parallelize=0, num_cpus=1):
         if parallelize == 0:
             return list(map(algorithm.predict, signatures))
         if parallelize == -1:
@@ -76,18 +77,45 @@ class Segmentator():
             targets = p.map(algorithm.predict, signatures)
         return targets
 
-    def segment_images(self, images, selected_areas):
-        keep = self.cfg.misc.segmentator.classes_keep
-        remove = self.cfg.misc.segmentator.classes_remove
+    def filter_areas(self, images, selected_areas):
+        """_summary_
 
+        Args:
+            images (tuple): image od same scene for cam1 and cam2
+            selected_areas (_type_): selected areas for cam1 and cam2
+        """
+        cls_remove = self.cfg.misc.segmentator.classes_remove
+        parallelize = self.cfg.misc.segmentator.parallelize
+        num_cpus = multiprocessing.cpu_count()
+
+        selected_areas_out = SimpleNamespace(cam1=[], cam2=[])
         timer = Timer(name="Classification of signatures", logger=logger)
         for area_pix in selected_areas.cam1:
             signatures_df = images.cam1.to_signatures(area_pix)
             signatures = signatures_df.signature.to_list()
-            targets = self.predict(self.algos.cam1, signatures)
-        timer.stop()
-        pass
+            targets = Segmentator.predict(self.algos.cam1, signatures,
+                                          parallelize=parallelize,
+                                          num_cpus=num_cpus)
+            signatures_df["target"] = targets
+            # remove rows with target in classes_remove
+            signatures_df = signatures_df[~signatures_df.target.isin(cls_remove)].reset_index()
+            selected_areas_out.cam1.append(signatures_df)
 
+        # do the same for camera 2, if images are available
+        if selected_areas.cam2:
+            for area_pix in selected_areas.cam2:
+                signatures_df = images.cam2.to_signatures(area_pix)
+                signatures = signatures_df.signature.to_list()
+                targets = Segmentator.predict(self.algos.cam2, signatures,
+                                              parallelize=parallelize,
+                                              num_cpus=num_cpus)
+                signatures_df["target"] = targets
+                # remove rows with target in classes_remove
+                signatures_df = signatures_df[~signatures_df.target.isin(cls_remove)].reset_index()
+                selected_areas_out.cam2.append(signatures_df)
+
+        timer.stop()
+        return selected_areas_out
 
 
 

@@ -1,6 +1,7 @@
 import collections
 import logging
 from itertools import product
+from types import SimpleNamespace
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -90,8 +91,11 @@ def pixels_select_lasso(image):
 
 @log_durations(logging.info)
 def display_images(images, images_selected_areas=None, colors="red"):
-    if images_selected_areas is None:
-        images_selected_areas = []
+    # TODO make some additional arguments checking points
+    if isinstance(images, SimpleNamespace):
+        images = [images.cam1, images.cam2]
+        images_selected_areas = [images_selected_areas.cam1, images_selected_areas.cam2]
+
     num_images = len(images)
     fig, axes = plt.subplots(1, num_images)
     # in case only images from one camera provided

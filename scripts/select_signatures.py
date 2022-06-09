@@ -1,4 +1,6 @@
 
+from types import SimpleNamespace
+
 import matplotlib.pyplot as plt
 
 from data_loader.data_loader import DataLoader
@@ -22,14 +24,14 @@ def main(cfg):
     selected_areas_cam1 = pixels_select_lasso(image_cam1)
 
     # create images list to display
-    images_display = [image_cam1]
+    # images = [image_cam1]
+    images = SimpleNamespace(cam1=image_cam1, cam2=None)
     # create list of areas which will be shown on the images
-    selected_areas_display = [selected_areas_cam1]
+    # selected_areas_display = [selected_areas_cam1]
+    selected_areas = SimpleNamespace(cam1=selected_areas_cam1, cam2=None)
     # dictionary of signatures for each image
-    selected_signatures = {
-        "cam1": list(map(image_cam1.to_signatures, selected_areas_cam1)),
-        "cam2": None
-    }
+    selected_signatures = SimpleNamespace(cam1=list(map(image_cam1.to_signatures,
+                                                        selected_areas_cam1)), cam2=None)
 
     # perform if images from both cameras are available
     if images_cam2:
@@ -39,21 +41,21 @@ def main(cfg):
         # limit coordinates to the image size
         selected_areas_cam2 = list(map(limit_to_bounds(image_cam2.shape), selected_areas_cam2))
 
-        images_display.append(image_cam2)
-        selected_areas_display.append(selected_areas_cam2)
-        selected_signatures["cam2"] = list(map(image_cam2.to_signatures, selected_areas_cam2))
+        images.cam2 = image_cam2
+        selected_areas.cam2 = selected_areas_cam2
+        selected_signatures.cam2 = list(map(image_cam2.to_signatures, selected_areas_cam2))
 
 	# perform averaging of signatures per area selected
     if cfg.misc.selector.average:
-        selected_signatures["cam1"] = list(map(average_signatures, selected_signatures["cam1"]))
-        selected_signatures["cam2"] = list(map(average_signatures, selected_signatures["cam2"]))
+        selected_signatures.cam1 = list(map(average_signatures, selected_signatures.cam1))
+        selected_signatures.cam2 = list(map(average_signatures, selected_signatures.cam2))
 
     # save signatures
     save_data(cfg, data=selected_signatures,
                     data_file_name=f"signatures/{cfg.misc.selector.item}/img_{cfg.image_idx}")
 
     # colors = [["red", "blue", "blue", "blue"], ["red", "blue", "blue", "blue"]]
-    display_images(images_display, selected_areas_display, colors=cfg.misc.selector.color)
+    display_images(images, selected_areas, colors=cfg.misc.selector.color)
     plt.show()
 
 
