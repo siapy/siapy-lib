@@ -3,6 +3,6 @@ segmentator:
     classes: [object, background]
     classes_keep: [object]
     classes_remove: [background]
-    parallelize: 0
+    n_jobs: -1
 
 

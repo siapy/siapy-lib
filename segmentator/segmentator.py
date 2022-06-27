@@ -7,11 +7,14 @@ from types import SimpleNamespace
 import numpy as np
 import pandas as pd
 from funcy import log_durations
+from joblib import Parallel, delayed
+from joblib.externals.loky import set_loky_pickler
 
 import segmentator.decision_algos as module
 from utils.utils import (Timer, get_logger, get_project_root, init_obj,
                          load_data)
 
+set_loky_pickler("dill")
 logger = get_logger(name="segmentator")
 
 class Segmentator():
@@ -63,19 +66,18 @@ class Segmentator():
         return data
 
     @staticmethod
-    def predict(algorithm, signatures, parallelize=0, num_cpus=1):
-        if parallelize == 0:
-            return list(map(algorithm.predict, signatures))
+    def get_number_cpus(parallelize):
+        num_cpus = multiprocessing.cpu_count()
         if parallelize == -1:
             parallelize = num_cpus
         elif 1 <= parallelize <= num_cpus:
             pass
+        elif parallelize > num_cpus:
+            parallelize = num_cpus
+            logger.warning(f"number of cpus changed from {num_cpus} to {parallelize}")
         else:
-            raise ValueError('Parallelize should be in range [-1, number of cpus]')
-
-        with multiprocessing.Pool(processes=parallelize) as p:
-            targets = p.map(algorithm.predict, signatures)
-        return targets
+            raise ValueError(f'Define accurate number of cpus')
+        return parallelize
 
     def filter_areas(self, images, selected_areas):
         """_summary_
@@ -85,34 +87,43 @@ class Segmentator():
             selected_areas (_type_): selected areas for cam1 and cam2
         """
         cls_remove = self.cfg.misc.segmentator.classes_remove
-        parallelize = self.cfg.misc.segmentator.parallelize
-        num_cpus = multiprocessing.cpu_count()
+        n_jobs = self.cfg.misc.segmentator.n_jobs
+        n_jobs = Segmentator.get_number_cpus(n_jobs)
 
-        selected_areas_out = SimpleNamespace(cam1=[], cam2=[])
+        selected_areas_out = SimpleNamespace(cam1=None, cam2=[])
         timer = Timer(name="Classification of signatures", logger=logger)
-        for area_pix in selected_areas.cam1:
+
+		# change image to numpy array
+        images.cam1.to_numpy()
+        images.cam2.to_numpy()
+
+        def filter_cam1(area_pix):
             signatures_df = images.cam1.to_signatures(area_pix)
             signatures = signatures_df.signature.to_list()
-            targets = Segmentator.predict(self.algos.cam1, signatures,
-                                          parallelize=parallelize,
-                                          num_cpus=num_cpus)
+            targets = list(map(self.algos.cam1.predict, signatures))
             signatures_df["target"] = targets
             # remove rows with target in classes_remove
             signatures_df = signatures_df[~signatures_df.target.isin(cls_remove)].reset_index()
-            selected_areas_out.cam1.append(signatures_df)
+            return signatures_df
+
+        def filter_cam2(area_pix):
+            signatures_df = images.cam2.to_signatures(area_pix)
+            signatures = signatures_df.signature.to_list()
+            targets = list(map(self.algos.cam2.predict, signatures))
+            signatures_df["target"] = targets
+            # remove rows with target in classes_remove
+            signatures_df = signatures_df[~signatures_df.target.isin(cls_remove)].reset_index()
+            return signatures_df
+
+        area_pix = Parallel(n_jobs=n_jobs)(delayed(filter_cam1)(area_pix)
+                                            for area_pix in selected_areas.cam1)
+        selected_areas_out.cam1 = area_pix
 
         # do the same for camera 2, if images are available
         if selected_areas.cam2:
-            for area_pix in selected_areas.cam2:
-                signatures_df = images.cam2.to_signatures(area_pix)
-                signatures = signatures_df.signature.to_list()
-                targets = Segmentator.predict(self.algos.cam2, signatures,
-                                              parallelize=parallelize,
-                                              num_cpus=num_cpus)
-                signatures_df["target"] = targets
-                # remove rows with target in classes_remove
-                signatures_df = signatures_df[~signatures_df.target.isin(cls_remove)].reset_index()
-                selected_areas_out.cam2.append(signatures_df)
+            area_pix = Parallel(n_jobs=n_jobs)(delayed(filter_cam2)(area_pix)
+                                                for area_pix in selected_areas.cam2)
+            selected_areas_out.cam2 = area_pix
 
         timer.stop()
         return selected_areas_out

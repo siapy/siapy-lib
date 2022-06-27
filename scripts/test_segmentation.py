@@ -21,12 +21,12 @@ def main(cfg):
     images_cam2 = data_loader.images.cam2
 
     image_cam1 = images_cam1[cfg.image_idx]
-    selected_areas_cam1 = pixels_select_lasso(image_cam1)
+    # selected_areas_cam1 = pixels_select_lasso(image_cam1)
 
     # save_data(cfg, data={"ss": selected_areas_cam1},
-    #                 data_file_name=f"random/selected_areas")
-    # ld = load_data(cfg, data_file_name=f"random/selected_areas")
-    # selected_areas_cam1 = ld["ss"]
+                    # data_file_name=f"random/selected_areas")
+    ld = load_data(cfg, data_file_name=f"random/selected_areas")
+    selected_areas_cam1 = ld["ss"]
 
     images = SimpleNamespace(cam1=image_cam1, cam2=None)
     selected_areas = SimpleNamespace(cam1=selected_areas_cam1, cam2=None)
