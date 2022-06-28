@@ -9,7 +9,7 @@ import pandas as pd
 import spectral as sp
 from funcy import log_durations
 from matplotlib.path import Path
-from matplotlib.widgets import LassoSelector
+from matplotlib.widgets import Button, LassoSelector
 
 from utils.utils import get_logger
 
@@ -93,8 +93,13 @@ def pixels_select_lasso(image):
 def display_images(images, images_selected_areas=None, colors="red"):
     # TODO make some additional arguments checking points
     if isinstance(images, SimpleNamespace):
-        images = [images.cam1, images.cam2]
-        images_selected_areas = [images_selected_areas.cam1, images_selected_areas.cam2]
+        images_ = [images.cam1]
+        images_selected_areas_ = [images_selected_areas.cam1]
+        if images.cam2 is not None:
+            images_.append(images.cam2)
+            images_selected_areas_.append(images_selected_areas.cam2)
+        images = images_
+        images_selected_areas = images_selected_areas_
 
     num_images = len(images)
     fig, axes = plt.subplots(1, num_images)
@@ -132,3 +137,37 @@ def display_images(images, images_selected_areas=None, colors="red"):
             plt.close()
     fig.canvas.mpl_connect("key_press_event", accept)
 
+
+def segmentation_buttons():
+    flag = "repeat"
+    def repeat(event):
+        nonlocal flag
+        logger.info(f'Pressed repeat button.')
+        plt.close()
+        flag = "repeat"
+
+    def save(event):
+        nonlocal flag
+        logger.info(f'Pressed save button.')
+        plt.close()
+        flag = "save"
+
+    def skip(event):
+        nonlocal flag
+        logger.info(f'Pressed skip button.')
+        plt.close()
+        flag = "skip"
+
+    axcolor = "lightgoldenrodyellow"
+    position = plt.axes([0.9, 0.1, 0.1, 0.04])
+    button_save = Button(position, "Save", color=axcolor, hovercolor="0.975")
+    button_save.on_clicked(save)
+    position = plt.axes([0.9, 0.15, 0.1, 0.04])
+    button_repeat = Button(position, "Repeat", color=axcolor, hovercolor="0.975")
+    button_repeat.on_clicked(repeat)
+    position = plt.axes([0.9, 0.2, 0.1, 0.04])
+    button_skip = Button(position, "Skip", color=axcolor, hovercolor="0.975")
+    button_skip.on_clicked(skip)
+    plt.show()
+
+    return flag

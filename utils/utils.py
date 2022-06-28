@@ -1,5 +1,6 @@
 import json
 import logging
+import multiprocessing
 import os
 import pickle
 from dataclasses import dataclass, field
@@ -95,6 +96,18 @@ class Timer():
         self.logger.info(f"{self.name} took {self.end - self.start:.2f} seconds.")
 
 
+def get_number_cpus(parallelize):
+    num_cpus = multiprocessing.cpu_count()
+    if parallelize == -1:
+        parallelize = num_cpus
+    elif 1 <= parallelize <= num_cpus:
+        pass
+    elif parallelize > num_cpus:
+        parallelize = num_cpus
+        logger.warning(f"number of cpus changed from {num_cpus} to {parallelize}")
+    else:
+        raise ValueError(f'Define accurate number of cpus')
+    return parallelize
 
 
 

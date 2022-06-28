@@ -6,7 +6,7 @@ from data_loader.data_loader import DataLoader
 from initializer.cameras_corregistration import CamerasCorregistrator
 from segmentator.segmentator import Segmentator
 from utils import plot_utils, utils
-from utils.image_utils import average_signatures, limit_to_bounds
+from utils.image_utils import average_signatures, limit_to_bounds, filter_small_area_pixels
 from utils.plot_utils import display_images, pixels_select_lasso
 from utils.utils import get_logger, load_data, save_data
 
@@ -21,12 +21,12 @@ def main(cfg):
     images_cam2 = data_loader.images.cam2
 
     image_cam1 = images_cam1[cfg.image_idx]
-    # selected_areas_cam1 = pixels_select_lasso(image_cam1)
+    selected_areas_cam1 = pixels_select_lasso(image_cam1)
 
-    # save_data(cfg, data={"ss": selected_areas_cam1},
-                    # data_file_name=f"random/selected_areas")
-    ld = load_data(cfg, data_file_name=f"random/selected_areas")
-    selected_areas_cam1 = ld["ss"]
+    save_data(cfg, data={"ss": selected_areas_cam1},
+                    data_file_name=f"random/selected_areas")
+    # ld = load_data(cfg, data_file_name=f"random/selected_areas")
+    # selected_areas_cam1 = ld["ss"]
 
     images = SimpleNamespace(cam1=image_cam1, cam2=None)
     selected_areas = SimpleNamespace(cam1=selected_areas_cam1, cam2=None)
@@ -38,8 +38,7 @@ def main(cfg):
         # limit coordinates to the image size
         selected_areas.cam2 = list(map(limit_to_bounds(images.cam2.shape), selected_areas_cam2))
 
-    selected_areas = segmentator.filter_areas(images, selected_areas)
-
+    selected_areas = segmentator.run(images, selected_areas)
 
     display_images(images, selected_areas, colors=cfg.misc.selector.color)
     plt.show()

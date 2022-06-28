@@ -5,8 +5,8 @@ import hydra
 from hydra.core.config_store import ConfigStore
 from omegaconf import DictConfig, OmegaConf
 
-from scripts import (corregistrate, select_signatures, show_image,
-                     test_segmentation)
+from scripts import (corregistrate, perform_segmentation, select_signatures,
+                     show_image, test_segmentation)
 
 logger = logging.getLogger("main")
 
@@ -23,6 +23,8 @@ def main(cfg: DictConfig):
         corregistrate.main(cfg)
     elif cfg.program == "test_segmentator":
         test_segmentation.main(cfg)
+    elif cfg.program == "perform_segmentation":
+        perform_segmentation.main(cfg)
 
 
 if __name__ == "__main__":

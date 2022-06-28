@@ -1,6 +1,5 @@
 import glob
 import logging
-import multiprocessing
 import os
 from types import SimpleNamespace
 
@@ -11,8 +10,9 @@ from joblib import Parallel, delayed
 from joblib.externals.loky import set_loky_pickler
 
 import segmentator.decision_algos as module
-from utils.utils import (Timer, get_logger, get_project_root, init_obj,
-                         load_data)
+from utils.image_utils import filter_small_area_pixels
+from utils.utils import (Timer, get_logger, get_number_cpus, get_project_root,
+                         init_obj, load_data)
 
 set_loky_pickler("dill")
 logger = get_logger(name="segmentator")
@@ -65,21 +65,18 @@ class Segmentator():
 
         return data
 
-    @staticmethod
-    def get_number_cpus(parallelize):
-        num_cpus = multiprocessing.cpu_count()
-        if parallelize == -1:
-            parallelize = num_cpus
-        elif 1 <= parallelize <= num_cpus:
-            pass
-        elif parallelize > num_cpus:
-            parallelize = num_cpus
-            logger.warning(f"number of cpus changed from {num_cpus} to {parallelize}")
-        else:
-            raise ValueError(f'Define accurate number of cpus')
-        return parallelize
+    def _filter_with_decision_algo(self, image, algorithm, cls_remove):
+        def filter_(area_pix):
+            signatures_df = image.to_signatures(area_pix)
+            signatures = signatures_df.signature.to_list()
+            targets = list(map(algorithm.predict, signatures))
+            signatures_df["target"] = targets
+            # remove rows with target in classes_remove
+            signatures_df = signatures_df[~signatures_df.target.isin(cls_remove)].reset_index()
+            return signatures_df
+        return filter_
 
-    def filter_areas(self, images, selected_areas):
+    def run(self, images, selected_areas):
         """_summary_
 
         Args:
@@ -87,43 +84,38 @@ class Segmentator():
             selected_areas (_type_): selected areas for cam1 and cam2
         """
         cls_remove = self.cfg.misc.segmentator.classes_remove
+        area_thrs_cam1 = self.cfg.misc.segmentator.area_size_threshold_camera1
+        area_thrs_cam2 = self.cfg.misc.segmentator.area_size_threshold_camera2
         n_jobs = self.cfg.misc.segmentator.n_jobs
-        n_jobs = Segmentator.get_number_cpus(n_jobs)
+        n_jobs = get_number_cpus(n_jobs)
 
         selected_areas_out = SimpleNamespace(cam1=None, cam2=[])
         timer = Timer(name="Classification of signatures", logger=logger)
 
-		# change image to numpy array
-        images.cam1.to_numpy()
-        images.cam2.to_numpy()
+        # TODO: figure why this increases time for calculation
+		# # change image to numpy array
+        # images.cam1.to_numpy()
+        # images.cam2.to_numpy()
 
-        def filter_cam1(area_pix):
-            signatures_df = images.cam1.to_signatures(area_pix)
-            signatures = signatures_df.signature.to_list()
-            targets = list(map(self.algos.cam1.predict, signatures))
-            signatures_df["target"] = targets
-            # remove rows with target in classes_remove
-            signatures_df = signatures_df[~signatures_df.target.isin(cls_remove)].reset_index()
-            return signatures_df
+        # define filter functions for each camera using decision algo
+        filter_cam1 = self._filter_with_decision_algo(images.cam1, self.algos.cam1, cls_remove)
+        filter_cam2 = self._filter_with_decision_algo(images.cam2, self.algos.cam2, cls_remove)
 
-        def filter_cam2(area_pix):
-            signatures_df = images.cam2.to_signatures(area_pix)
-            signatures = signatures_df.signature.to_list()
-            targets = list(map(self.algos.cam2.predict, signatures))
-            signatures_df["target"] = targets
-            # remove rows with target in classes_remove
-            signatures_df = signatures_df[~signatures_df.target.isin(cls_remove)].reset_index()
-            return signatures_df
-
+        # paralel execution of filter functions
         area_pix = Parallel(n_jobs=n_jobs)(delayed(filter_cam1)(area_pix)
                                             for area_pix in selected_areas.cam1)
-        selected_areas_out.cam1 = area_pix
+
+        # filter by size camera 1
+        selected_areas_out.cam1 = list(map(filter_small_area_pixels(images.cam1, area_thrs_cam1),
+                                           area_pix))
 
         # do the same for camera 2, if images are available
         if selected_areas.cam2:
             area_pix = Parallel(n_jobs=n_jobs)(delayed(filter_cam2)(area_pix)
                                                 for area_pix in selected_areas.cam2)
-            selected_areas_out.cam2 = area_pix
+            # filter by size camera 2
+            selected_areas_out.cam2 = list(map(filter_small_area_pixels(images.cam2, area_thrs_cam2),
+                                            area_pix))
 
         timer.stop()
         return selected_areas_out
