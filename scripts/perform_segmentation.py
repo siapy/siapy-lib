@@ -24,7 +24,7 @@ def get_filtered_selected_areas(image_cam1, image_cam2, segmentator, corregistra
         # limit coordinates to the image size
         selected_areas.cam2 = list(map(limit_to_bounds(images.cam2.shape), selected_areas_cam2))
 
-    selected_areas = segmentator.filter_areas(images, selected_areas)
+    selected_areas = segmentator.run(images, selected_areas)
     return selected_areas
 
 # def save_image_objects(cfg, images, selected_areas):
@@ -39,7 +39,7 @@ def main(cfg):
     images_cam1 = data_loader.images.cam1
     images_cam2 = data_loader.images.cam2
 
-    # check if images form camera 2 are loaded
+    # check if images from camera 2 are loaded
     if not len(images_cam2):
         images_cam2 = [None]* len(images_cam1)
 
@@ -60,5 +60,5 @@ def main(cfg):
             continue
         if idx == len(images_cam1):
             break
-        if flag == "save":
-            save_image_objects(cfg, images, selected_areas)
+        # if flag == "save":
+        #     save_image_objects(cfg, images, selected_areas)

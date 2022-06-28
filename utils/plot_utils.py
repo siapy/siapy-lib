@@ -61,7 +61,7 @@ def pixels_select_lasso(image):
     fig.tight_layout()
 
     indices = 0
-    selected_areas = []
+    indices_list = []
 
     def onselect(verts, eps=1e-8):
         nonlocal indices
@@ -69,10 +69,8 @@ def pixels_select_lasso(image):
         indices = p.contains_points(pix, radius=1)
 
     def onrelease(_):
-        nonlocal indices, selected_areas
-        coordinates_list = np.hstack((pix[indices], np.ones((pix[indices].shape[0], 1))))
-        coordinates_df = pd.DataFrame(coordinates_list.astype("int"), columns=["x","y","z"])
-        selected_areas.append(coordinates_df.drop_duplicates())
+        nonlocal indices, indices_list
+        indices_list.append(indices)
 
     def accept(event):
         if event.key == "enter":
@@ -85,6 +83,12 @@ def pixels_select_lasso(image):
     # mng = plt.get_current_fig_manager()
     # mng.full_screen_toggle()
     plt.show(block=True)
+
+    selected_areas = []
+    for indices in indices_list:
+        coordinates_list = np.hstack((pix[indices], np.ones((pix[indices].shape[0], 1))))
+        coordinates_df = pd.DataFrame(coordinates_list.astype("int"), columns=["x","y","z"])
+        selected_areas.append(coordinates_df.drop_duplicates())
 
     return selected_areas
 
