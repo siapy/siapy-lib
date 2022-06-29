@@ -98,12 +98,15 @@ def display_images(images, images_selected_areas=None, colors="red"):
     # TODO make some additional arguments checking points
     if isinstance(images, SimpleNamespace):
         images_ = [images.cam1]
-        images_selected_areas_ = [images_selected_areas.cam1]
+        if images_selected_areas is not None:
+            images_selected_areas_ = [images_selected_areas.cam1]
         if images.cam2 is not None:
             images_.append(images.cam2)
-            images_selected_areas_.append(images_selected_areas.cam2)
+            if images_selected_areas is not None:
+                images_selected_areas_.append(images_selected_areas.cam2)
         images = images_
-        images_selected_areas = images_selected_areas_
+        if images_selected_areas is not None:
+            images_selected_areas = images_selected_areas_
 
     num_images = len(images)
     fig, axes = plt.subplots(1, num_images)
@@ -120,21 +123,22 @@ def display_images(images, images_selected_areas=None, colors="red"):
     mng = plt.get_current_fig_manager()
     # mng.full_screen_toggle()
 
-    for image_idx, selected_areas in enumerate(images_selected_areas):
-        if selected_areas:
-            for area_idx, selected_area in enumerate(selected_areas):
-                if not isinstance(colors, list):
-                    color = colors
-                else:
-                    color = colors[image_idx][area_idx]
-                axes[image_idx].scatter(
-                    selected_area.x,
-                    selected_area.y,
-                    lw=0,
-                    marker='o',
-                    c=color,
-                    s=(72.0 / fig.dpi) ** 2,
-                )
+    if images_selected_areas is not None:
+        for image_idx, selected_areas in enumerate(images_selected_areas):
+            if selected_areas:
+                for area_idx, selected_area in enumerate(selected_areas):
+                    if not isinstance(colors, list):
+                        color = colors
+                    else:
+                        color = colors[image_idx][area_idx]
+                    axes[image_idx].scatter(
+                        selected_area.x,
+                        selected_area.y,
+                        lw=0,
+                        marker='o',
+                        c=color,
+                        s=(72.0 / fig.dpi) ** 2,
+                    )
 
     def accept(event):
         if event.key == "enter":

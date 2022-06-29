@@ -16,7 +16,7 @@ def main(cfg: DictConfig):
     logger.info(OmegaConf.to_yaml(cfg))
 
     if cfg.program == "show_image":
-        show_image.show(cfg)
+        show_image.main(cfg)
     elif cfg.program == "select_signatures":
         select_signatures.main(cfg)
     elif cfg.program == "corregistrate":
