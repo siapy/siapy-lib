@@ -10,7 +10,8 @@ from joblib import Parallel, delayed
 from joblib.externals.loky import set_loky_pickler
 
 import segmentator.decision_algos as module
-from utils.image_utils import filter_small_area_pixels
+from utils.image_utils import (filter_small_area_pixels,
+                               filter_with_decision_algo, save_image)
 from utils.utils import (Timer, get_logger, get_number_cpus, get_project_root,
                          init_obj, load_data)
 
@@ -65,16 +66,6 @@ class Segmentator():
 
         return data
 
-    def _filter_with_decision_algo(self, image, algorithm, cls_remove):
-        def filter_(area_pix):
-            signatures_df = image.to_signatures(area_pix)
-            signatures = signatures_df.signature.to_list()
-            targets = list(map(algorithm.predict, signatures))
-            signatures_df["target"] = targets
-            # remove rows with target in classes_remove
-            signatures_df = signatures_df[~signatures_df.target.isin(cls_remove)].reset_index()
-            return signatures_df
-        return filter_
 
     def run(self, images, selected_areas):
         """_summary_
@@ -98,8 +89,8 @@ class Segmentator():
         # images.cam2.to_numpy()
 
         # define filter functions for each camera using decision algo
-        filter_cam1 = self._filter_with_decision_algo(images.cam1, self.algos.cam1, cls_remove)
-        filter_cam2 = self._filter_with_decision_algo(images.cam2, self.algos.cam2, cls_remove)
+        filter_cam1 = filter_with_decision_algo(images.cam1, self.algos.cam1, cls_remove)
+        filter_cam2 = filter_with_decision_algo(images.cam2, self.algos.cam2, cls_remove)
 
         # paralel execution of filter functions
         area_pix = Parallel(n_jobs=n_jobs)(delayed(filter_cam1)(area_pix)
@@ -121,4 +112,34 @@ class Segmentator():
         return selected_areas_out
 
 
+    def save_segmented(self, images, selected_areas):
+        def _save_segmented_image(selected_areas, image, metadata):
+            image_arr = image.to_numpy()
+            for idx, area in enumerate(selected_areas):
+                x_max = area.x.max()
+                x_min = area.x.min()
+                y_max = area.y.max()
+                y_min = area.y.min()
+                # create new image
+                image_arr_area = np.zeros((y_max - y_min + 1,
+                                            x_max - x_min + 1,
+                                            image.shape[2]))
+                # convert original coordinates to coordinates for new image
+                y_coor = area.y - y_min
+                x_coor = area.x - x_min
+                # write values from original image to new image
+                image_arr_area[y_coor, x_coor, :] = image_arr[area.y, area.x, :]
 
+                data_file_name = f"images/segmented/{image.filename}__{idx}"
+                save_image(self.cfg, image_arr_area, data_file_name, metadata)
+
+        image_cam1 = images.cam1
+        selected_areas_cam1 = selected_areas.cam1
+        metadata_cam1 = image_cam1.file.metadata
+        _save_segmented_image(selected_areas_cam1, image_cam1, metadata_cam1)
+
+        if images.cam2 is not None:
+            image_cam2 = images.cam2
+            selected_areas_cam2 = selected_areas.cam2
+            metadata_cam2 = image_cam2.file.metadata
+            _save_segmented_image(selected_areas_cam2, image_cam2, metadata_cam2)

@@ -1,7 +1,14 @@
+import os
+
 import cv2
+import hydra
 import numpy as np
 import pandas as pd
+import spectral as sp
 
+from utils.utils import get_logger, parse_data_file_name
+
+logger = get_logger(name="image_utils")
 
 def average_signatures(area_of_signatures):
     if area_of_signatures is not None:
@@ -26,6 +33,7 @@ def limit_to_bounds(image_shape):
                         (points.y < y_max)]
         return points
     return _limit
+
 
 def filter_small_area_pixels(image, threshold_area_size):
     def filter_contours(contours, threshold):
@@ -65,3 +73,27 @@ def filter_small_area_pixels(image, threshold_area_size):
         return pd.DataFrame(pixels_coor_new.astype("int"), columns=["x","y","z"])
 
     return filter_area
+
+
+def filter_with_decision_algo(image, algorithm, cls_remove):
+    def filter_(area_pix):
+        signatures_df = image.to_signatures(area_pix)
+        signatures = signatures_df.signature.to_list()
+        targets = list(map(algorithm.predict, signatures))
+        signatures_df["target"] = targets
+        # remove rows with target in classes_remove
+        signatures_df = signatures_df[~signatures_df.target.isin(cls_remove)].reset_index()
+        return signatures_df
+    return filter_
+
+
+def save_image(config, image, data_file_name, metadata=None):
+    dfn = parse_data_file_name(data_file_name)
+    dir_abs_path = hydra.utils.to_absolute_path(os.path.join("outputs", config.name, dfn.dir_name))
+    os.makedirs(dir_abs_path, exist_ok=True)
+    file = os.path.join(dir_abs_path, dfn.file_name + ".hdr")
+    sp.envi.save_image(file, image, dtype=np.float32, metadata=metadata, force=True)
+    logger.info(f"Images saved as:  {file}")
+
+
+

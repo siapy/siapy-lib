@@ -46,7 +46,7 @@ def save_data(config, data, data_file_name, saver="pickle"):
             json.dump(data, f)
     else:
         logger.exception("Posible loader options: pickle, json")
-    logger.info(f"Data saved to {file}")
+    logger.info(f"Data saved as:  {file}")
 
 def load_data(config, data_file_name, loader="pickle"):
     dfn = parse_data_file_name(data_file_name)
@@ -62,7 +62,7 @@ def load_data(config, data_file_name, loader="pickle"):
     else:
         logger.exception("Posible loader options: pickle, json")
 
-    logger.info(f"Data loaded from {file}")
+    logger.info(f"Data loaded from:  {file}")
     return data
 
 def init_obj(module, module_name, module_args=None, *args, **kwargs):

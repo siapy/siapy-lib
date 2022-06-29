@@ -7,7 +7,8 @@ from initializer.cameras_corregistration import CamerasCorregistrator
 from segmentator.segmentator import Segmentator
 from utils import plot_utils, utils
 from utils.image_utils import average_signatures, limit_to_bounds
-from utils.plot_utils import display_images, pixels_select_lasso, segmentation_buttons
+from utils.plot_utils import (display_images, pixels_select_lasso,
+                              segmentation_buttons)
 from utils.utils import get_logger, load_data, save_data
 
 logger = get_logger(name="perform_segmentation")
@@ -27,9 +28,6 @@ def get_filtered_selected_areas(image_cam1, image_cam2, segmentator, corregistra
     selected_areas = segmentator.run(images, selected_areas)
     return selected_areas
 
-# def save_image_objects(cfg, images, selected_areas):
-
-
 
 def main(cfg):
     data_loader = DataLoader(cfg).load_images()
@@ -47,6 +45,9 @@ def main(cfg):
     while 1:
         image_cam1 = images_cam1[idx]
         image_cam2 = images_cam2[idx]
+        logger.info(f"_Processed index_: {idx}")
+        logger.info(f"Processed files: \n -> camera1: {image_cam1.filename} \
+                    \n -> camera2: {image_cam2.filename}")
 
         images = SimpleNamespace(cam1=image_cam1, cam2=image_cam2)
         selected_areas = get_filtered_selected_areas(image_cam1, image_cam2, segmentator, corregistrator)
@@ -60,5 +61,6 @@ def main(cfg):
             continue
         if idx == len(images_cam1):
             break
-        # if flag == "save":
-        #     save_image_objects(cfg, images, selected_areas)
+        if flag == "save":
+            segmentator.save_segmented(images, selected_areas)
+            idx += 1

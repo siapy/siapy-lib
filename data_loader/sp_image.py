@@ -41,5 +41,7 @@ class SPImage():
         bands = self._sp_file.nbands
         return (rows, samples, bands)
 
-
+    @property
+    def filename(self):
+        return self._sp_file.filename.split("\\")[-1].split(".")[0]
 
