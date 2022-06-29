@@ -1,0 +1,3 @@
+preparator:
+    labels_path_deliminator: __
+    labels_deliminator: _

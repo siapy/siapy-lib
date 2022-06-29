@@ -5,6 +5,4 @@ data_loader:
         path_ending_camera1: corr_rad_f32.hdr
         path_ending_camera2: corr2_rad_f32.hdr
         # path_ending_camera2: None
-    labels_path_deliminator: __
-    labels_deliminator: _
     corregistrate_dir_name: koregistracija

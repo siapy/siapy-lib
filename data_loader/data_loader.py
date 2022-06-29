@@ -3,6 +3,7 @@ import logging
 import os
 from types import SimpleNamespace
 
+import hydra
 import numpy as np
 import spectral as sp
 from funcy import log_durations
@@ -58,6 +59,9 @@ class DataLoader():
         if dir_name == "corregistrate":
             data_dir_path = os.path.join(cfg_data_loader.data_dir_path,
                                         cfg_data_loader.corregistrate_dir_name)
+        elif dir_name == "segmented_images":
+            data_dir_path = hydra.utils.to_absolute_path(f"outputs/{self._cfg.name}/images/segmented")
+
         self._cfg.data_loaders.data_loader.data_dir_path = data_dir_path
         return self
 

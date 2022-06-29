@@ -130,7 +130,7 @@ class Segmentator():
                 # write values from original image to new image
                 image_arr_area[y_coor, x_coor, :] = image_arr[area.y, area.x, :]
 
-                data_file_name = f"images/segmented/{image.filename}__{idx}"
+                data_file_name = f"images/segmented/{idx}__{image.filename}"
                 save_image(self.cfg, image_arr_area, data_file_name, metadata)
 
         image_cam1 = images.cam1
