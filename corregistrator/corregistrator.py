@@ -7,7 +7,7 @@ import pandas as pd
 from utils.utils import load_data, save_data
 
 
-class CamerasCorregistrator():
+class Corregistrator():
     def __init__(self, config):
         self.cfg = config
         self.matx_2d_combined = None

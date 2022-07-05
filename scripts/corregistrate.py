@@ -1,5 +1,5 @@
 from data_loader.data_loader import DataLoader
-from initializer.cameras_corregistration import CamerasCorregistrator
+from corregistrator.corregistrator import Corregistrator
 from utils.utils import get_logger
 from utils.plot_utils import pixels_select_click
 
@@ -26,7 +26,7 @@ def main(cfg):
     selected_pixels_cam1 = pixels_select_click(image_cam1)
     selected_pixels_cam2 = pixels_select_click(image_cam2)
 
-    corregistrator = CamerasCorregistrator(cfg)
+    corregistrator = Corregistrator(cfg)
     corregistrator.align(selected_pixels_cam2, selected_pixels_cam1,
                          plot_progress=True, points_ordered=True)
     corregistrator.save_params()

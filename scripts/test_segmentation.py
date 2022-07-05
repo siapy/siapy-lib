@@ -2,8 +2,8 @@ from types import SimpleNamespace
 
 import matplotlib.pyplot as plt
 
+from corregistrator.corregistrator import Corregistrator
 from data_loader.data_loader import DataLoader
-from initializer.cameras_corregistration import CamerasCorregistrator
 from segmentator.segmentator import Segmentator
 from utils import plot_utils, utils
 from utils.image_utils import average_signatures, limit_to_bounds
@@ -14,7 +14,7 @@ logger = get_logger(name="test_segmentation")
 
 def main(cfg):
     data_loader = DataLoader(cfg).load_images()
-    corregistrator = CamerasCorregistrator(cfg).load_params()
+    corregistrator = Corregistrator(cfg).load_params()
     segmentator = Segmentator(cfg).init_decision_function()
 
     images_cam1 = data_loader.images.cam1
