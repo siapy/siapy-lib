@@ -69,6 +69,7 @@ def pixels_select_lasso(image):
         indices = p.contains_points(pix, radius=1)
 
     def onrelease(_):
+        #TODO: use asyncio to avoid blocking
         nonlocal indices, indices_list
         indices_list.append(indices)
 

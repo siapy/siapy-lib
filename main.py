@@ -5,8 +5,8 @@ import hydra
 from hydra.core.config_store import ConfigStore
 from omegaconf import DictConfig, OmegaConf
 
-from scripts import (corregistrate, perform_segmentation, select_signatures,
-                     show_image, test_segmentation, prepare_data)
+from scripts import (corregistrate, perform_segmentation, prepare_data,
+                     select_signatures, show_image, test_segmentation)
 
 logger = logging.getLogger("main")
 

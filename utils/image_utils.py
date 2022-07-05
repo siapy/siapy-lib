@@ -97,3 +97,8 @@ def save_image(config, image, data_file_name, metadata=None):
 
 
 
+#TODO: move filter functions to classes
+
+
+
+

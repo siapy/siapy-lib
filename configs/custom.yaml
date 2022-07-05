@@ -4,5 +4,6 @@ defaults:
     - data_loaders/data_loader
     - misc/selector
     - misc/segmentator
+    - preparators/preparator
 
 name: "krompir-ana-1-22"

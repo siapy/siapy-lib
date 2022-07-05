@@ -19,8 +19,8 @@ set_loky_pickler("dill")
 logger = get_logger(name="segmentator")
 
 class Segmentator():
-    def __init__(self, cfg):
-        self.cfg = cfg
+    def __init__(self, config):
+        self.cfg = config
         self.algos = None
 
     def init_decision_function(self):
@@ -112,34 +112,36 @@ class Segmentator():
         return selected_areas_out
 
 
-    def save_segmented(self, images, selected_areas):
-        def _save_segmented_image(selected_areas, image, metadata):
+    def save_segmented(self, images, selected_areas, image_idx):
+        def _save_segmented_image(selected_areas, image, metadata, image_idx):
             image_arr = image.to_numpy()
-            for idx, area in enumerate(selected_areas):
+            for area_idx, area in enumerate(selected_areas):
                 x_max = area.x.max()
                 x_min = area.x.min()
                 y_max = area.y.max()
                 y_min = area.y.min()
                 # create new image
-                image_arr_area = np.zeros((y_max - y_min + 1,
-                                            x_max - x_min + 1,
-                                            image.shape[2]))
+                image_arr_area = np.nan * np.ones((y_max - y_min + 1,
+                                                   x_max - x_min + 1,
+                                                   image.shape[2]))
                 # convert original coordinates to coordinates for new image
                 y_coor = area.y - y_min
                 x_coor = area.x - x_min
                 # write values from original image to new image
                 image_arr_area[y_coor, x_coor, :] = image_arr[area.y, area.x, :]
 
-                data_file_name = f"images/segmented/{idx}__{image.filename}"
+                data_file_name = f"images/segmented/{image_idx}_{area_idx}__{image.filename}"
                 save_image(self.cfg, image_arr_area, data_file_name, metadata)
 
         image_cam1 = images.cam1
         selected_areas_cam1 = selected_areas.cam1
         metadata_cam1 = image_cam1.file.metadata
-        _save_segmented_image(selected_areas_cam1, image_cam1, metadata_cam1)
+        _save_segmented_image(selected_areas_cam1, image_cam1, metadata_cam1, image_idx)
 
         if images.cam2 is not None:
             image_cam2 = images.cam2
             selected_areas_cam2 = selected_areas.cam2
             metadata_cam2 = image_cam2.file.metadata
-            _save_segmented_image(selected_areas_cam2, image_cam2, metadata_cam2)
+            _save_segmented_image(selected_areas_cam2, image_cam2, metadata_cam2, image_idx)
+
+
