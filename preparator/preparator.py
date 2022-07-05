@@ -39,8 +39,8 @@ class Preparator():
         if self.slices_size_cam1 == -1:
             logger.info(f"Signatures will be created from whole objects.")
         elif isinstance(self.slices_size_cam1, int):
-            logger.info(f"Signatures will be created from objects of size {[self.slices_size_cam2]*2} for camera1.")
-            logger.info(f"Signatures will be created from objects of size {[self.slices_size_cam1]*2} for camera2.")
+            logger.info(f"Signatures will be created from objects of size {[self.slices_size_cam1]*2} for camera1.")
+            logger.info(f"Signatures will be created from objects of size {[self.slices_size_cam2]*2} for camera2.")
             if 0 < self.percentage_bg < 100:
                 logger.info(f"Background will be included in signatures with {self.percentage_bg}% of objects.")
             else:
@@ -68,7 +68,7 @@ class Preparator():
                           for image_segmented in images_segmented]
 
         # whole converted image prepared for save
-        if slices_size == -1:
+        if self.slices_size_cam1 == -1:
             self._save_converted(images_segmented, images_arr)
         # converted image is further sliced and then saved
         else:
@@ -103,7 +103,7 @@ class Preparator():
 
     def _save_converted(self, images_segmented, images_arr_prepared):
         # if image was sliced and slices need to be saved
-        if isinstance(images_arr_prepared, list):
+        if isinstance(images_arr_prepared[0], list):
             for image_seg, images_list in zip(images_segmented, images_arr_prepared):
                 for slice_idx, image_arr_prep in enumerate(images_list):
                     # split name of file
