@@ -1,42 +1,37 @@
 # python-project-template
 
-This is a simple python project template for Visual studio code. 
+## Commands used
 
-Create and activate virtual environment:
+- Show image
+```
+$ python3 main.py program=show_image image_idx=0
+```
 
-   ```sh
-   python -m venv .venv
-   ```
-   ```sh
-   "./.venv/Scripts/activate"
-   ```
-   
-   or
-   
-   ```sh
-   conda create -n yourenvname python=x.x anaconda
-   ```
-   ```sh
-   conda activate yourenvname
-   ```
-   
-Clear git cached files and directories:
+- Corregistrate both cameras:
+```
+$ python3 main.py program=corregistrate image_idx=0
+```
 
-   ```sh
-   git rm --cached -r .vscode 
-   ```
-   ```sh
-   git rm --cached .env
-   ```
-    
-Set path to project root directory in `.env`, e.g.:
+- Select signatures
+```
+$ python3 main.py program=select_signatures image_idx=0 selector.item=background
+```
+```
+$ python3 main.py program=select_signatures image_idx=0 selector.item=object
+```
 
-   ```sh
-   PYTHONPATH=C:\\Users\\janezla\\Documents\\python-project-template
-   ```
-   
-Set python path in vscode workspace settings, e.g.:
-   ```sh
-   "python.pythonPath": "C:\\Users\\janezla\\Anaconda3\\envs\\yourenvname\\python"
-   ```
+- Segmentation
+```
+$ python3 main.py program=test_segmentation image_idx=0
+```
+```
+$ python3 main.py program=perform_segmentation image_idx=0
+```
+
+- Prepare dataset
+```
+$ python3 main.py program=prepare_data image_idx=0
+```
+
+
 

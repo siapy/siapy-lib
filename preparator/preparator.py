@@ -16,7 +16,7 @@ logger = get_logger(name="preparator")
 class Preparator():
     def __init__(self, config):
         self.cfg = config
-        preparator_cfg = self.cfg.preparators.preparator
+        preparator_cfg = self.cfg.preparator
 
         self.slices_size_cam1 = preparator_cfg.image_slices_size_cam1
         self.slices_size_cam2 = preparator_cfg.image_slices_size_cam2

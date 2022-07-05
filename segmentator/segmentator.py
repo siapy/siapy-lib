@@ -27,11 +27,11 @@ class Segmentator():
         cfg_arg = {'cfg': self.cfg}
         data = self._load_data()
         self.algos = SimpleNamespace(cam1=None, cam2=None)
-        self.algos.cam1 = init_obj(module, self.cfg.misc.segmentator.decision_function, cfg_arg)
+        self.algos.cam1 = init_obj(module, self.cfg.segmentator.decision_function, cfg_arg)
         self.algos.cam1.fit(data.cam1)
 
         if data.cam2:
-            self.algos.cam2 = init_obj(module, self.cfg.misc.segmentator.decision_function, cfg_arg)
+            self.algos.cam2 = init_obj(module, self.cfg.segmentator.decision_function, cfg_arg)
             self.algos.cam2.fit(data.cam2)
         return self
 
@@ -43,7 +43,7 @@ class Segmentator():
             # remove filenames extensions
             return [os.path.splitext(path)[0] for path in paths]
 
-        classes_labels = self.cfg.misc.segmentator.classes
+        classes_labels = self.cfg.segmentator.classes
         # initiate data structure for data - for each camera for all avaiblable calsses
         data = SimpleNamespace(cam1={}, cam2={})
 
@@ -74,10 +74,10 @@ class Segmentator():
             images (tuple): image od same scene for cam1 and cam2
             selected_areas (_type_): selected areas for cam1 and cam2
         """
-        cls_remove = self.cfg.misc.segmentator.classes_remove
-        area_thrs_cam1 = self.cfg.misc.segmentator.area_size_threshold_camera1
-        area_thrs_cam2 = self.cfg.misc.segmentator.area_size_threshold_camera2
-        n_jobs = self.cfg.misc.segmentator.n_jobs
+        cls_remove = self.cfg.segmentator.classes_remove
+        area_thrs_cam1 = self.cfg.segmentator.area_size_threshold_camera1
+        area_thrs_cam2 = self.cfg.segmentator.area_size_threshold_camera2
+        n_jobs = self.cfg.segmentator.n_jobs
         n_jobs = get_number_cpus(n_jobs)
 
         selected_areas_out = SimpleNamespace(cam1=None, cam2=[])

@@ -94,7 +94,7 @@ def pixels_select_lasso(image):
     return selected_areas
 
 
-@log_durations(logging.info)
+# @log_durations(logging.info)
 def display_images(images, images_selected_areas=None, colors="red"):
     # TODO make some additional arguments checking points
     if isinstance(images, SimpleNamespace):

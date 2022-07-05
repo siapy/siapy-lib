@@ -1,0 +1,4 @@
+name: swir
+model: SWIR-600
+default_channels: ???
+image_display_brightness: 1.0

@@ -1,9 +1,9 @@
 defaults:
-    - cameras/camera_nir
-    - cameras/camera_swir
-    - data_loaders/data_loader
-    - misc/selector
-    - misc/segmentator
-    - preparators/preparator
+    - camera1: camera_nir
+    - camera2: camera_swir
+    - data_loader: data_loader
+    - selector: selector
+    - segmentator: segmentator
+    - preparator: preparator
 
 name: "krompir-ana-1-22"

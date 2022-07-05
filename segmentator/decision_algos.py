@@ -29,8 +29,8 @@ class Svm(BaseDecisionAlgo):
 
 class Sid(BaseDecisionAlgo):
     def __init__(self, cfg):
-        self.cls_remove = cfg.misc.segmentator.classes_remove
-        self.cls_keep = cfg.misc.segmentator.classes_keep
+        self.cls_remove = cfg.segmentator.classes_remove
+        self.cls_keep = cfg.segmentator.classes_keep
         if not(len(self.cls_keep) == len(self.cls_remove) == 1):
             raise ValueError("Sid only works with one class removed and one class kept")
         self.cls_keep = self.cls_keep[0]

@@ -1,0 +1,9 @@
+decision_function: Sid
+classes: [object, background]
+classes_keep: [object]
+classes_remove: [background]
+n_jobs: -1
+area_size_threshold_camera1: 0
+area_size_threshold_camera2: 0
+
+

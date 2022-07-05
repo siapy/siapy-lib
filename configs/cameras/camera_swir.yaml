@@ -1,5 +1,0 @@
-camera2:
-    name: swir
-    default_channels: ???
-
-    image_display_brightness: 1.0

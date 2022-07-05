@@ -1,6 +1,0 @@
-camera1:
-    name: vnir
-    model: VNIR-1600
-    default_channels: ???
-
-    image_display_brightness: 3.5

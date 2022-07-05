@@ -1,8 +1,0 @@
-preparator:
-    labels_path_deliminator: __
-    labels_deliminator: _
-    image_slices_size_cam1: 64
-    image_slices_size_cam2: 15
-    percentage_of_background : 5
-    reflectance_panel: 0.2
-    panel_filter_function: average

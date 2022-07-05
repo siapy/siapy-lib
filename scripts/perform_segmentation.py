@@ -52,7 +52,7 @@ def main(cfg):
         # check whether first objet on image selected represents reference panel
         selected_area_panel_cam1 = None
         selected_area_panel_cam2 = None
-        if cfg.preparators.preparator.reflectance_panel is not None:
+        if cfg.preparator.reflectance_panel is not None:
             selected_area_panel_cam1 = selected_areas.cam1[0]
             selected_areas.cam1.pop(0)
             if selected_areas.cam2 is not None:
@@ -68,7 +68,7 @@ def main(cfg):
             selected_areas.cam2.insert(0, selected_area_panel_cam2)
 
         # display and confirmation process
-        display_images(images, selected_areas, colors=cfg.misc.selector.color)
+        display_images(images, selected_areas, colors=cfg.selector.color)
         flag = segmentation_buttons()
 
         if flag == "skip":

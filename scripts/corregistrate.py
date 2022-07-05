@@ -6,7 +6,7 @@ from utils.plot_utils import pixels_select_click
 logger = get_logger(name="select_signatures")
 
 def main(cfg):
-    data_loader_cfg = cfg.data_loaders.data_loader
+    data_loader_cfg = cfg.data_loader
     if not data_loader_cfg.corregistrate_dir_name:
         logger.warning("No data directory provided to perform corregistration")
         return

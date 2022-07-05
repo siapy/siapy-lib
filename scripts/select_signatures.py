@@ -46,16 +46,16 @@ def main(cfg):
         selected_signatures.cam2 = list(map(image_cam2.to_signatures, selected_areas_cam2))
 
 	# perform averaging of signatures per area selected
-    if cfg.misc.selector.average:
+    if cfg.selector.average:
         selected_signatures.cam1 = list(map(average_signatures, selected_signatures.cam1))
         selected_signatures.cam2 = list(map(average_signatures, selected_signatures.cam2))
 
     # save signatures
     save_data(cfg, data=selected_signatures,
-                    data_file_name=f"signatures/{cfg.misc.selector.item}/img_{cfg.image_idx}")
+                    data_file_name=f"signatures/{cfg.selector.item}/img_{cfg.image_idx}")
 
     # colors = [["red", "blue", "blue", "blue"], ["red", "blue", "blue", "blue"]]
-    display_images(images, selected_areas, colors=cfg.misc.selector.color)
+    display_images(images, selected_areas, colors=cfg.selector.color)
     plt.show()
 
 

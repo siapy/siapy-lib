@@ -40,7 +40,7 @@ def main(cfg):
 
     selected_areas = segmentator.run(images, selected_areas)
 
-    display_images(images, selected_areas, colors=cfg.misc.selector.color)
+    display_images(images, selected_areas, colors=cfg.selector.color)
     plt.show()
 
 
