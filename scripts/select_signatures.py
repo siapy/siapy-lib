@@ -13,14 +13,16 @@ logger = get_logger(name="select_signatures")
 
 def main(cfg):
     data_loader = DataLoader(cfg)
-    corregistrator = Corregistrator(cfg)
     data_loader.load_images()
-    corregistrator.load_params()
+
+    # if only camera1, then corregistration is not needed
+    if cfg.camera2 is not None:
+        corregistrator = Corregistrator(cfg)
+        corregistrator.load_params()
 
     images_cam1 = data_loader.images.cam1
-    images_cam2 = data_loader.images.cam2
-
     image_cam1 = images_cam1[cfg.image_idx]
+
     selected_areas_cam1 = pixels_select_lasso(image_cam1)
 
     # create images list to display
@@ -34,7 +36,8 @@ def main(cfg):
                                                         selected_areas_cam1)), cam2=None)
 
     # perform if images from both cameras are available
-    if images_cam2:
+    if cfg.camera2 is not None:
+        images_cam2 = data_loader.images.cam2
         image_cam2 = images_cam2[cfg.image_idx]
         # tranform coordinates from cam1 to cam2
         selected_areas_cam2 = list(map(corregistrator.transform, selected_areas_cam1))
@@ -48,7 +51,8 @@ def main(cfg):
 	# perform averaging of signatures per area selected
     if cfg.selector.average:
         selected_signatures.cam1 = list(map(average_signatures, selected_signatures.cam1))
-        selected_signatures.cam2 = list(map(average_signatures, selected_signatures.cam2))
+        if cfg.camera2 is not None:
+            selected_signatures.cam2 = list(map(average_signatures, selected_signatures.cam2))
 
     # save signatures
     save_data(cfg, data=selected_signatures,

@@ -16,10 +16,11 @@ def main(cfg):
 
     # group slices of the same image into under same list
     images_cam1 = preparator.batch_images(data_loader.images.cam1)
-    images_cam2 = preparator.batch_images(data_loader.images.cam2)
 
     # check if images from camera 2 are loaded
-    if not len(images_cam2):
+    if cfg.camera2 is not None:
+        images_cam2 = preparator.batch_images(data_loader.images.cam2)
+    else:
         images_cam2 = [None]* len(images_cam1)
 
     for image_cam1, image_cam2 in zip(images_cam1, images_cam2):

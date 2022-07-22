@@ -1,6 +1,9 @@
 defaults:
     - base/camera
     - base/data_loader
+    - base/preparator
+    - base/segmentator
+    - base/selector
     - custom
     - hydra/run/dir
     - hydra/job/chdir

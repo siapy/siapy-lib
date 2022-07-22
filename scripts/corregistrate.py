@@ -10,8 +10,8 @@ def main(cfg):
     if not data_loader_cfg.corregistrate_dir_name:
         logger.warning("No data directory provided to perform corregistration")
         return
-    if not data_loader_cfg.data_sources.path_ending_camera1 and \
-        not data_loader_cfg.data_sources.path_ending_camera2:
+    if not data_loader_cfg.path_ending_camera1 and \
+        not data_loader_cfg.path_ending_camera2:
         logger.warning("No camera paths endings provided to perform corregistration")
         return
 

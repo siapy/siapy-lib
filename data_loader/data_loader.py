@@ -20,12 +20,17 @@ class DataLoader():
         self._paths = None
         self._images = None
 
+        # internal variable to check if camera2 is present
+        self.is_camera2 = False if config.camera2 is None else True
+
     def _load_images_paths(self):
         cfg_data_loader = self._cfg.data_loader
         paths_cam1 = sorted(glob.glob(os.path.join(cfg_data_loader.data_dir_path, "*" +
                                                       cfg_data_loader.path_ending_camera1)))
-        paths_cam2 = sorted(glob.glob(os.path.join(cfg_data_loader.data_dir_path, "*" +
-                                                      cfg_data_loader.path_ending_camera2)))
+        paths_cam2 = None
+        if self.is_camera2:
+            paths_cam2 = sorted(glob.glob(os.path.join(cfg_data_loader.data_dir_path, "*" +
+                                                        cfg_data_loader.path_ending_camera2)))
         paths = {
             "cam1": paths_cam1,
             "cam2": paths_cam2
@@ -34,9 +39,12 @@ class DataLoader():
 
     def _import_spectral_images(self):
         cfg_cam1 = self._cfg.camera1
-        cfg_cam2 = self._cfg.camera2
         images_cam1 = [SPImage(sp.envi.open(path), cfg_cam1) for path in self._paths.cam1]
-        images_cam2 = [SPImage(sp.envi.open(path), cfg_cam2) for path in self._paths.cam2]
+
+        images_cam2 = None
+        if self.is_camera2:
+            cfg_cam2 = self._cfg.camera2
+            images_cam2 = [SPImage(sp.envi.open(path), cfg_cam2) for path in self._paths.cam2]
 
         images = {
             "cam1": images_cam1,

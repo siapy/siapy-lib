@@ -1,0 +1,4 @@
+selector:
+    average: bool
+    item: str
+    color: str

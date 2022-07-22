@@ -1,4 +1,5 @@
 from utils.utils import dict_zip, get_logger, equalize_dict_len
+import omegaconf
 
 logger = get_logger(name="checkers")
 
@@ -28,5 +29,8 @@ def check_config_file(config):
     check_against_base(config.base.camera, config.camera1, "camera1")
     check_against_base(config.base.camera, config.camera2, "camera2")
     check_against_base(config.base.data_loader, config.data_loader, "data_loader")
+    check_against_base(config.base.preparator, config.preparator, "preparator")
+    check_against_base(config.base.segmentator, config.segmentator, "segmentator")
+    check_against_base(config.base.selector, config.selector, "selector")
     return config
 
