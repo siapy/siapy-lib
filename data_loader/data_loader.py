@@ -23,9 +23,9 @@ class DataLoader():
     def _load_images_paths(self):
         cfg_data_loader = self._cfg.data_loader
         paths_cam1 = sorted(glob.glob(os.path.join(cfg_data_loader.data_dir_path, "*" +
-                                                      cfg_data_loader.data_sources.path_ending_camera1)))
+                                                      cfg_data_loader.path_ending_camera1)))
         paths_cam2 = sorted(glob.glob(os.path.join(cfg_data_loader.data_dir_path, "*" +
-                                                      cfg_data_loader.data_sources.path_ending_camera2)))
+                                                      cfg_data_loader.path_ending_camera2)))
         paths = {
             "cam1": paths_cam1,
             "cam2": paths_cam2

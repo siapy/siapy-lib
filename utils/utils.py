@@ -109,5 +109,23 @@ def get_number_cpus(parallelize):
         raise ValueError(f'Define accurate number of cpus')
     return parallelize
 
+def dict_zip(*dicts):
+    if not dicts:
+        return
+
+    n = len(dicts[0])
+    if any(len(d) != n for d in dicts):
+        raise ValueError('arguments must have the same length')
+
+    for key, first_val in dicts[0].items():
+        yield key, first_val, *(other[key] for other in dicts[1:])
 
 
+def equalize_dict_len(dict1, dict2):
+    keys_both = set(list(dict1.keys()) + list(dict2.keys()))
+    for key in keys_both:
+        if key not in dict1:
+            dict1[key] = None
+        if key not in dict2:
+            dict2[key] = None
+    return dict1, dict2

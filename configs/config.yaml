@@ -3,8 +3,10 @@ defaults:
     - base/data_loader
     - custom
     - hydra/run/dir
+    - hydra/job/chdir
     - override hydra/job_logging: custom_logging
     - _self_
 
 program: ???
 image_idx: 0
+

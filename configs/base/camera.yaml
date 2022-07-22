@@ -1,8 +1,4 @@
 camera:
     name: str
-    camera_id: str
-    no_bands: int
-    wavelengths: list
-    default_bands: list
-    data_ignore_value: float
-    data_type: int
+    model: str
+    image_display_brightness: [float, int]
