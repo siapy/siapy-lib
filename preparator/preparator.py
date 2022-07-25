@@ -29,12 +29,13 @@ class Preparator():
         self._post_init()
 
     def _post_init(self):
-        # check if firts object on an image represents reference panel
-        if 0 < self.ref_panel < 1:
-            logger.info(f"Reference reflactance used: {self.ref_panel}")
-        else:
-            logger.info(f"Reflectance panel not included.")
-            self.ref_panel = False
+        # check if first object on an image represents reference panel
+        if self.ref_panel is not None:
+            if 0 < self.ref_panel < 1:
+                logger.info(f"Reference reflactance used: {self.ref_panel}")
+            else:
+                logger.info(f"Reflectance panel not included.")
+                self.ref_panel = False
 
         if self.slices_size_cam1 == -1:
             logger.info(f"Signatures will be created from whole objects.")

@@ -90,6 +90,7 @@ def pixels_select_lasso(image):
         coordinates_list = np.hstack((pix[indices], np.ones((pix[indices].shape[0], 1))))
         coordinates_df = pd.DataFrame(coordinates_list.astype("int"), columns=["x","y","z"])
         selected_areas.append(coordinates_df.drop_duplicates())
+    logger.info(f'Number of selected areas: {len(selected_areas)}')
 
     return selected_areas
 

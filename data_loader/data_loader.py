@@ -69,6 +69,8 @@ class DataLoader():
                                         cfg_data_loader.corregistrate_dir_name)
         elif dir_name == "segmented_images":
             data_dir_path = hydra.utils.to_absolute_path(f"outputs/{self._cfg.name}/images/segmented")
+        elif dir_name == "converted_images":
+            data_dir_path = hydra.utils.to_absolute_path(f"outputs/{self._cfg.name}/images/converted")
 
         self._cfg.data_loader.data_dir_path = data_dir_path
         return self

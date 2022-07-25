@@ -1,11 +1,13 @@
+import numpy as np
 import pandas as pd
+
 
 class SPImage():
     def __init__(self, sp_file, config):
         self._sp_file = sp_file
-        self._cfg = config
         self._image_arr = None
         self._brightness = config.image_display_brightness
+        self.cfg = config
 
     def __repr__(self):
         return repr(self._sp_file)
@@ -30,6 +32,10 @@ class SPImage():
         data = {"x": pixels_loc.x, "y": pixels_loc.y, "signature": list(signatures)}
         return pd.DataFrame(data, columns=["x", "y", "signature"])
 
+    def mean(self, axis=None):
+        image_arr = self.to_numpy()
+        return np.nanmean(image_arr, axis=axis)
+
     @property
     def file(self):
         return self._sp_file
@@ -44,4 +50,8 @@ class SPImage():
     @property
     def filename(self):
         return self._sp_file.filename.split("\\")[-1].split(".")[0]
+
+    @property
+    def camera_name(self):
+        return self.cfg.name
 

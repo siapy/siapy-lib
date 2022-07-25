@@ -4,5 +4,6 @@ preparator:
     image_slices_size_cam1: int
     image_slices_size_cam2: int
     percentage_of_background : int
-    reflectance_panel: float
+    reflectance_panel: [None, int, float]
     panel_filter_function: str
+    match_labels_to_indices: bool

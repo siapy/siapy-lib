@@ -5,8 +5,9 @@ import hydra
 from hydra.core.config_store import ConfigStore
 from omegaconf import DictConfig, OmegaConf, open_dict
 
-from scripts import (corregistrate, perform_segmentation, prepare_data,
-                     select_signatures, show_image, test_segmentation)
+from scripts import (corregistrate, create_signatures, perform_segmentation,
+                     prepare_data, select_signatures, show_image,
+                     test_segmentation)
 from utils.checkers import check_config_file
 
 logger = logging.getLogger("main")
@@ -26,6 +27,7 @@ def main(cfg: DictConfig):
         "test_segmentation": test_segmentation,
         "perform_segmentation": perform_segmentation,
         "prepare_data": prepare_data,
+        "create_signatures": create_signatures,
     }
     program = programs[cfg.program]
     program.main(cfg)

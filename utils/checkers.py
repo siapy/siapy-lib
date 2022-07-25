@@ -10,7 +10,7 @@ def check_value_type(dict_types, dict_values, config_name):
             val_types = [val_types]
         flag = 0
         for val_type in val_types:
-            if type(val) is eval(val_type):
+            if type(val) is eval(val_type) or (val is None and val_type == "None"):
                 flag += 1
         if flag == 0:
             msg = f"{key} is not of type <{val_types}> in {config_name}"

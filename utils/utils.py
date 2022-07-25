@@ -10,6 +10,7 @@ from timeit import default_timer
 from types import SimpleNamespace
 
 import hydra
+import pandas as pd
 
 
 def get_logger(name, verbosity=2):
@@ -44,6 +45,9 @@ def save_data(config, data, data_file_name, saver="pickle"):
         file = os.path.join(dir_abs_path, dfn.file_name + ".json")
         with open(file, 'w') as f:
             json.dump(data, f)
+    elif saver == "df_csv":
+        file = os.path.join(dir_abs_path, dfn.file_name + ".csv")
+        data.to_csv(file, index=False)
     else:
         logger.exception("Posible loader options: pickle, json")
     logger.info(f"Data saved as:  {file}")
@@ -59,6 +63,9 @@ def load_data(config, data_file_name, loader="pickle"):
         file = os.path.join(dir_abs_path, dfn.file_name + ".json")
         with open(file, 'r') as f:
             data = json.load(f)
+    elif loader == "df_csv":
+        file = os.path.join(dir_abs_path, dfn.file_name + ".csv")
+        data = pd.read_csv(file)
     else:
         logger.exception("Posible loader options: pickle, json")
 
