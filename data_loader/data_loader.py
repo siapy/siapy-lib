@@ -7,6 +7,7 @@ import hydra
 import numpy as np
 import spectral as sp
 from funcy import log_durations
+from rich.progress import track
 from tqdm import tqdm
 
 from data_loader.sp_image import SPImage
@@ -39,12 +40,14 @@ class DataLoader():
 
     def _import_spectral_images(self):
         cfg_cam1 = self._cfg.camera1
-        images_cam1 = [SPImage(sp.envi.open(path), cfg_cam1) for path in self._paths.cam1]
+        images_cam1 = [SPImage(sp.envi.open(path), cfg_cam1)
+                       for path in track(self._paths.cam1, "[green]Processing (camera1)...")]
 
         images_cam2 = None
         if self.is_camera2:
             cfg_cam2 = self._cfg.camera2
-            images_cam2 = [SPImage(sp.envi.open(path), cfg_cam2) for path in self._paths.cam2]
+            images_cam2 = [SPImage(sp.envi.open(path), cfg_cam2)
+                           for path in track(self._paths.cam2, "[green]Processing (camera2)...")]
 
         images = {
             "cam1": images_cam1,

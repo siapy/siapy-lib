@@ -5,5 +5,6 @@ defaults:
     - selector: selector
     - segmentator: segmentator
     - preparator: preparator
+    - visualiser: visualiser
 
 name: "krompir-ana-1-22"

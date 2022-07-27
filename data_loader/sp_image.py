@@ -55,3 +55,7 @@ class SPImage():
     def camera_name(self):
         return self.cfg.name
 
+    @property
+    def wavelengths(self):
+        wavelen = self._sp_file.metadata["wavelength"]
+        return list(map(float, wavelen))

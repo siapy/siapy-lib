@@ -7,8 +7,8 @@ from omegaconf import DictConfig, OmegaConf, open_dict
 
 from scripts import (corregistrate, create_signatures, perform_segmentation,
                      prepare_data, select_signatures, show_image,
-                     test_segmentation)
-from utils.checkers import check_config_file
+                     test_segmentation, visualise_signatures)
+from utils.checkers import check_config
 
 logger = logging.getLogger("main")
 
@@ -16,7 +16,7 @@ logger = logging.getLogger("main")
 @hydra.main(config_path="configs", config_name="config.yaml", version_base=None)
 def main(cfg: DictConfig):
     with open_dict(cfg):
-        cfg = check_config_file(cfg)
+        cfg = check_config(cfg)
         cfg.pop("base")
     logger.info(f"\n {OmegaConf.to_yaml(cfg)}")
 
@@ -28,6 +28,7 @@ def main(cfg: DictConfig):
         "perform_segmentation": perform_segmentation,
         "prepare_data": prepare_data,
         "create_signatures": create_signatures,
+        "visualise_signatures": visualise_signatures,
     }
     program = programs[cfg.program]
     program.main(cfg)

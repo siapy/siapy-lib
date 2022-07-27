@@ -8,8 +8,11 @@ import numpy as np
 import pandas as pd
 import spectral as sp
 from funcy import log_durations
+from matplotlib.collections import LineCollection
+from matplotlib.lines import Line2D
 from matplotlib.path import Path
 from matplotlib.widgets import Button, LassoSelector
+from sklearn import preprocessing
 
 from utils.utils import get_logger
 
@@ -181,3 +184,56 @@ def segmentation_buttons():
     plt.show()
 
     return flag
+
+
+def plot_signatures(signatures, groups_labels, *, x_scat=None):
+    """ Plot signatures with corresponding wavelenght or consequtive wavelength number
+
+    Args:
+        signatures (list): list of lists/signatures
+        labels (list): list of labels
+    """
+    signatures = np.array(signatures)
+    labels = np.array(groups_labels)
+    # remove nans
+    if len(np.unique(labels)) == 1 and labels[0] == 'nan':
+        pass
+    else:
+        indices = np.where(labels != 'nan')
+        signatures = signatures[indices]
+        labels = labels[indices]
+
+    transformer = preprocessing.LabelEncoder()
+    transformer.fit(labels)
+    labels = transformer.transform(labels)
+
+    fig = plt.figure()
+    fig.set_figheight(5)
+    fig.set_figwidth(15)
+
+    ax = fig.add_subplot(1, 1, 1)
+    # ax.set_title(title, fontsize=14)
+    # ax.set_ylabel(y_label, fontsize=24)
+    # ax.set_xlabel(x_label, fontsize=24)
+    ax.tick_params(axis='both', which='major', labelsize=22)
+    ax.tick_params(axis='both', which='minor', labelsize=22)
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+
+    cmap = plt.get_cmap('viridis')
+    no_colors = len(np.unique(labels))
+    colors = cmap(np.linspace(0, 1, no_colors))
+
+    if x_scat is None:
+        x_scat = list(np.arange(len(signatures[0])))
+
+    for obj in range(len(signatures)):
+        ax.plot(x_scat, signatures[obj], color=colors[labels[obj]], alpha=0.6)
+
+    custom_lines = []
+    for idx in range(no_colors):
+        custom_lines.append(Line2D([0], [0], color=colors[idx], lw=2))
+
+    labels = transformer.inverse_transform(list(range(no_colors)))
+    ax.legend(custom_lines, [str(num) for num in labels], fontsize=22)
+    plt.show()

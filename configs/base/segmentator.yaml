@@ -1,8 +1,8 @@
 segmentator:
     decision_function: str
-    classes: omegaconf.listconfig.ListConfig
-    classes_keep: omegaconf.listconfig.ListConfig
-    classes_remove: omegaconf.listconfig.ListConfig
+    classes: list
+    classes_keep: list
+    classes_remove: list
     n_jobs: int
     area_size_threshold_camera1: int
     area_size_threshold_camera2: int

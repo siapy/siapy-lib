@@ -1,0 +1,11 @@
+visualiser:
+    camera1: bool
+    camera2: bool
+    images_indices: list
+    objects_indices: list
+    slices_indices: list
+    labels_names: list
+    iterate_over_images: bool
+    group_data_by: [None, str]
+    groups: [None, dict]
+    plot: [None, dict]

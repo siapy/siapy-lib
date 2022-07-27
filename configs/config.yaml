@@ -4,6 +4,7 @@ defaults:
     - base/preparator
     - base/segmentator
     - base/selector
+    - base/visualiser
     - custom
     - hydra/run/dir
     - hydra/job/chdir
