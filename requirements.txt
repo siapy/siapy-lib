@@ -1,10 +1,11 @@
 funcy==1.17
-joblib==1.0.1
+joblib==1.1.0
 matplotlib==3.5.2
 numpy==1.23.1
 omegaconf==2.2.2
 opencv_python==4.5.3.56
 pandas==1.4.3
+rich==12.5.1
 scikit_learn==1.1.1
 spectral==0.22.4
 tqdm==4.59.0

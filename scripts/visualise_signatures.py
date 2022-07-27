@@ -102,7 +102,7 @@ def main(cfg):
     # further modify data for plotting purpose
     # use dataloader to extract wavelengths
     data_loader = DataLoader(cfg)
-    data_loader.change_dir("converted_images").load_images()
+    data_loader.change_dir("converted_images").load_images(1)
 
     # get wavelengths
     wavelengths_cam1 = None

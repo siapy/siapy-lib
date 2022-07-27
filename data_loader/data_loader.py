@@ -24,14 +24,16 @@ class DataLoader():
         # internal variable to check if camera2 is present
         self.is_camera2 = False if config.camera2 is None else True
 
-    def _load_images_paths(self):
+    def _load_images_paths(self, num_images):
         cfg_data_loader = self._cfg.data_loader
         paths_cam1 = sorted(glob.glob(os.path.join(cfg_data_loader.data_dir_path, "*" +
                                                       cfg_data_loader.path_ending_camera1)))
+        paths_cam1 = paths_cam1[:num_images] if num_images > 0 else paths_cam1
         paths_cam2 = None
         if self.is_camera2:
             paths_cam2 = sorted(glob.glob(os.path.join(cfg_data_loader.data_dir_path, "*" +
                                                         cfg_data_loader.path_ending_camera2)))
+            paths_cam2 = paths_cam2[:num_images] if num_images > 0 else paths_cam2
         paths = {
             "cam1": paths_cam1,
             "cam2": paths_cam2
@@ -59,8 +61,8 @@ class DataLoader():
     def images(self):
         return self._images
 
-    def load_images(self):
-        self._paths = self._load_images_paths()
+    def load_images(self, num_images=-1):
+        self._paths = self._load_images_paths(num_images)
         self._images = self._import_spectral_images()
         logger.info("Spectral images loaded into memory")
         return self
