@@ -1,4 +1,4 @@
 selector:
     average: bool
-    item: str
+    item: [None, str]
     color: str

@@ -9,9 +9,14 @@ from pathlib import Path
 from timeit import default_timer
 from types import SimpleNamespace
 
-import hydra
 import pandas as pd
 
+
+def get_project_root() -> Path:
+    return Path(__file__).parent.parent.resolve()
+
+def to_absolute_path(path):
+    return os.path.join(get_project_root(), path)
 
 def get_logger(name, verbosity=2):
     logger = logging.getLogger(name)
@@ -35,7 +40,7 @@ def save_data(config, data, data_file_name, saver="pickle"):
         data_dir_name (str): name of directory where data will be stored
     """
     dfn = parse_data_file_name(data_file_name)
-    dir_abs_path = hydra.utils.to_absolute_path(os.path.join("outputs", config.name, dfn.dir_name))
+    dir_abs_path = os.path.join(get_project_root(), "outputs", config.name, dfn.dir_name)
     os.makedirs(dir_abs_path, exist_ok=True)
     if saver == "pickle":
         file = os.path.join(dir_abs_path, dfn.file_name + ".pkl")
@@ -54,7 +59,7 @@ def save_data(config, data, data_file_name, saver="pickle"):
 
 def load_data(config, data_file_name, loader="pickle"):
     dfn = parse_data_file_name(data_file_name)
-    dir_abs_path = hydra.utils.to_absolute_path(os.path.join("outputs", config.name, dfn.dir_name))
+    dir_abs_path = os.path.join(get_project_root(), "outputs", config.name, dfn.dir_name)
     if loader == "pickle":
         file = os.path.join(dir_abs_path, dfn.file_name + ".pkl")
         with open(file, 'rb') as f:
@@ -86,8 +91,6 @@ def init_ftn(module, module_name, module_args=None, *args, **kwargs):
     module_args.update(kwargs)
     return partial(getattr(module, module_name), *args, **module_args)
 
-def get_project_root() -> Path:
-    return Path(__file__).parent.parent
 
 @dataclass
 class Timer():

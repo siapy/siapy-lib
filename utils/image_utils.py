@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 import spectral as sp
 
-from utils.utils import get_logger, parse_data_file_name
+from utils.utils import get_logger, parse_data_file_name, to_absolute_path
 
 logger = get_logger(name="image_utils")
 
@@ -36,7 +36,7 @@ def limit_to_bounds(image_shape):
 
 def save_image(config, image, data_file_name, metadata=None):
     dfn = parse_data_file_name(data_file_name)
-    dir_abs_path = hydra.utils.to_absolute_path(os.path.join("outputs", config.name, dfn.dir_name))
+    dir_abs_path = to_absolute_path(os.path.join("outputs", config.name, dfn.dir_name))
     os.makedirs(dir_abs_path, exist_ok=True)
     file = os.path.join(dir_abs_path, dfn.file_name + ".hdr")
     sp.envi.save_image(file, image, dtype=np.float32, metadata=metadata, force=True)

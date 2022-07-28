@@ -11,7 +11,7 @@ from rich.progress import track
 from tqdm import tqdm
 
 from data_loader.sp_image import SPImage
-from utils.utils import get_logger
+from utils.utils import get_logger, to_absolute_path
 
 logger = get_logger(name="data_loader")
 
@@ -73,9 +73,9 @@ class DataLoader():
             data_dir_path = os.path.join(cfg_data_loader.data_dir_path,
                                         cfg_data_loader.corregistrate_dir_name)
         elif dir_name == "segmented_images":
-            data_dir_path = hydra.utils.to_absolute_path(f"outputs/{self._cfg.name}/images/segmented")
+            data_dir_path = to_absolute_path(f"outputs/{self._cfg.name}/images/segmented")
         elif dir_name == "converted_images":
-            data_dir_path = hydra.utils.to_absolute_path(f"outputs/{self._cfg.name}/images/converted")
+            data_dir_path = to_absolute_path(f"outputs/{self._cfg.name}/images/converted")
 
         self._cfg.data_loader.data_dir_path = data_dir_path
         return self

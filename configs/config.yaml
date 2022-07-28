@@ -8,9 +8,18 @@ defaults:
     - custom
     - hydra/run/dir
     - hydra/job/chdir
-    - override hydra/job_logging: custom_logging
+    # - override hydra/job_logging: custom_logging
+    # - override hydra/hydra_logging: custom_logging
+    - override hydra/job_logging: colorlog
+    - override hydra/hydra_logging: colorlog
     - _self_
 
 program: ???
 image_idx: 0
 
+# override the formatting.
+# hydra:
+#   job_logging:
+#     formatters:
+#       colorlog:
+#         format: '[%(blue)s%(name)s%(reset)s][%(log_color)s%(levelname)s%(reset)s] - %(message)s'
