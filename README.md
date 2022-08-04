@@ -30,7 +30,7 @@ $ python3 main.py program=perform_segmentation image_idx=0
 
 - Prepare dataset
 ```
-$ python3 main.py program=prepare_data image_idx=0
+$ python3 main.py program=prepare_data
 ```
 
 - Create signatures
@@ -38,5 +38,9 @@ $ python3 main.py program=prepare_data image_idx=0
 $ python3 main.py program=create_signatures
 ```
 
+- Visualise signatures
+```
+$ python3 main.py program=visualise_signatures
+```
 
 

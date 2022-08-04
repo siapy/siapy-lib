@@ -139,3 +139,13 @@ def equalize_dict_len(dict1, dict2):
         if key not in dict2:
             dict2[key] = None
     return dict1, dict2
+
+
+def get_increasing_seq_indices(values_list):
+    indices = []
+    last_value = 0
+    for idx, value in enumerate(values_list):
+        if value > last_value:
+            last_value = value
+            indices.append(idx)
+    return indices

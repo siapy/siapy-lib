@@ -1,7 +1,8 @@
 funcy==1.17
+inpoly==0.1.2
 joblib==1.1.0
 matplotlib==3.5.2
-numpy==1.23.1
+numpy==1.22.4
 omegaconf==2.2.2
 opencv_python==4.5.3.56
 pandas==1.4.3

@@ -2,8 +2,8 @@ from types import SimpleNamespace
 
 import matplotlib.pyplot as plt
 
-from data_loader.data_loader import DataLoader
 from corregistrator.corregistrator import Corregistrator
+from data_loader.data_loader import DataLoader
 from segmentator.segmentator import Segmentator
 from utils import plot_utils, utils
 from utils.image_utils import average_signatures, limit_to_bounds
@@ -29,8 +29,9 @@ def main(cfg):
     image_idx = cfg.image_idx
     while 1:
         image_cam1 = images_cam1[image_idx]
-        logger.info(f"_Processed index_: {image_idx}")
-        logger.info(f"Processed files: \n -> camera1: {image_cam1.filename}")
+        logger.info(f"__ Processed index __: {image_idx}")
+        logger.info(f"Processed files:")
+        logger.info(f" -> camera1: {image_cam1.filename}")
         if cfg.camera2 is not None:
             image_cam2 = images_cam2[image_idx]
             logger.info(f" -> camera2: {image_cam2.filename}")

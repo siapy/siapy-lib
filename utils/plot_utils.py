@@ -1,5 +1,6 @@
 import collections
 import logging
+import sys
 from itertools import product
 from types import SimpleNamespace
 
@@ -8,6 +9,7 @@ import numpy as np
 import pandas as pd
 import spectral as sp
 from funcy import log_durations
+from inpoly import inpoly2
 from matplotlib.collections import LineCollection
 from matplotlib.lines import Line2D
 from matplotlib.path import Path
@@ -44,6 +46,7 @@ def pixels_select_click(image):
 
     def accept(event):
         if event.key == "enter":
+            logger.info('Enter clicked.')
             plt.close()
 
     fig.canvas.mpl_connect('button_press_event', onclick)
@@ -57,7 +60,7 @@ def pixels_select_lasso(image):
     image_display = image.to_display()
     x, y = np.meshgrid(
         np.arange(image_display.shape[1]), np.arange(image_display.shape[0]))
-    pix = np.vstack((x.flatten(), y.flatten())).T
+    pixes_all_stack = np.vstack((x.flatten(), y.flatten())).T
 
     fig, ax = plt.subplots(1, 1)
     ax.imshow(image_display)
@@ -65,23 +68,35 @@ def pixels_select_lasso(image):
 
     indices = 0
     indices_list = []
+    enter_clicked = 0
 
-    def onselect(verts, eps=1e-8):
+    def onselect(vertices_selected, eps=1e-8):
+        logger.info('Selected.')
         nonlocal indices
-        p = Path(verts)
-        indices = p.contains_points(pix, radius=1)
+        indices, _ = inpoly2(pixes_all_stack, vertices_selected)
 
     def onrelease(_):
-        #TODO: use asyncio to avoid blocking
         nonlocal indices, indices_list
         indices_list.append(indices)
 
+    def onexit(event):
+        nonlocal enter_clicked
+        if not enter_clicked:
+            logger.info('Exiting application.')
+            plt.close()
+            sys.exit(0)
+
     def accept(event):
+        nonlocal enter_clicked
         if event.key == "enter":
+            logger.info('Enter clicked.')
+            enter_clicked = 1
             plt.close()
 
+
     lasso = LassoSelector(ax, onselect)
-    cid = fig.canvas.mpl_connect('button_release_event', onrelease)
+    fig.canvas.mpl_connect('button_release_event', onrelease)
+    fig.canvas.mpl_connect('close_event', onexit)
     fig.canvas.mpl_connect("key_press_event", accept)
 
     # mng = plt.get_current_fig_manager()
@@ -90,7 +105,7 @@ def pixels_select_lasso(image):
 
     selected_areas = []
     for indices in indices_list:
-        coordinates_list = np.hstack((pix[indices], np.ones((pix[indices].shape[0], 1))))
+        coordinates_list = np.hstack((pixes_all_stack[indices], np.ones((pixes_all_stack[indices].shape[0], 1))))
         coordinates_df = pd.DataFrame(coordinates_list.astype("int"), columns=["x","y","z"])
         selected_areas.append(coordinates_df.drop_duplicates())
     logger.info(f'Number of selected areas: {len(selected_areas)}')
@@ -147,6 +162,7 @@ def display_images(images, images_selected_areas=None, colors="red"):
 
     def accept(event):
         if event.key == "enter":
+            logger.info('Enter clicked. Exiting.')
             plt.close()
     fig.canvas.mpl_connect("key_press_event", accept)
 
@@ -195,11 +211,13 @@ def plot_signatures(signatures, groups_labels, *, x_scat=None):
     """
     signatures = np.array(signatures)
     labels = np.array(groups_labels)
-    # remove nans
-    if len(np.unique(labels)) == 1 and labels[0] == 'nan':
+    # if all labels equal to nan than all are left for plotting
+    if len(np.unique(labels)) == 1 and str(labels[0]) == 'nan':
         pass
     else:
-        indices = np.where(labels != 'nan')
+        # remove nans in case more unique labels in group_labels
+        # nans are removed in this case
+        indices = [idx for idx, lab in enumerate(labels) if str(lab) != 'nan']
         signatures = signatures[indices]
         labels = labels[indices]
 

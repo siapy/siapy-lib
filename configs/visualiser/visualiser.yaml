@@ -2,11 +2,13 @@ camera1: True
 camera2: True
 images_indices: ["__include_all__"]
 objects_indices: ["__exclude_only__", ]
-slices_indices: ["__include_only__", 0]
+slices_indices: ["__include_only__", ]
 labels_names: ["__include_only__", ]
 iterate_over_images: True
 
 group_data_by: labels_names
+# group_data_by: null
+
 groups:
     "bolni": ['KK-K-07', 'KS-S-10', 'KS-K-12']
     "zdravi": ['KK-K-04', 'KS-K-05', 'KK-S-03']
