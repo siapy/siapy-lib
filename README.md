@@ -2,6 +2,11 @@
 
 ## Commands used
 
+- Check labels
+```
+$ python3 main.py program=check_images
+```
+
 - Show image
 ```
 $ python3 main.py program=show_image image_idx=0
@@ -42,5 +47,4 @@ $ python3 main.py program=create_signatures
 ```
 $ python3 main.py program=visualise_signatures
 ```
-
 
