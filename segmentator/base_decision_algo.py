@@ -7,7 +7,9 @@ from sklearn import preprocessing
 
 
 class BaseDecisionAlgo(ABC):
-    encoder = preprocessing.LabelEncoder()
+    def __init__(self, cfg):
+        self.cfg = cfg
+        self.encoder = preprocessing.LabelEncoder()
 
     @abstractmethod
     def _fit(self, X, y):
@@ -36,6 +38,6 @@ class BaseDecisionAlgo(ABC):
         self._fit(X, y)
 
     def predict(self, X):
-        return self._predict(X)
+        return self.encoder.inverse_transform(self._predict(X))
 
 

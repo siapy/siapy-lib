@@ -7,7 +7,6 @@ import cv2
 import numpy as np
 import pandas as pd
 from funcy import log_durations
-from joblib import Parallel, delayed
 from joblib.externals.loky import set_loky_pickler
 
 import segmentator.decision_algos as module
@@ -77,8 +76,7 @@ class Segmentator():
         cls_remove = self.cfg.segmentator.classes_remove
         area_thrs_cam1 = self.cfg.segmentator.area_size_threshold_camera1
         area_thrs_cam2 = self.cfg.segmentator.area_size_threshold_camera2
-        n_jobs = self.cfg.segmentator.n_jobs
-        n_jobs = get_number_cpus(n_jobs)
+        n_jobs = get_number_cpus()
 
         selected_areas_out = SimpleNamespace(cam1=None, cam2=[])
         timer = Timer(name="Classification of signatures", logger=logger)
@@ -92,9 +90,8 @@ class Segmentator():
         filter_cam1 = Segmentator.filter_with_decision_algo(images.cam1, self.algos.cam1, cls_remove)
         filter_cam2 = Segmentator.filter_with_decision_algo(images.cam2, self.algos.cam2, cls_remove)
 
-        # paralel execution of filter functions
-        area_pix = Parallel(n_jobs=n_jobs)(delayed(filter_cam1)(area_pix)
-                                            for area_pix in selected_areas.cam1)
+        # execution of filter functions
+        area_pix = [filter_cam1(area_pix) for area_pix in selected_areas.cam1]
 
         # filter by size camera 1
         selected_areas_out.cam1 = list(map(Segmentator.filter_small_area_pixels(images.cam1, area_thrs_cam1),
@@ -102,8 +99,7 @@ class Segmentator():
 
         # do the same for camera 2, if images are available
         if selected_areas.cam2:
-            area_pix = Parallel(n_jobs=n_jobs)(delayed(filter_cam2)(area_pix)
-                                                for area_pix in selected_areas.cam2)
+            area_pix = [filter_cam2(area_pix) for area_pix in selected_areas.cam2]
             # filter by size camera 2
             selected_areas_out.cam2 = list(map(Segmentator.filter_small_area_pixels(images.cam2, area_thrs_cam2),
                                             area_pix))
@@ -190,7 +186,7 @@ class Segmentator():
         def filter_(area_pix):
             signatures_df = image.to_signatures(area_pix)
             signatures = signatures_df.signature.to_list()
-            targets = list(map(algorithm.predict, signatures))
+            targets = algorithm.predict(signatures)
             signatures_df["target"] = targets
             # remove rows with target in classes_remove
             signatures_df = signatures_df[~signatures_df.target.isin(cls_remove)].reset_index()

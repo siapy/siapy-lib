@@ -106,7 +106,7 @@ class Timer():
         self.logger.info(f"{self.name} took {self.end - self.start:.2f} seconds.")
 
 
-def get_number_cpus(parallelize):
+def get_number_cpus(parallelize=-1):
     num_cpus = multiprocessing.cpu_count()
     if parallelize == -1:
         parallelize = num_cpus

@@ -8,27 +8,30 @@ from segmentator.base_decision_algo import BaseDecisionAlgo
 
 class Lda(BaseDecisionAlgo):
     def __init__(self, cfg):
+        super().__init__(cfg)
         self.model = LinearDiscriminantAnalysis()
 
     def _fit(self, X, y):
         self.model.fit(X, y)
 
     def _predict(self, X):
-        return self.model.predict([X])
+        return self.model.predict(X)
 
 
 class Svm(BaseDecisionAlgo):
     def __init__(self, cfg):
+        super().__init__(cfg)
         self.model = SVC()
 
     def _fit(self, X, y):
         self.model.fit(X, y)
 
     def _predict(self, X):
-        return self.model.predict([X])
+        return self.model.predict(X)
 
 class Sid(BaseDecisionAlgo):
     def __init__(self, cfg):
+        super().__init__(cfg)
         self.cls_remove = cfg.segmentator.classes_remove
         self.cls_keep = cfg.segmentator.classes_keep
         if not(len(self.cls_keep) == len(self.cls_remove) == 1):
@@ -36,14 +39,20 @@ class Sid(BaseDecisionAlgo):
         self.cls_keep = self.cls_keep[0]
         self.cls_remove = self.cls_remove[0]
 
+        self.cls_keep_enc = None
+        self.cls_remove_enc = None
+
         self.background_sig = None
         self.sid_threshold = None
 
     @staticmethod
-    def sid(s1, s2):
-        p = s1 + np.spacing(1)
-        q = s2 + np.spacing(1)
-        return np.sum(p * np.log(p / q) + q * np.log(q / p))
+    def sid(p, q):
+        # p = p + np.spacing(1)
+        # q = q + np.spacing(1)
+        # return np.sum(p * np.log(p / q) + q * np.log(q / p))
+        # one line to vectorize function
+        return np.sum((p + np.spacing(1)) * np.log((p + np.spacing(1)) / (q + np.spacing(1))) +
+                      (q + np.spacing(1)) * np.log((q + np.spacing(1)) / (p + np.spacing(1))))
 
     def _fit(self, X, y):
         y_inv = self.encoder.inverse_transform(y)
@@ -67,10 +76,14 @@ class Sid(BaseDecisionAlgo):
         # w0*x + b = 0 -> x = -b/w0
         self.sid_threshold = - clf.intercept_/clf.coef_
 
-    def _predict(self, X):
-        sid = Sid.sid(self.background_sig, X)
+    def _predict_single(self, x):
+        sid = Sid.sid(self.background_sig, x)
         if sid > self.sid_threshold:
-            return self.cls_keep
+            return self.cls_keep_enc
         else:
-            return self.cls_remove
+            return self.cls_remove_enc
 
+    def _predict(self, X):
+        self.cls_keep_enc = self.encoder.transform([self.cls_keep])[0]
+        self.cls_remove_enc = self.encoder.transform([self.cls_remove])[0]
+        return list(map(self._predict_single, X))

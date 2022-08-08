@@ -3,7 +3,6 @@ segmentator:
     classes: list
     classes_keep: list
     classes_remove: list
-    n_jobs: int
     area_size_threshold_camera1: int
     area_size_threshold_camera2: int
 
