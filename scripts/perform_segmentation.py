@@ -85,3 +85,6 @@ def main(cfg):
         if flag == "save":
             segmentator.save_segmented(images, selected_areas, image_idx)
             image_idx += 1
+
+        if image_idx == len(images_cam1):
+            break

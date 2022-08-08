@@ -27,6 +27,7 @@ def pixels_select_click(image):
     fig, ax = plt.subplots(1, 1)
     ax.imshow(image_display)
     fig.tight_layout()
+    enter_clicked = 0
 
     def onclick(event):
         nonlocal coordinates_list, fig
@@ -45,12 +46,22 @@ def pixels_select_click(image):
         fig.canvas.draw()
 
     def accept(event):
+        nonlocal enter_clicked
         if event.key == "enter":
             logger.info('Enter clicked.')
+            enter_clicked = 1
             plt.close()
+
+    def onexit(event):
+        nonlocal enter_clicked
+        if not enter_clicked:
+            logger.info('Exiting application.')
+            plt.close()
+            sys.exit(0)
 
     fig.canvas.mpl_connect('button_press_event', onclick)
     fig.canvas.mpl_connect("key_press_event", accept)
+    fig.canvas.mpl_connect('close_event', onexit)
     plt.show(block=True)
 
     return pd.DataFrame(coordinates_list.astype("int"), columns=["x","y","z"])
