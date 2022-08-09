@@ -10,6 +10,8 @@ logger = get_logger(name="visualise_signatures")
 def modify_dataframe(data, col_name, instructions):
     instruction = instructions[0]
     instructions.pop(0)
+    # convert to strings even if integer values written
+    instructions = list(map(str, instructions))
     if len(instructions):
         if instruction == "__include_all__":
             pass
