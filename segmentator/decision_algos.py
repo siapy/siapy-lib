@@ -7,6 +7,17 @@ from sklearn.svm import SVC
 from segmentator.base_decision_algo import BaseDecisionAlgo
 
 
+class KeepAll(BaseDecisionAlgo):
+    def __init__(self, cfg):
+        super().__init__(cfg)
+        self.cls_keep_enc = None
+
+    def _fit(self, X, y):
+        self.cls_keep_enc = self.encoder.transform(self.cfg.segmentator.classes_keep)[0]
+
+    def _predict(self, X):
+        return [self.cls_keep_enc] * len(X)
+    
 
 class Lda(BaseDecisionAlgo):
     def __init__(self, cfg):
