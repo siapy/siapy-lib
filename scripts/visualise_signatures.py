@@ -43,8 +43,8 @@ def merge_cameras_rows(cfg, data):
     data_cam2 = data[data.camera_names == cam2_name]
 
     # remove camera_names column
-    data_cam1.drop(["camera_names"], axis=1, inplace=True)
-    data_cam2.drop(["camera_names"], axis=1, inplace=True)
+    data_cam1 = data_cam1.drop(["camera_names"], axis=1)
+    data_cam2 = data_cam2.drop(["camera_names"], axis=1)
 
     # check if dataframe not enabled create empty columns
     if not cfg.visualiser.camera1:
