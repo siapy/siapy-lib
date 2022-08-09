@@ -26,6 +26,8 @@ def append_groups_to_dataframe(data, groups, group_data_by):
     data = data.assign(groups=np.nan)
     if group_data_by in data.columns:
         for group_name, group_list in groups.items():
+            # in case in list integer values, convert to strings
+            group_list = list(map(str, group_list))
             # get bolean indices indicating where groups applies
             group_indices = data[group_data_by].isin(group_list)
             # set group name
@@ -157,7 +159,7 @@ def main(cfg):
     else:
         signatures = data.signatures_merged.to_list()
         groups_labels = data.groups.to_list()
-        plot_df = str(data_slice[["images_indices", "objects_indices",
+        plot_df = str(data[["images_indices", "objects_indices",
                                     "slices_indices", "labels_names", "groups"]])
         logger.info(f"Data plotted: \n {plot_df}")
         plot_signatures(signatures, groups_labels, x_scat=x_scat)

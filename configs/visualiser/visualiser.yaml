@@ -4,14 +4,15 @@ images_indices: ["__include_all__"]
 objects_indices: ["__exclude_only__", ]
 slices_indices: ["__include_only__", ]
 labels_names: ["__include_only__", ]
-iterate_over_images: True
+iterate_over_images: False
 
 group_data_by: labels_names
 # group_data_by: null
 
 groups:
-    "bolni": ['KK-K-07', 'KS-S-10', 'KS-K-12']
-    "zdravi": ['KK-K-04', 'KS-K-05', 'KK-S-03']
+    "panels": [2,8,14]
+    "objects": [1,4,6,10,12,15]
+    "background": [3,5,7,9,11,13]
 
 plot:
     x_wavelengths: True
