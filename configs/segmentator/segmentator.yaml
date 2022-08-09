@@ -1,4 +1,4 @@
-decision_function: Svm
+decision_function: Sid
 classes: [object, background]
 classes_keep: [object]
 classes_remove: [background]

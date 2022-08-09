@@ -4,6 +4,7 @@ from sklearn.linear_model import RidgeClassifier
 from sklearn.svm import SVC
 
 from segmentator.base_decision_algo import BaseDecisionAlgo
+from segmentator.formulas import sid
 
 
 class Lda(BaseDecisionAlgo):
@@ -45,15 +46,6 @@ class Sid(BaseDecisionAlgo):
         self.background_sig = None
         self.sid_threshold = None
 
-    @staticmethod
-    def sid(p, q):
-        # p = p + np.spacing(1)
-        # q = q + np.spacing(1)
-        # return np.sum(p * np.log(p / q) + q * np.log(q / p))
-        # one line to vectorize function
-        return np.sum((p + np.spacing(1)) * np.log((p + np.spacing(1)) / (q + np.spacing(1))) +
-                      (q + np.spacing(1)) * np.log((q + np.spacing(1)) / (p + np.spacing(1))))
-
     def _fit(self, X, y):
         y_inv = self.encoder.inverse_transform(y)
         X_remove = X[y_inv == self.cls_remove]
@@ -61,8 +53,8 @@ class Sid(BaseDecisionAlgo):
 
         self.background_sig = np.mean(X_remove, axis=0)
         # calculate sid for all extracted signatures
-        sid_remove = list(map(lambda sig: Sid.sid(sig, self.background_sig), X_remove))
-        sid_keep = list(map(lambda sig: Sid.sid(sig, self.background_sig), X_keep))
+        sid_remove = list(map(lambda sig: sid(sig, self.background_sig), X_remove))
+        sid_keep = list(map(lambda sig: sid(sig, self.background_sig), X_keep))
 
         # make column vecotrs
         sid_keep = np.atleast_2d(sid_keep).T
@@ -76,14 +68,11 @@ class Sid(BaseDecisionAlgo):
         # w0*x + b = 0 -> x = -b/w0
         self.sid_threshold = - clf.intercept_/clf.coef_
 
-    def _predict_single(self, x):
-        sid = Sid.sid(self.background_sig, x)
-        if sid > self.sid_threshold:
-            return self.cls_keep_enc
-        else:
-            return self.cls_remove_enc
-
     def _predict(self, X):
         self.cls_keep_enc = self.encoder.transform([self.cls_keep])[0]
         self.cls_remove_enc = self.encoder.transform([self.cls_remove])[0]
-        return list(map(self._predict_single, X))
+        targets = np.array([sid(self.background_sig, sig) for sig in X])
+        # replace values above threshold with class keep and below with class remove
+        targets = np.where(targets > self.sid_threshold, self.cls_keep_enc, self.cls_remove_enc)[0]
+
+        return targets
