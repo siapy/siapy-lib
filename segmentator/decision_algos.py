@@ -1,7 +1,6 @@
 import numpy as np
 from numba import njit, prange
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
-from sklearn.linear_model import RidgeClassifier
 from sklearn.svm import SVC
 
 from segmentator.base_decision_algo import BaseDecisionAlgo
@@ -17,7 +16,7 @@ class KeepAll(BaseDecisionAlgo):
 
     def _predict(self, X):
         return [self.cls_keep_enc] * len(X)
-    
+
 
 class Lda(BaseDecisionAlgo):
     def __init__(self, cfg):
@@ -89,17 +88,17 @@ class Sid(BaseDecisionAlgo):
         targets = np.where(targets > self.sid_threshold, self.cls_keep_enc, self.cls_remove_enc)[0]
         return targets
 
-    @staticmethod    
+    @staticmethod
     @njit()
     def sid(p, q):
         p = p + np.spacing(1)
         q = q + np.spacing(1)
         return np.sum(p * np.log(p / q) + q * np.log(q / p))
 
-    @staticmethod    
+    @staticmethod
     @njit(parallel=True)
     def sid_multi(X, background_sig, sid_func):
-        n_rows, _ = X.shape 
+        n_rows, _ = X.shape
         sid_values = np.zeros(n_rows)
         for idx in prange(n_rows):
             sid_values[idx] = sid_func(X[idx,:], background_sig)

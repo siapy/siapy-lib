@@ -1,5 +1,5 @@
 name: data_loader
-data_dir_path: C:\\Users\\janezla\\Documents\\DATA\\project_test
+data_dir_path: C:/Users/janezla/Documents/DATA/project_test
 path_ending_camera1: corr_rad_f32.hdr
 path_ending_camera2: corr2_rad_f32.hdr
 corregistrate_dir_name: koregistracija

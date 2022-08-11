@@ -1,12 +1,9 @@
 from types import SimpleNamespace
 
-import matplotlib.pyplot as plt
 import pandas as pd
 
 from data_loader.data_loader import DataLoader
-from preparator.preparator import Preparator
-from utils.plot_utils import display_images
-from utils.utils import get_logger, load_data, save_data
+from utils.utils import get_logger, save_data
 
 logger = get_logger(name="create_signatures")
 

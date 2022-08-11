@@ -1,6 +1,5 @@
 import os
 
-import hydra
 import numpy as np
 import pandas as pd
 import spectral as sp

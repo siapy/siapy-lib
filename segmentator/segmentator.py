@@ -1,12 +1,10 @@
 import glob
-import logging
 import os
 from types import SimpleNamespace
 
 import cv2
 import numpy as np
 import pandas as pd
-from funcy import log_durations
 from joblib.externals.loky import set_loky_pickler
 
 import segmentator.decision_algos as module

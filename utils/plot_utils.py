@@ -1,18 +1,12 @@
 import collections
-import logging
 import sys
-from itertools import product
 from types import SimpleNamespace
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import spectral as sp
-from funcy import log_durations
 from inpoly import inpoly2
-from matplotlib.collections import LineCollection
 from matplotlib.lines import Line2D
-from matplotlib.path import Path
 from matplotlib.widgets import Button, LassoSelector
 from sklearn import preprocessing
 

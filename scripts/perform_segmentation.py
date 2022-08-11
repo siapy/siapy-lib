@@ -1,15 +1,12 @@
 from types import SimpleNamespace
 
-import matplotlib.pyplot as plt
-
 from corregistrator.corregistrator import Corregistrator
 from data_loader.data_loader import DataLoader
 from segmentator.segmentator import Segmentator
-from utils import plot_utils, utils
-from utils.image_utils import average_signatures, limit_to_bounds
+from utils.image_utils import limit_to_bounds
 from utils.plot_utils import (display_images, pixels_select_lasso,
                               segmentation_buttons)
-from utils.utils import get_logger, load_data, save_data
+from utils.utils import get_logger
 
 logger = get_logger(name="perform_segmentation")
 
