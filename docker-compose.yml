@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+    hyper-api:
+        build: .
+        container_name: hyper-api
+        volumes:
+            - .:/app

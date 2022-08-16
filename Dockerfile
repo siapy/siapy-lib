@@ -10,6 +10,11 @@ ENV PYTHONUNBUFFERED=1
 # set working directory
 WORKDIR /app
 
+# for matplotlib plots
+RUN apt-get update -y
+RUN apt-get install -y libx11-dev
+RUN apt-get install -y python3-tk
+
 # install open-cv
 RUN apt-get update && apt-get install -y python3-opencv
 RUN pip install opencv-python
