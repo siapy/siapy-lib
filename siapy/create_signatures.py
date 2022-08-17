@@ -2,8 +2,8 @@ from types import SimpleNamespace
 
 import pandas as pd
 
-from data_loader.data_loader import DataLoader
-from utils.utils import get_logger, save_data
+from siapy.data_loader import DataLoader
+from siapy.utils.utils import get_logger, save_data
 
 logger = get_logger(name="create_signatures")
 

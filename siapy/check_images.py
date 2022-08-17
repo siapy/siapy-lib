@@ -1,7 +1,7 @@
 import numpy as np
 
-from data_loader.data_loader import DataLoader
-from utils.utils import get_logger
+from siapy.data_loader.data_loader import DataLoader
+from siapy.utils.utils import get_logger
 
 logger = get_logger(name="check_images")
 

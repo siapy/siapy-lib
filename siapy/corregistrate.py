@@ -1,7 +1,7 @@
-from data_loader.data_loader import DataLoader
-from corregistrator.corregistrator import Corregistrator
-from utils.utils import get_logger
-from utils.plot_utils import pixels_select_click
+from siapy.corregistrator import Corregistrator
+from siapy.data_loader import DataLoader
+from siapy.utils.plot_utils import pixels_select_click
+from siapy.utils.utils import get_logger
 
 logger = get_logger(name="select_signatures")
 

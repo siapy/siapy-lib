@@ -10,7 +10,7 @@ from matplotlib.lines import Line2D
 from matplotlib.widgets import Button, LassoSelector
 from sklearn import preprocessing
 
-from utils.utils import get_logger
+from siapy.utils.utils import get_logger
 
 logger = get_logger(name="plot_utils")
 

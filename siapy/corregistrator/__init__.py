@@ -1,0 +1,1 @@
+from .corregistrator import Corregistrator

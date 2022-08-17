@@ -6,9 +6,9 @@ from types import SimpleNamespace
 
 import numpy as np
 
-import preparator.panel_pool_ftns as module
-from utils.image_utils import save_image
-from utils.utils import Timer, get_logger, init_ftn
+import siapy.preparator.panel_pool_ftns as module
+from siapy.utils.image_utils import save_image
+from siapy.utils.utils import Timer, get_logger, init_ftn
 
 logger = get_logger(name="preparator")
 

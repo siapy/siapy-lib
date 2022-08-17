@@ -1,12 +1,12 @@
 from types import SimpleNamespace
 
-from corregistrator.corregistrator import Corregistrator
-from data_loader.data_loader import DataLoader
-from segmentator.segmentator import Segmentator
-from utils.image_utils import limit_to_bounds
-from utils.plot_utils import (display_images, pixels_select_lasso,
-                              segmentation_buttons)
-from utils.utils import get_logger
+from siapy.corregistrator import Corregistrator
+from siapy.data_loader import DataLoader
+from siapy.segmentator import Segmentator
+from siapy.utils.image_utils import limit_to_bounds
+from siapy.utils.plot_utils import (display_images, pixels_select_lasso,
+                                    segmentation_buttons)
+from siapy.utils.utils import get_logger
 
 logger = get_logger(name="perform_segmentation")
 

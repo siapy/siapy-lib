@@ -5,10 +5,10 @@ import hydra
 from hydra.core.config_store import ConfigStore
 from omegaconf import DictConfig, OmegaConf, open_dict
 
-from scripts import (check_images, corregistrate, create_signatures,
-                     perform_segmentation, prepare_data, select_signatures,
-                     show_image, test_segmentation, visualise_signatures)
-from utils.checkers import check_config
+from siapy import (check_images, corregistrate, create_signatures,
+                   perform_segmentation, prepare_data, select_signatures,
+                   show_image, test_segmentation, visualise_signatures)
+from siapy.utils.checkers import check_config
 
 logger = logging.getLogger("main")
 

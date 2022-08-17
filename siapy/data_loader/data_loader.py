@@ -5,8 +5,8 @@ from types import SimpleNamespace
 import spectral as sp
 from rich.progress import track
 
-from data_loader.sp_image import SPImage
-from utils.utils import get_logger, to_absolute_path
+from siapy.data_loader import SPImage
+from siapy.utils.utils import get_logger, to_absolute_path
 
 logger = get_logger(name="data_loader")
 

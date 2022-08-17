@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-from utils.utils import load_data, save_data
+from siapy.utils.utils import load_data, save_data
 
 
 class Corregistrator():

@@ -4,7 +4,8 @@ import numpy as np
 import pandas as pd
 import spectral as sp
 
-from utils.utils import get_logger, parse_data_file_name, to_absolute_path
+from siapy.utils.utils import (get_logger, parse_data_file_name,
+                               to_absolute_path)
 
 logger = get_logger(name="image_utils")
 

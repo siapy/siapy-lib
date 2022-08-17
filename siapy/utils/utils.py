@@ -13,7 +13,7 @@ import pandas as pd
 
 
 def get_project_root() -> Path:
-    return Path(__file__).parent.parent.resolve()
+    return Path(__file__).parent.parent.parent.resolve()
 
 def to_absolute_path(path):
     return os.path.join(get_project_root(), path)

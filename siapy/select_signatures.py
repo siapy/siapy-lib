@@ -3,11 +3,11 @@ from types import SimpleNamespace
 
 import matplotlib.pyplot as plt
 
-from corregistrator.corregistrator import Corregistrator
-from data_loader.data_loader import DataLoader
-from utils.image_utils import average_signatures, limit_to_bounds
-from utils.plot_utils import display_images, pixels_select_lasso
-from utils.utils import get_logger, save_data
+from siapy.corregistrator import Corregistrator
+from siapy.data_loader import DataLoader
+from siapy.utils.image_utils import average_signatures, limit_to_bounds
+from siapy.utils.plot_utils import display_images, pixels_select_lasso
+from siapy.utils.utils import get_logger, save_data
 
 logger = get_logger(name="select_signatures")
 

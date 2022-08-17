@@ -7,9 +7,9 @@ import numpy as np
 import pandas as pd
 from joblib.externals.loky import set_loky_pickler
 
-import segmentator.decision_algos as module
-from utils.image_utils import save_image
-from utils.utils import (Timer, get_logger, get_number_cpus, get_project_root,
+import siapy.segmentator.decision_algos as module
+from siapy.utils.image_utils import save_image
+from siapy.utils.utils import (Timer, get_logger, get_number_cpus, get_project_root,
                          init_obj, load_data)
 
 set_loky_pickler("dill")

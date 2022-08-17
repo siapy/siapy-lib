@@ -1,8 +1,8 @@
 from types import SimpleNamespace
 
-from data_loader.data_loader import DataLoader
-from preparator.preparator import Preparator
-from utils.utils import get_logger
+from siapy.data_loader import DataLoader
+from siapy.preparator import Preparator
+from siapy.utils.utils import get_logger
 
 logger = get_logger(name="prepare_data")
 

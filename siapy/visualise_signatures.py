@@ -1,9 +1,9 @@
 import numpy as np
 
-from data_loader.data_loader import DataLoader
-from utils.plot_utils import plot_signatures
-from utils.utils import (get_increasing_seq_indices, get_logger, load_data,
-                         save_data)
+from siapy.data_loader import DataLoader
+from siapy.utils.plot_utils import plot_signatures
+from siapy.utils.utils import (get_increasing_seq_indices, get_logger,
+                               load_data, save_data)
 
 logger = get_logger(name="visualise_signatures")
 

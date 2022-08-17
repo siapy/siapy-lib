@@ -1,6 +1,6 @@
 import omegaconf
 
-from utils.utils import dict_zip, equalize_dict_len, get_logger
+from siapy.utils.utils import dict_zip, equalize_dict_len, get_logger
 
 logger = get_logger(name="checkers")
 

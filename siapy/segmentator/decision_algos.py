@@ -3,7 +3,7 @@ from numba import njit, prange
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.svm import SVC
 
-from segmentator.base_decision_algo import BaseDecisionAlgo
+from siapy.segmentator import BaseDecisionAlgo
 
 
 class KeepAll(BaseDecisionAlgo):
