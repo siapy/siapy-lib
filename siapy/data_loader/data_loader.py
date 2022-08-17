@@ -23,10 +23,19 @@ class DataLoader():
         cfg_data_loader = self._cfg.data_loader
         paths_cam1 = sorted(glob.glob(os.path.join(cfg_data_loader.data_dir_path, "*" +
                                                       cfg_data_loader.path_ending_camera1)))
+        # in case there are no images check mounted data directory inside docker container
+        if not len(paths_cam1):
+            paths_cam1 = sorted(glob.glob(os.path.join("/app/data", "*" +
+                                                       cfg_data_loader.path_ending_camera1)))
+
         paths_cam1 = paths_cam1[:num_images] if num_images > 0 else paths_cam1
         paths_cam2 = None
         if self.is_camera2:
             paths_cam2 = sorted(glob.glob(os.path.join(cfg_data_loader.data_dir_path, "*" +
+                                                        cfg_data_loader.path_ending_camera2)))
+            # in case there are no images check mounted data directory inside docker container
+            if not len(paths_cam2):
+                paths_cam2 = sorted(glob.glob(os.path.join("/app/data", "*" +
                                                         cfg_data_loader.path_ending_camera2)))
             paths_cam2 = paths_cam2[:num_images] if num_images > 0 else paths_cam2
         paths = {
