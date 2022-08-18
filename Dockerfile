@@ -1,23 +1,45 @@
-# For more information, please refer to https://aka.ms/vscode-docker-python
-FROM python:3.8-slim
+# escape=`
+# https://towardsdatascience.com/complete-tutorial-on-building-images-using-docker-1f2be49ea8a6
 
+# base image
+ARG UBUNTU_VERSION=18.04
+FROM ubuntu:$UBUNTU_VERSION
+
+# disable interactive
+ENV DEBIAN_FRONTEND noninteractive
 # Keeps Python from generating .pyc files in the container
 ENV PYTHONDONTWRITEBYTECODE=1
-
 # Turns off buffering for easier container logging
 ENV PYTHONUNBUFFERED=1
+
+# update ubuntu and install utilities
+RUN apt update --fix-missing &&  `
+    apt install -y --no-install-recommends ca-certificates git sudo curl && `
+    apt clean
 
 # set working directory
 WORKDIR /app
 
+# install miniconda and dependencies
+ARG MINICONDA_DOWNLOAD_LINK=https://repo.anaconda.com/miniconda/Miniconda3-py38_4.12.0-Linux-x86_64.sh
+
+# allow us to run conda from anywhere in the file system
+ENV PATH /app/miniconda3/bin:$PATH
+RUN curl $MINICONDA_DOWNLOAD_LINK --create-dirs -o Miniconda.sh && `
+    bash Miniconda.sh -b -p ./miniconda3 && `
+    rm Miniconda.sh && `
+    conda init && `
+    conda update -y --all
+
 # for matplotlib plots
-RUN apt-get update -y
-RUN apt-get install -y libx11-dev
-RUN apt-get install -y python3-tk
+RUN apt-get update -y && `
+    apt-get install -y libx11-dev && `
+    apt-get install -y python3-tk
 
 # install open-cv
-RUN apt-get update && apt-get install -y python3-opencv
-RUN pip install opencv-python
+RUN apt-get update && `
+    apt-get install -y python3-opencv && `
+    pip install opencv-python
 
 # Install pip requirements
 COPY ./requirements.txt /app
@@ -30,6 +52,3 @@ COPY ./main.py /app
 # Creates a non-root user with an explicit UID and adds permission to access the /app folder
 RUN adduser -u 5678 --disabled-password --gecos "" appuser && chown -R appuser /app
 USER appuser
-
-# During debugging, this entry point will be overridden
-CMD ["/bin/bash"]

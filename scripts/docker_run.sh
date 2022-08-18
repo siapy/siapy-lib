@@ -1,5 +1,4 @@
 #!/bin/bash
-
 # get network address of computer
 IP_ADDRS=$(ipconfig.exe | grep 'Ethernet' -A4 | cut -d":" -f 2 | tail -n1 | sed -e 's/\s*//g')
 # set display variable
