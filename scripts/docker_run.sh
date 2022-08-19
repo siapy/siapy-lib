@@ -6,7 +6,7 @@ DISPLAY=$IP_ADDRS:0.0
 # grab data directory path from configs file
 DATA_DIR_PATH=$(cat ../configs/data_loader/data_loader.yaml | grep data_dir_path | cut --complement -d ":" -f 1)
 # replace section of path to set wsl form of path
-DATA_DIR_PATH=${DATA_DIR_PATH/"C:"/"/mnt/c"}
+# DATA_DIR_PATH=${DATA_DIR_PATH/"C:"/"/mnt/c"}
 # set data directory mapping
 DATA_DIR_MAP=$DATA_DIR_PATH:/app/data
 # set serverX mapping (not necessary on windows)
