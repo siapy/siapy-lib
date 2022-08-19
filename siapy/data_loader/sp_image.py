@@ -1,3 +1,5 @@
+import os
+
 import numpy as np
 import pandas as pd
 
@@ -49,7 +51,7 @@ class SPImage():
 
     @property
     def filename(self):
-        return self._sp_file.filename.split("\\")[-1].split(".")[0]
+        return self._sp_file.filename.split(os.sep)[-1].split(".")[0]
 
     @property
     def camera_name(self):

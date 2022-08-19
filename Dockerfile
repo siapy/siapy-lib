@@ -7,8 +7,6 @@ FROM ubuntu:$UBUNTU_VERSION
 
 # disable interactive
 ENV DEBIAN_FRONTEND noninteractive
-# Keeps Python from generating .pyc files in the container
-ENV PYTHONDONTWRITEBYTECODE=1
 # Turns off buffering for easier container logging
 ENV PYTHONUNBUFFERED=1
 
@@ -29,7 +27,8 @@ RUN curl $MINICONDA_DOWNLOAD_LINK --create-dirs -o Miniconda.sh && `
     bash Miniconda.sh -b -p ./miniconda3 && `
     rm Miniconda.sh && `
     conda init && `
-    conda update -y --all
+    conda update -y --all && `
+    python -m pip install --upgrade pip setuptools wheel
 
 # for matplotlib plots
 RUN apt-get update -y && `
@@ -43,7 +42,8 @@ RUN apt-get update && `
 
 # Install pip requirements
 COPY ./requirements.txt /app
-RUN pip install --no-cache-dir --upgrade -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt && `
+    rm requirements.txt
 
 # copy scripts to the folder
 COPY ./siapy/ /app/siapy
