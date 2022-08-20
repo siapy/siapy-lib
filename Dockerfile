@@ -49,6 +49,10 @@ RUN pip install --no-cache-dir -r requirements.txt && `
 COPY ./siapy/ /app/siapy
 COPY ./main.py /app
 
-# # Creates a non-root user with an explicit UID and adds permission to access the /app folder
-# RUN adduser -u 5678 --disabled-password --gecos "" appuser && chown -R appuser /app
-# USER appuser
+# add user with sudo privileges
+RUN adduser --disabled-password --gecos '' user && `
+    adduser user sudo && `
+    echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+
+USER user
+RUN sudo apt-get update
