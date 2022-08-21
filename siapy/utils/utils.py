@@ -3,6 +3,7 @@ import logging
 import multiprocessing
 import os
 import pickle
+import re
 from dataclasses import dataclass, field
 from functools import partial
 from pathlib import Path
@@ -149,3 +150,12 @@ def get_increasing_seq_indices(values_list):
             last_value = value
             indices.append(idx)
     return indices
+
+def is_docker():
+    PATH_CG = "/proc/self/cgroup"
+    if not os.path.isfile(PATH_CG): return False
+    with open(PATH_CG) as f:
+        for line in f:
+            if re.match("\d+:[\w=]+:/docker(-[ce]e)?/\w+", line):
+                return True
+        return False

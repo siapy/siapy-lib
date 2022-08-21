@@ -7,7 +7,6 @@ import pandas as pd
 class SPImage():
     def __init__(self, sp_file, config):
         self._sp_file = sp_file
-        self._image_arr = None
         self._brightness = config.image_display_brightness
         self.cfg = config
 
@@ -24,9 +23,7 @@ class SPImage():
         return image_3ch.astype("uint8")
 
     def to_numpy(self):
-        if self._image_arr is None:
-            self._image_arr = self._sp_file[:,:,:]
-        return self._image_arr
+        return self._sp_file[:,:,:]
 
     def to_signatures(self, pixels_loc):
         image_arr = self.to_numpy()

@@ -6,7 +6,7 @@ import spectral as sp
 from rich.progress import track
 
 from siapy.data_loader import SPImage
-from siapy.utils.utils import get_logger, to_absolute_path
+from siapy.utils.utils import get_logger, is_docker, to_absolute_path
 
 logger = get_logger(name="data_loader")
 
@@ -18,24 +18,18 @@ class DataLoader():
 
         # internal variable to check if camera2 is present
         self.is_camera2 = False if config.camera2 is None else True
+        if is_docker():
+            self._cfg.data_loader.data_dir_path = "/app/data"
 
     def _load_images_paths(self, num_images):
         cfg_data_loader = self._cfg.data_loader
         paths_cam1 = sorted(glob.glob(os.path.join(cfg_data_loader.data_dir_path, "*" +
                                                       cfg_data_loader.path_ending_camera1)))
-        # in case there are no images check mounted data directory inside docker container
-        if not len(paths_cam1):
-            paths_cam1 = sorted(glob.glob(os.path.join("/app/data", "*" +
-                                                       cfg_data_loader.path_ending_camera1)))
-
         paths_cam1 = paths_cam1[:num_images] if num_images > 0 else paths_cam1
+
         paths_cam2 = None
         if self.is_camera2:
             paths_cam2 = sorted(glob.glob(os.path.join(cfg_data_loader.data_dir_path, "*" +
-                                                        cfg_data_loader.path_ending_camera2)))
-            # in case there are no images check mounted data directory inside docker container
-            if not len(paths_cam2):
-                paths_cam2 = sorted(glob.glob(os.path.join("/app/data", "*" +
                                                         cfg_data_loader.path_ending_camera2)))
             paths_cam2 = paths_cam2[:num_images] if num_images > 0 else paths_cam2
         paths = {
