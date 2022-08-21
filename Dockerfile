@@ -49,10 +49,13 @@ RUN pip install --no-cache-dir -r requirements.txt && `
 COPY ./siapy/ /app/siapy
 COPY ./main.py /app
 
+
 # add user with sudo privileges
+# disable passord prompt and add alias for easier program handling
 RUN adduser --disabled-password --gecos '' user && `
     adduser user sudo && `
-    echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+    echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers && `
+    echo 'run() { python3 main.py program=$1; }' >> /home/user/.bashrc
 
 USER user
 RUN sudo apt-get update
