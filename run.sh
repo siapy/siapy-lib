@@ -10,4 +10,5 @@ DATA_DIR_MAP=$DATA_DIR_PATH:/app/data
 # set serverX mapping (not necessary on windows)
 SERVER_MAP=/tmp/.X11-unix:/tmp/.X11-unix:rw
 # run docker-compose to start
+docker build -t siapy-api .
 docker-compose run --rm -v $DATA_DIR_MAP -v $SERVER_MAP siapy-api

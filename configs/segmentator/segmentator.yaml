@@ -1,4 +1,4 @@
-decision_function: KeepAll
+decision_function: Sid
 classes: [object, background]
 classes_keep: [object]
 classes_remove: [background]
