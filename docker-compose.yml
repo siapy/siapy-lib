@@ -1,8 +1,14 @@
 version: '3.4'
+name: siapy-app
 
 services:
     siapy-api:
-        build: .
-        container_name: siapy-api
+        build:
+            context: .
+            dockerfile: Dockerfile
+        image: siapy-api:latest
         volumes:
-            - .:/app
+            - ./outputs:/app/outputs
+            - ./configs:/app/configs
+        environment:
+            - DISPLAY=${DISPLAY}
