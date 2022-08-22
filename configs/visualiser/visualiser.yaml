@@ -1,3 +1,6 @@
+defaults:
+    - base_visualiser
+
 camera1: True
 camera2: True
 images_indices: ["__include_all__"]

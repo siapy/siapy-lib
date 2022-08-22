@@ -1,9 +1,0 @@
-segmentator:
-    decision_function: str
-    classes: list
-    classes_keep: list
-    classes_remove: list
-    area_size_threshold_camera1: int
-    area_size_threshold_camera2: int
-
-

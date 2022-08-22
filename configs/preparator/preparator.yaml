@@ -1,3 +1,6 @@
+defaults:
+    - base_preparator
+
 labels_path_deliminator: __
 labels_deliminator: _
 image_slices_size_cam1: -1

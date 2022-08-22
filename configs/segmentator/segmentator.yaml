@@ -1,3 +1,6 @@
+defaults:
+    - base_segmentator
+
 decision_function: Sid
 classes: [object, background]
 classes_keep: [object]

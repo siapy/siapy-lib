@@ -1,3 +1,6 @@
+defaults:
+    - base_camera1
+
 name: vnir
 model: VNIR-1600
 image_display_brightness: 3.5

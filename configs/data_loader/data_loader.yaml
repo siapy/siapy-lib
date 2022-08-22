@@ -1,3 +1,6 @@
+defaults:
+    - base_data_loader
+
 name: data_loader
 data_dir_path: /home/janezla/data/project_test
 path_ending_camera1: corr_rad_f32.hdr

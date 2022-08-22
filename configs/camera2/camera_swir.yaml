@@ -1,3 +1,6 @@
+defaults:
+    - base_camera2
+
 name: swir
 model: SWIR-600
-image_display_brightness: 1.0
+image_display_brightness: 1

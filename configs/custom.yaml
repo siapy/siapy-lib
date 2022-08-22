@@ -7,4 +7,4 @@ defaults:
     - preparator: preparator
     - visualiser: visualiser
 
-name: "project_test"
+name: project_test

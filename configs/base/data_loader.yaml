@@ -1,6 +1,0 @@
-data_loader:
-    name: str
-    data_dir_path: str
-    path_ending_camera1: str
-    path_ending_camera2: str
-    corregistrate_dir_name: str

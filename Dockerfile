@@ -47,6 +47,7 @@ RUN pip install --no-cache-dir -r requirements.txt && `
 
 # copy scripts to the folder
 COPY ./siapy/ /app/siapy
+COPY ./structure/ /app/structure
 COPY ./main.py /app
 
 

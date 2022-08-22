@@ -1,4 +1,0 @@
-camera:
-    name: str
-    model: str
-    image_display_brightness: [float, int]
