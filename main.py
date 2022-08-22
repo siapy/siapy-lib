@@ -18,7 +18,6 @@ logger = logging.getLogger("main")
 def main(cfg: Config) -> None:
     with open_dict(cfg):
         cfg = check_config(cfg)
-        cfg.pop("base")
 
     programs = {
         "show_image": show_image,

@@ -9,7 +9,7 @@ defaults:
     - override hydra/hydra_logging: colorlog
     - _self_
 
-program: ???
+program: --version
 image_idx: 0
 
 # override the formatting.

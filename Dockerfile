@@ -56,7 +56,7 @@ COPY ./main.py /app
 RUN adduser --disabled-password --gecos '' user && `
     adduser user sudo && `
     echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers && `
-    echo 'run() { python3 main.py program=$1; }' >> /home/user/.bashrc
+    echo 'alias run="cd /app && python main.py"' >> /home/user/.bashrc
 
 USER user
 RUN sudo apt-get update
