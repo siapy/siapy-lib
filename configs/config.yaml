@@ -3,13 +3,14 @@ defaults:
     - custom
     - hydra/run/dir
     - hydra/job/chdir
+    - hydra/help/main_help
     # - override hydra/job_logging: custom_logging
     # - override hydra/hydra_logging: custom_logging
     - override hydra/job_logging: colorlog
     - override hydra/hydra_logging: colorlog
     - _self_
 
-program: --version
+program: version
 image_idx: 0
 
 # override the formatting.

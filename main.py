@@ -9,7 +9,7 @@ from siapy import (check_images, corregistrate, create_signatures,
                    perform_segmentation, prepare_data, select_signatures,
                    show_image, test_segmentation, visualise_signatures)
 from siapy.utils.utils import get_logger
-from structure import Config, check_config
+from structure import Config, __docs__, check_config
 
 logger = logging.getLogger("main")
 
@@ -20,18 +20,23 @@ def main(cfg: Config) -> None:
         cfg = check_config(cfg)
 
     programs = {
-        "show_image": show_image,
-        "select_signatures": select_signatures,
-        "corregistrate": corregistrate,
-        "test_segmentation": test_segmentation,
-        "perform_segmentation": perform_segmentation,
-        "prepare_data": prepare_data,
-        "create_signatures": create_signatures,
-        "visualise_signatures": visualise_signatures,
-        "check_images": check_images,
+        "show_image": show_image.main,
+        "select_signatures": select_signatures.main,
+        "corregistrate": corregistrate.main,
+        "test_segmentation": test_segmentation.main,
+        "perform_segmentation": perform_segmentation.main,
+        "prepare_data": prepare_data.main,
+        "create_signatures": create_signatures.main,
+        "visualise_signatures": visualise_signatures.main,
+        "check_images": check_images.main,
+        "version": __docs__.version,
     }
-    program = programs[cfg.program]
-    program.main(cfg)
+    try:
+        program = programs[cfg.program]
+        program(cfg)
+    except KeyError:
+        logger.error(f"Command '{cfg.program}' not found.")
+        raise SystemExit(1)
 
 
 if __name__ == "__main__":

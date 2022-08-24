@@ -1,0 +1,52 @@
+# App name, override to match the name your app is known by
+app_name: Spectral imaging analysis for python (SiaPy)
+
+# Help header, customize to describe your app to your users
+header: |-
+  ${hydra.help.app_name}
+
+footer: |-
+  To get more help with SiaPy, check out our guides at https://github.com/Agricultural-institute/SiaPy
+
+template: |-
+
+  ${hydra.help.header}
+
+  Usage:  run [OPTIONS] program=COMMAND
+
+  Options:
+    --help, -h     Application's help
+    --cfg,  -c     Show config (add arg: 'job', 'hydra', 'all' -> example: 'run --cfg job')
+    --info, -i     Print Hydra information
+
+  Commands:
+    check_images            Check intial stage of raw images
+    show_image              Show image defined by image_idx (default: image_idx=0)
+    select_signatures       Select spectral signatures from specific part of image
+    corregistrate           Find corregistration parameters between two cameras
+    test_segmentation       Performs test segmentation (dry run)
+    perform_segmentation    Performs segmentation with save options
+    prepare_data            Prepares data as set in config files
+    create_signatures       Create signatures as set in config files
+    visualise_signatures    Visualise signatures as set in config files
+
+  Complementary commands:
+    image_idx       Index of image at which program should start
+
+  Config files:
+    camera1/camera.yaml
+    camera2/camera.yaml
+    data_loader/data_loader.yaml
+    selector/selector.yaml
+    segmentator/segmentator.yaml
+    preparator/preparator.yaml
+    visualiser/visualiser.yaml
+
+    (selected in 'configs/custom.yaml' file)
+
+    Parameters in config files can be dynamically modified during execution:
+        -> example: 'run selector.item=object'
+
+  ${hydra.help.footer}
+
+
