@@ -13,4 +13,4 @@ DATA_DIR_MAP=$DATA_DIR_PATH:/app/data
 SERVER_MAP=/tmp/.X11-unix:/tmp/.X11-unix:rw
 # run docker-compose to start
 docker build --rm -t siapy-api .
-docker-compose run --rm -v $DATA_DIR_MAP -v $SERVER_MAP siapy-api
+docker-compose run --rm -v $DATA_DIR_MAP -v $SERVER_MAP --name siapy-main siapy-api
