@@ -1,6 +1,16 @@
-# python-project-template
 
-## Commands used
+<p align="center">
+  <img src="docs/logo.png" alt="Sublime's custom image" width="300"/>
+</p>
+
+-----
+
+Spectral imaging analysis for Python (SiaPy) is a tool for efficient processing of spectral images.
+
+
+
+
+<!-- ## Commands used
 
 - Check labels
 ```
@@ -45,6 +55,6 @@ $ python3 main.py program=create_signatures
 
 - Visualise signatures
 ```
-$ python3 main.py program=visualise_signatures
+$ python3 main.py program=visualise_signatures -->
 ```
 

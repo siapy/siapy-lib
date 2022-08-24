@@ -139,3 +139,6 @@ dmypy.json
 # outputs
 outputs
 segmentator/formulas.c
+
+# docs
+!docs/*
