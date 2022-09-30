@@ -7,19 +7,19 @@ import pandas as pd
 class SPImage():
     def __init__(self, sp_file, config):
         self._sp_file = sp_file
-        self._brightness = config.image_display_brightness
-        self.cfg = config
+        self._cfg = config
 
     def __repr__(self):
         return repr(self._sp_file)
 
     def to_display(self):
-        db = self._sp_file.metadata["default bands"]
+        brightness = self._cfg.image_display_brightness
+        db = self.metadata["default bands"]
         db = list(map(int, db))
         image_3ch = self._sp_file.read_bands(db)
-        image_3ch[:, :, 0] = image_3ch[:, :, 0] / (image_3ch[:, :, 0].max() / 255.) * self._brightness
-        image_3ch[:, :, 1] = image_3ch[:, :, 1] / (image_3ch[:, :, 1].max() / 255.) * self._brightness
-        image_3ch[:, :, 2] = image_3ch[:, :, 2] / (image_3ch[:, :, 2].max() / 255.) * self._brightness
+        image_3ch[:, :, 0] = image_3ch[:, :, 0] / (image_3ch[:, :, 0].max() / 255.) * brightness
+        image_3ch[:, :, 1] = image_3ch[:, :, 1] / (image_3ch[:, :, 1].max() / 255.) * brightness
+        image_3ch[:, :, 2] = image_3ch[:, :, 2] / (image_3ch[:, :, 2].max() / 255.) * brightness
         return image_3ch.astype("uint8")
 
     def to_numpy(self):
@@ -40,6 +40,14 @@ class SPImage():
         return self._sp_file
 
     @property
+    def config(self):
+        return self._cfg.copy()
+
+    @property
+    def metadata(self):
+        return self._sp_file.metadata
+
+    @property
     def shape(self):
         rows = self._sp_file.nrows
         samples = self._sp_file.ncols
@@ -47,12 +55,24 @@ class SPImage():
         return (rows, samples, bands)
 
     @property
+    def rows(self):
+        return self._sp_file.nrows
+
+    @property
+    def cols(self):
+        return self._sp_file.ncols
+
+    @property
+    def bands(self):
+        return self._sp_file.nbands
+
+    @property
     def filename(self):
         return self._sp_file.filename.split(os.sep)[-1].split(".")[0]
 
     @property
     def camera_name(self):
-        return self.cfg.name
+        return self._cfg.name
 
     @property
     def wavelengths(self):

@@ -5,11 +5,11 @@ import hydra
 from hydra.core.config_store import ConfigStore
 from omegaconf import open_dict
 
-from siapy import (check_images, corregistrate, create_signatures,
+from siapy import (__print__, check_images, corregistrate, create_signatures,
                    perform_segmentation, prepare_data, select_signatures,
                    show_image, test_segmentation, visualise_signatures)
 from siapy.utils.utils import get_logger
-from structure import Config, __docs__, check_config
+from structure import Config, check_config
 
 logger = logging.getLogger("main")
 
@@ -29,7 +29,7 @@ def main(cfg: Config) -> None:
         "create_signatures": create_signatures.main,
         "visualise_signatures": visualise_signatures.main,
         "check_images": check_images.main,
-        "version": __docs__.version,
+        "version": __print__.version,
     }
     try:
         program = programs[cfg.program]

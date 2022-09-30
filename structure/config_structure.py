@@ -28,6 +28,7 @@ class PreparatorConfig:
     percentage_of_background : int = MISSING
     reflectance_panel: Optional[float] = MISSING
     panel_filter_function: str = MISSING
+    merge_images_by_specter: bool = MISSING
     match_labels_to_indices: bool = MISSING
 
 @dataclass

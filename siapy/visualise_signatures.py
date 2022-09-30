@@ -70,14 +70,20 @@ def merge_cameras_rows(cfg, data):
     data["signatures_merged"] = np.nan
     return data
 
-def merge_signatures(row, indices_inc):
+def merge_signatures_and_evaluate(row):
     if str(row.signatures_camera1) == 'nan':
         row.signatures_merged = eval(row.signatures_camera2)
     elif str(row.signatures_camera2) == 'nan':
         row.signatures_merged = eval(row.signatures_camera1)
     else:
         row.signatures_merged = eval(row.signatures_camera1) + eval(row.signatures_camera2)
+    return row
 
+def evaluate_signatures(row):
+    row.signatures_merged = eval(row.signatures_merged)
+    return row
+
+def filter_by_indices(row, indices_inc):
     if indices_inc is not None:
         row.signatures_merged = list(np.array(row.signatures_merged)[indices_inc])
     return row
@@ -118,9 +124,9 @@ def main(cfg):
     # get wavelengths
     wavelengths_cam1 = None
     wavelengths_cam2 = None
-    if data_loader.images.cam1 is not None:
+    if data_loader.images.cam1 is not None and len(data_loader.images.cam1):
         wavelengths_cam1 = data_loader.images.cam1[0].wavelengths
-    if data_loader.images.cam2 is not None:
+    if data_loader.images.cam2 is not None and len(data_loader.images.cam2):
         wavelengths_cam2 = data_loader.images.cam2[0].wavelengths
 
     # merge wavelengths from both cameras
@@ -131,18 +137,26 @@ def main(cfg):
         if config_vis.camera2 and wavelengths_cam2 is not None:
             x_scat += wavelengths_cam2
 
-    # find increasing sequences in wavelengths list
-    if len(x_scat):
-        indices_inc = get_increasing_seq_indices(x_scat)
-        x_scat = np.array(x_scat)[indices_inc]
-    else:
-        indices_inc = None
-        x_scat = None
+        # find increasing sequences in wavelengths list
+        if len(x_scat):
+            indices_inc = get_increasing_seq_indices(x_scat)
+            x_scat = np.array(x_scat)[indices_inc]
+        else:
+            indices_inc = None
+            x_scat = None
 
-    # merge dataframe and signatures from both cameras
-    data =  merge_cameras_rows(cfg, data)
-    # merge signatures from both cameras
-    data = data.apply(lambda row: merge_signatures(row, indices_inc), axis=1)
+    # check whether images were merged in preparation proces
+    if not cfg.preparator.merge_images_by_specter:
+        # merge dataframe and signatures from both cameras
+        data =  merge_cameras_rows(cfg, data)
+        # merge signatures from both cameras
+        data = data.apply(lambda row: merge_signatures_and_evaluate(row), axis=1)
+
+    else:
+        data = data.rename(columns={"signatures":"signatures_merged"})
+        data = data.apply(lambda row: evaluate_signatures(row), axis=1)
+    # filter by wavelengts
+    data = data.apply(lambda row: filter_by_indices(row, indices_inc), axis=1)
 
 	# save modified data
     save_data(cfg, data=data,

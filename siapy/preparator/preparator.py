@@ -7,7 +7,7 @@ from types import SimpleNamespace
 import numpy as np
 
 import siapy.preparator.panel_pool_ftns as module
-from siapy.utils.image_utils import save_image
+from siapy.utils.image_utils import merge_images_by_specter, save_image
 from siapy.utils.utils import Timer, get_logger, init_ftn
 
 logger = get_logger(name="preparator")
@@ -25,6 +25,7 @@ class Preparator():
         self.percentage_bg = preparator_cfg.percentage_of_background
         self.ref_panel = preparator_cfg.reflectance_panel
         self.panel_pool_ftn = preparator_cfg.panel_filter_function
+        self.merge_images_by_specter = preparator_cfg.merge_images_by_specter
 
         self._post_init()
 
@@ -69,6 +70,7 @@ class Preparator():
                           for image_segmented in images_segmented]
 
         # whole converted image prepared for save
+        # TODO: tuki veretn menjat z slices_size
         if self.slices_size_cam1 == -1:
             self._save_converted(images_segmented, images_arr)
         # converted image is further sliced and then saved
@@ -80,9 +82,22 @@ class Preparator():
             self._save_converted(images_segmented, images_slices_cam1)
 
     def run(self, images_segmented):
-        self.__run(images_segmented.cam1, self.slices_size_cam1)
-        if images_segmented.cam2 is not None:
-            self.__run(images_segmented.cam2, self.slices_size_cam2)
+        if self.merge_images_by_specter and images_segmented.cam2 is not None:
+            images_segmented = self._merge_images_spectrally(images_segmented)
+            self.__run(images_segmented, self.slices_size_cam1)
+
+        else:
+            self.__run(images_segmented.cam1, self.slices_size_cam1)
+            if images_segmented.cam2 is not None:
+                self.__run(images_segmented.cam2, self.slices_size_cam2)
+
+    def _merge_images_spectrally(self, images_segmented):
+        images_segmented_out = []
+        for image_cam1, image_cam2 in zip(images_segmented.cam1, images_segmented.cam2):
+            data_file_name = f"images/converted/{image_cam1.filename}"
+            image_merged = merge_images_by_specter(self.cfg.name, image_cam1, image_cam2, data_file_name=data_file_name)
+            images_segmented_out.append(image_merged)
+        return images_segmented_out
 
     def batch_images(self, images):
         images_out = list()
@@ -143,6 +158,7 @@ class Preparator():
         image_slices_out = []
         for image_slice in image_slices:
             # check where all bands include nan values (axis=2) to get positions of background
+            # TODO pogledat, če je res ok, da vse nan vrednosti izbrišemo
             mask_nan = np.all(np.isnan(image_slice), axis=2)
             # calculate percentage of background
             percentage = np.sum(mask_nan) / mask_nan.size * 100
