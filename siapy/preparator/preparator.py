@@ -70,8 +70,7 @@ class Preparator():
                           for image_segmented in images_segmented]
 
         # whole converted image prepared for save
-        # TODO: tuki veretn menjat z slices_size
-        if self.slices_size_cam1 == -1:
+        if slices_size == -1:
             self._save_converted(images_segmented, images_arr)
         # converted image is further sliced and then saved
         else:
@@ -157,13 +156,14 @@ class Preparator():
     def _remove_background_images(image_slices, percentage_bg):
         image_slices_out = []
         for image_slice in image_slices:
-            # check where all bands include nan values (axis=2) to get positions of background
-            # TODO pogledat, če je res ok, da vse nan vrednosti izbrišemo
-            mask_nan = np.all(np.isnan(image_slice), axis=2)
+            # check where any of bands include nan values (axis=2) to get positions of background
+            mask_nan = np.any(np.isnan(image_slice), axis=2)
             # calculate percentage of background
             percentage = np.sum(mask_nan) / mask_nan.size * 100
             # if percentage is lower than threshold
             if percentage < percentage_bg:
+                # assign background if any nan values are present at any channel
+                image_slice[mask_nan] = np.nan
                 image_slices_out.append(image_slice)
         return image_slices_out
 

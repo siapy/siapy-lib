@@ -1,4 +1,5 @@
 import os
+import warnings
 from types import SimpleNamespace
 
 import numpy as np
@@ -98,4 +99,9 @@ def rescale_image(image, output_size):
 
     new_h, new_w = int(new_h), int(new_w)
 
-    return transform.resize(image, (new_h, new_w))
+    # to suppresss the warning: "All-Nan slice encountered"
+    with warnings.catch_warnings():
+        warnings.filterwarnings('ignore', r'All-NaN slice encountered')
+        resized_image = transform.resize(image, (new_h, new_w))
+
+    return resized_image
