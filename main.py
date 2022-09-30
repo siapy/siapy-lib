@@ -5,9 +5,10 @@ import hydra
 from hydra.core.config_store import ConfigStore
 from omegaconf import open_dict
 
-from siapy import (__print__, check_images, corregistrate, create_signatures,
+from siapy import (__print__, corregistrate, create_signatures,
                    perform_segmentation, prepare_data, select_signatures,
                    show_image, test_segmentation, visualise_signatures)
+from siapy.checker import check_images
 from siapy.utils.utils import get_logger
 from structure import Config, check_config
 
