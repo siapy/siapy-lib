@@ -40,6 +40,9 @@ class DataLoader():
 
     def _import_spectral_images(self):
         cfg_cam1 = self._cfg.camera1
+        # if error with too little file descriptors, increase ulimit -n:
+        # https://superuser.com/questions/1200539/cannot-increase-open-file-limit-past-4096-ubuntu
+        # https://stackoverflow.com/questions/63960859/how-can-i-raise-the-limit-for-open-files-in-ubuntu-20-04-on-wsl2
         images_cam1 = [SPImage(sp.envi.open(path), cfg_cam1)
                        for path in track(self._paths.cam1, "[green]Processing (camera1)...")]
 

@@ -8,7 +8,7 @@ from omegaconf import open_dict
 from siapy import (__print__, corregistrate, create_signatures,
                    perform_segmentation, prepare_data, select_signatures,
                    show_image, test_segmentation, visualise_signatures)
-from siapy.checker import check_images
+from siapy.checker import check_images, check_slices
 from siapy.utils.utils import get_logger
 from structure import Config, check_config
 
@@ -30,6 +30,7 @@ def main(cfg: Config) -> None:
         "create_signatures": create_signatures.main,
         "visualise_signatures": visualise_signatures.main,
         "check_images": check_images.main,
+        "check_slices": check_slices.main,
         "version": __print__.version,
     }
     try:
