@@ -34,9 +34,9 @@ class PreparatorConfig:
 @dataclass
 class SegmentatorConfig:
     decision_function: str = MISSING
-    classes: list = MISSING
-    classes_keep: list = MISSING
-    classes_remove: list = MISSING
+    classes: list[str] = MISSING
+    classes_keep: list[str] = MISSING
+    classes_remove: list[str] = MISSING
     area_size_threshold_camera1: int = MISSING
     area_size_threshold_camera2: int = MISSING
 
@@ -50,14 +50,14 @@ class SelectorConfig:
 class VisualiserConfig:
     camera1: bool = MISSING
     camera2: bool = MISSING
-    images_indices: list = MISSING
-    objects_indices: list = MISSING
-    slices_indices: list = MISSING
-    labels_names: list = MISSING
+    images_indices: list[Union[int, str]] = MISSING
+    objects_indices: list[Union[int, str]] = MISSING
+    slices_indices: list[Union[int, str]] = MISSING
+    labels_names: list[Union[int, str]] = MISSING
     iterate_over_images: bool = MISSING
     group_data_by: Optional[str] = MISSING
-    groups: Optional[dict] = MISSING
-    plot: Optional[dict] = MISSING
+    groups: Optional[dict[str, str]] = MISSING
+    plot: Optional[dict[str, str]] = MISSING
 
 @dataclass
 class Config:
