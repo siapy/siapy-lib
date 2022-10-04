@@ -30,10 +30,9 @@ def main(cfg):
     labels_d = cfg.preparator.labels_deliminator
 
     labels_cam1 = [parse_labels(filename, labels_pd, labels_d) for filename in filenames_cam1]
-    # TODO: change to list flattening
-    labels_cam1 = list(np.array(labels_cam1).flatten())
+    labels_cam1 = list(np.concatenate(labels_cam1))
     labels_cam2 = [parse_labels(filename, labels_pd, labels_d) for filename in filenames_cam2]
-    labels_cam2 = list(np.array(labels_cam2).flatten())
+    labels_cam2 = list(np.concatenate(labels_cam2))
 
     labels_unique = sorted(set(labels_cam1))
     labels_duplicated = check_duplicate_labels(labels_cam1)
