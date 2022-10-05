@@ -24,6 +24,7 @@ class Preparator():
         self.labels_deliminator_path = preparator_cfg.labels_path_deliminator
         self.percentage_bg = preparator_cfg.percentage_of_background
         self.ref_panel = preparator_cfg.reflectance_panel
+        self.ref_panel_save = preparator_cfg.reflectance_panel_save
         self.panel_pool_ftn = preparator_cfg.panel_filter_function
         self.merge_images_by_specter = preparator_cfg.merge_images_by_specter
 
@@ -57,6 +58,10 @@ class Preparator():
     def __run(self, images_segmented, slices_size):
         # first image is used to represent reference panel
         panel_correction = self._calculate_panel_correction(images_segmented[0])
+
+        # remove reflectance image from processing
+        if panel_correction is not None and not self.ref_panel_save:
+            images_segmented.pop(0)
 
         # convert to reflectance image
         if panel_correction is not None:
@@ -93,7 +98,7 @@ class Preparator():
     def _merge_images_spectrally(self, images_segmented):
         images_segmented_out = []
         for image_cam1, image_cam2 in zip(images_segmented.cam1, images_segmented.cam2):
-            data_file_name = f"images/converted/{image_cam1.filename}"
+            data_file_name = f"images/merged/{image_cam1.filename}"
             image_merged = merge_images_by_specter(self.cfg.name, image_cam1, image_cam2, data_file_name=data_file_name)
             images_segmented_out.append(image_merged)
         return images_segmented_out

@@ -75,8 +75,8 @@ def merge_images_by_specter(dir_name, image_original, image_to_merge, data_file_
     mmap[:,:,:] = np.concatenate((image_original_arr, image_to_merge_arr), axis=2)
 
     cfg_image = image_original.config
-    # cfg_image.name = "merged"
-    # cfg_image.model = "/"
+    cfg_image.name = "merged"
+    cfg_image.model = "/"
     return SPImage(image, cfg_image)
 
 

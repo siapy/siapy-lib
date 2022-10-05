@@ -27,6 +27,7 @@ class PreparatorConfig:
     image_slices_size_cam2: int = MISSING
     percentage_of_background : int = MISSING
     reflectance_panel: Optional[float] = MISSING
+    reflectance_panel_save: bool = MISSING
     panel_filter_function: str = MISSING
     merge_images_by_specter: bool = MISSING
     match_labels_to_indices: bool = MISSING
