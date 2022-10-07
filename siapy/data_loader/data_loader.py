@@ -12,7 +12,7 @@ logger = get_logger(name="data_loader")
 
 class DataLoader():
     def __init__(self, config):
-        self._cfg = config
+        self._cfg = config.copy()
         self._paths = None
         self._images = None
 

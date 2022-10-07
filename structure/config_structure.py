@@ -18,6 +18,7 @@ class DataLoaderConfig:
     path_ending_camera1: str = MISSING
     path_ending_camera2: str = MISSING
     corregistrate_dir_name: str = MISSING
+    labels_of_groups_file_name: Optional[str] = None
 
 @dataclass
 class PreparatorConfig:
