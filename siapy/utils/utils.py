@@ -33,6 +33,8 @@ def parse_data_file_name(data_file_name):
 
 def save_data(config, data, data_file_name, saver="pickle"):
     #TODO: change first subfolder to name of a project used
+    # remove file extensions from those functions
+    # create different pattern for load and save of data
     """ Save data
 
     Args:
@@ -58,9 +60,13 @@ def save_data(config, data, data_file_name, saver="pickle"):
         logger.exception("Posible loader options: pickle, json")
     logger.info(f"Data saved as:  {file}")
 
-def load_data(config, data_file_name, loader="pickle"):
+def load_data(config, data_file_name, loader="pickle", dir_abs_path=None):
     dfn = parse_data_file_name(data_file_name)
-    dir_abs_path = os.path.join(get_project_root(), "outputs", config.name, dfn.dir_name)
+    if dir_abs_path is None:
+        dir_abs_path = os.path.join(get_project_root(), "outputs", config.name, dfn.dir_name)
+    else:
+        dir_abs_path = os.path.join(dir_abs_path, dfn.dir_name)
+
     if loader == "pickle":
         file = os.path.join(dir_abs_path, dfn.file_name + ".pkl")
         with open(file, 'rb') as f:
@@ -72,8 +78,11 @@ def load_data(config, data_file_name, loader="pickle"):
     elif loader == "df_csv":
         file = os.path.join(dir_abs_path, dfn.file_name + ".csv")
         data = pd.read_csv(file)
+    elif loader == "df_xlsx":
+        file = os.path.join(dir_abs_path, dfn.file_name + ".xlsx")
+        data = pd.read_excel(file)
     else:
-        logger.exception("Posible loader options: pickle, json")
+        logger.exception("Posible loader options: pickle, json, df_csv, df_xlsx")
 
     logger.info(f"Data loaded from:  {file}")
     return data
@@ -159,3 +168,13 @@ def is_docker():
             if re.match("\d+:[\w=]+:/docker(-[ce]e)?/\w+", line):
                 return True
         return False
+
+def parse_labels(row, ref_panel):
+    object_idx = int(row.objects_indices)
+    if ref_panel:
+        if object_idx == 0:
+            return "panel"
+        else:
+            return row.labels_all[object_idx - 1]
+    else:
+        return row.labels_all[object_idx]

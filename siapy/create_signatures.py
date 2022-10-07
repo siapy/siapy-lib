@@ -3,7 +3,7 @@ from types import SimpleNamespace
 import pandas as pd
 
 from siapy.data_loader import DataLoader
-from siapy.utils.utils import get_logger, save_data
+from siapy.utils.utils import get_logger, parse_labels, save_data
 
 logger = get_logger(name="create_signatures")
 
@@ -35,15 +35,6 @@ def parse_data(images, parsed_data_out, cfg):
         parsed_data_out = pd.concat([parsed_data_out, pd.DataFrame.from_records([parsed_data.__dict__])])
     return parsed_data_out.reset_index(drop=True)
 
-def parse_labels(row, ref_panel):
-    object_idx = int(row.objects_indices)
-    if ref_panel:
-        if object_idx == 0:
-            return "panel"
-        else:
-            return row.labels_all[object_idx - 1]
-    else:
-        return row.labels_all[object_idx]
 
 def main(cfg):
     data_loader = DataLoader(cfg)
