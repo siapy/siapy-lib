@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Callable, Iterator, Optional, Union
+from typing import Callable, Iterator, Optional, Union, List, Dict
 
 from hydra.core.config_store import ConfigStore
 from omegaconf import MISSING
@@ -26,9 +26,9 @@ class PreparatorConfig:
     labels_deliminator: str = MISSING
     image_slices_size_cam1: int = MISSING
     image_slices_size_cam2: int = MISSING
-    percentage_of_background : int = MISSING
+    percentage_of_background: int = MISSING
     reflectance_panel: Optional[float] = MISSING
-    reflectance_panel_save: bool = MISSING
+    reflectance_panel_save: Union[bool, None] = MISSING
     panel_filter_function: str = MISSING
     merge_images_by_specter: bool = MISSING
     match_labels_to_indices: bool = MISSING
@@ -36,9 +36,9 @@ class PreparatorConfig:
 @dataclass
 class SegmentatorConfig:
     decision_function: str = MISSING
-    classes: list[str] = MISSING
-    classes_keep: list[str] = MISSING
-    classes_remove: list[str] = MISSING
+    classes: List[str] = MISSING
+    classes_keep: List[str] = MISSING
+    classes_remove: List[str] = MISSING
     area_size_threshold_camera1: int = MISSING
     area_size_threshold_camera2: int = MISSING
 
@@ -52,14 +52,14 @@ class SelectorConfig:
 class VisualiserConfig:
     camera1: bool = MISSING
     camera2: bool = MISSING
-    images_indices: list[Union[int, str]] = MISSING
-    objects_indices: list[Union[int, str]] = MISSING
-    slices_indices: list[Union[int, str]] = MISSING
-    labels_names: list[Union[int, str]] = MISSING
+    images_indices: List[Union[int, str]] = MISSING
+    objects_indices: List[Union[int, str]] = MISSING
+    slices_indices: List[Union[int, str]] = MISSING
+    labels_names: List[Union[int, str]] = MISSING
     iterate_over_images: bool = MISSING
     group_data_by: Optional[str] = MISSING
-    groups: Optional[dict[str, str]] = MISSING
-    plot: Optional[dict[str, str]] = MISSING
+    groups: Optional[Dict[str, str]] = MISSING
+    plot: Optional[Dict[str, str]] = MISSING
 
 @dataclass
 class Config:

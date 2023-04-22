@@ -5,8 +5,10 @@ from siapy.utils.utils import get_logger
 
 logger = get_logger(name="check_images")
 
+
 def parse_labels(filename, labels_path_deliminator, labels_deliminator):
     return filename.split(labels_path_deliminator)[0].split(labels_deliminator)
+
 
 def check_duplicate_labels(labels):
     labels_out = []
@@ -32,7 +34,8 @@ def main(cfg):
     labels_cam1 = [parse_labels(filename, labels_pd, labels_d) for filename in filenames_cam1]
     labels_cam1 = list(np.concatenate(labels_cam1))
     labels_cam2 = [parse_labels(filename, labels_pd, labels_d) for filename in filenames_cam2]
-    labels_cam2 = list(np.concatenate(labels_cam2))
+    if labels_cam2:
+        labels_cam2 = list(np.concatenate(labels_cam2))
 
     labels_unique = sorted(set(labels_cam1))
     labels_duplicated = check_duplicate_labels(labels_cam1)
@@ -44,4 +47,3 @@ def main(cfg):
     msg += f"   Labels: \n{str(labels_unique)} \n"
     msg += f"   Duplicated labels: \n{str(labels_duplicated)} \n"
     logger.info(f"Report: \n{msg}")
-
