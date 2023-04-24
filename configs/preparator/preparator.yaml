@@ -6,7 +6,8 @@ labels_deliminator: _
 image_slices_size_cam1: -1
 image_slices_size_cam2: -1
 percentage_of_background : 5
-reflectance_panel: 0.2
+reflectance_panel: Null
+reflectance_panel_save: null
 panel_filter_function: average
-merge_images_by_specter: False
-match_labels_to_indices: True
+merge_images_by_specter: True
+match_labels_to_indices: False
