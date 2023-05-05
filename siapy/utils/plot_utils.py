@@ -17,7 +17,7 @@ logger = get_logger(name="plot_utils")
 
 def pixels_select_click(image):
     image_display = image.to_display()
-    coordinates_list = np.empty([0,3])
+    coordinates_list = np.empty([0, 3])
     fig, ax = plt.subplots(1, 1)
     ax.imshow(image_display)
     fig.tight_layout()
@@ -25,8 +25,9 @@ def pixels_select_click(image):
 
     def onclick(event):
         nonlocal coordinates_list, fig
-        if plt.get_current_fig_manager().toolbar.mode != '': return
-        logger.info(f'Pressed coordinate: X = {event.xdata}, Y = {event.ydata}')
+        if plt.get_current_fig_manager().toolbar.mode != "":
+            return
+        logger.info(f"Pressed coordinate: X = {event.xdata}, Y = {event.ydata}")
         x_coor = event.xdata
         y_coor = event.ydata
         coordinates_list = np.vstack((coordinates_list, [x_coor, y_coor, 1]))
@@ -34,7 +35,7 @@ def pixels_select_click(image):
         ax.scatter(
             int(x_coor),
             int(y_coor),
-            marker='x',
+            marker="x",
             c="red",
         )
         fig.canvas.draw()
@@ -42,29 +43,28 @@ def pixels_select_click(image):
     def accept(event):
         nonlocal enter_clicked
         if event.key == "enter":
-            logger.info('Enter clicked.')
+            logger.info("Enter clicked.")
             enter_clicked = 1
             plt.close()
 
     def onexit(event):
         nonlocal enter_clicked
         if not enter_clicked:
-            logger.info('Exiting application.')
+            logger.info("Exiting application.")
             plt.close()
             sys.exit(0)
 
-    fig.canvas.mpl_connect('button_press_event', onclick)
+    fig.canvas.mpl_connect("button_press_event", onclick)
     fig.canvas.mpl_connect("key_press_event", accept)
-    fig.canvas.mpl_connect('close_event', onexit)
+    fig.canvas.mpl_connect("close_event", onexit)
     plt.show(block=True)
 
-    return pd.DataFrame(coordinates_list.astype("int"), columns=["x","y","z"])
+    return pd.DataFrame(coordinates_list.astype("int"), columns=["x", "y", "z"])
 
 
 def pixels_select_lasso(image):
     image_display = image.to_display()
-    x, y = np.meshgrid(
-        np.arange(image_display.shape[1]), np.arange(image_display.shape[0]))
+    x, y = np.meshgrid(np.arange(image_display.shape[1]), np.arange(image_display.shape[0]))
     pixes_all_stack = np.vstack((x.flatten(), y.flatten())).T
 
     fig, ax = plt.subplots(1, 1)
@@ -76,7 +76,7 @@ def pixels_select_lasso(image):
     enter_clicked = 0
 
     def onselect(vertices_selected, eps=1e-8):
-        logger.info('Selected.')
+        logger.info("Selected.")
         nonlocal indices
         indices, _ = inpoly2(pixes_all_stack, vertices_selected)
 
@@ -87,21 +87,20 @@ def pixels_select_lasso(image):
     def onexit(event):
         nonlocal enter_clicked
         if not enter_clicked:
-            logger.info('Exiting application.')
+            logger.info("Exiting application.")
             plt.close()
             sys.exit(0)
 
     def accept(event):
         nonlocal enter_clicked
         if event.key == "enter":
-            logger.info('Enter clicked.')
+            logger.info("Enter clicked.")
             enter_clicked = 1
             plt.close()
 
-
     lasso = LassoSelector(ax, onselect)
-    fig.canvas.mpl_connect('button_release_event', onrelease)
-    fig.canvas.mpl_connect('close_event', onexit)
+    fig.canvas.mpl_connect("button_release_event", onrelease)
+    fig.canvas.mpl_connect("close_event", onexit)
     fig.canvas.mpl_connect("key_press_event", accept)
 
     # mng = plt.get_current_fig_manager()
@@ -110,10 +109,12 @@ def pixels_select_lasso(image):
 
     selected_areas = []
     for indices in indices_list:
-        coordinates_list = np.hstack((pixes_all_stack[indices], np.ones((pixes_all_stack[indices].shape[0], 1))))
-        coordinates_df = pd.DataFrame(coordinates_list.astype("int"), columns=["x","y","z"])
+        coordinates_list = np.hstack(
+            (pixes_all_stack[indices], np.ones((pixes_all_stack[indices].shape[0], 1)))
+        )
+        coordinates_df = pd.DataFrame(coordinates_list.astype("int"), columns=["x", "y", "z"])
         selected_areas.append(coordinates_df.drop_duplicates())
-    logger.info(f'Number of selected areas: {len(selected_areas)}')
+    logger.info(f"Number of selected areas: {len(selected_areas)}")
 
     return selected_areas
 
@@ -160,35 +161,37 @@ def display_images(images, images_selected_areas=None, colors="red"):
                         selected_area.x,
                         selected_area.y,
                         lw=0,
-                        marker='o',
+                        marker="o",
                         c=color,
                         s=(72.0 / fig.dpi) ** 2,
                     )
 
     def accept(event):
         if event.key == "enter":
-            logger.info('Enter clicked. Exiting.')
+            logger.info("Enter clicked. Exiting.")
             plt.close()
+
     fig.canvas.mpl_connect("key_press_event", accept)
 
 
 def segmentation_buttons():
     flag = "repeat"
+
     def repeat(event):
         nonlocal flag
-        logger.info(f'Pressed repeat button.')
+        logger.info(f"Pressed repeat button.")
         plt.close()
         flag = "repeat"
 
     def save(event):
         nonlocal flag
-        logger.info(f'Pressed save button.')
+        logger.info(f"Pressed save button.")
         plt.close()
         flag = "save"
 
     def skip(event):
         nonlocal flag
-        logger.info(f'Pressed skip button.')
+        logger.info(f"Pressed skip button.")
         plt.close()
         flag = "skip"
 
@@ -208,7 +211,7 @@ def segmentation_buttons():
 
 
 def plot_signatures(signatures, groups_labels, *, x_scat=None):
-    """ Plot signatures with corresponding wavelenght or consequtive wavelength number
+    """Plot signatures with corresponding wavelenght or consequtive wavelength number
 
     Args:
         signatures (list): list of lists/signatures
@@ -217,12 +220,12 @@ def plot_signatures(signatures, groups_labels, *, x_scat=None):
     signatures = np.array(signatures)
     labels = np.array(groups_labels)
     # if all labels equal to nan than all are left for plotting
-    if len(np.unique(labels)) == 1 and str(labels[0]) == 'nan':
+    if len(np.unique(labels)) == 1 and str(labels[0]) == "nan":
         pass
     else:
         # remove nans in case more unique labels in group_labels
         # nans are removed in this case
-        indices = [idx for idx, lab in enumerate(labels) if str(lab) != 'nan']
+        indices = [idx for idx, lab in enumerate(labels) if str(lab) != "nan"]
         signatures = signatures[indices]
         labels = labels[indices]
 
@@ -238,12 +241,12 @@ def plot_signatures(signatures, groups_labels, *, x_scat=None):
     # ax.set_title(title, fontsize=14)
     # ax.set_ylabel(y_label, fontsize=24)
     # ax.set_xlabel(x_label, fontsize=24)
-    ax.tick_params(axis='both', which='major', labelsize=22)
-    ax.tick_params(axis='both', which='minor', labelsize=22)
-    ax.spines['top'].set_visible(False)
-    ax.spines['right'].set_visible(False)
+    ax.tick_params(axis="both", which="major", labelsize=22)
+    ax.tick_params(axis="both", which="minor", labelsize=22)
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
 
-    cmap = plt.get_cmap('viridis')
+    cmap = plt.get_cmap("viridis")
     no_colors = len(np.unique(labels))
     colors = cmap(np.linspace(0, 1, no_colors))
 
