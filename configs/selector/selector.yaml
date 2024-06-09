@@ -1,6 +1,0 @@
-defaults:
-    - base_selector
-
-average: True
-item: ???
-color: red

@@ -1,2 +1,0 @@
-# dir: outputs/logs/${now:%Y-%m-%d_%H-%M-%S}
-dir: ${hydra.runtime.config_sources[1].path}/../outputs/logs/${now:%Y-%m-%d_%H-%M-%S}
