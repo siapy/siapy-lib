@@ -1,11 +1,14 @@
 from types import SimpleNamespace
 
 from siapy.corregistrator import Corregistrator
-from siapy.data_loader import DataLoader
+from siapy.entities import DataLoader
 from siapy.segmentator import Segmentator
 from siapy.utils.image_utils import limit_to_bounds
-from siapy.utils.plot_utils import (display_images, pixels_select_lasso,
-                                    segmentation_buttons)
+from siapy.utils.plot_utils import (
+    display_images,
+    pixels_select_lasso,
+    segmentation_buttons,
+)
 from siapy.utils.utils import get_logger
 
 logger = get_logger(name="perform_segmentation")
@@ -27,7 +30,7 @@ def main(cfg):
     while 1:
         image_cam1 = images_cam1[image_idx]
         logger.info(f"__ Processed index __: {image_idx}")
-        logger.info(f"Processed files:")
+        logger.info("Processed files:")
         logger.info(f" -> camera1: {image_cam1.filename}")
         if cfg.camera2 is not None:
             image_cam2 = images_cam2[image_idx]
@@ -47,9 +50,13 @@ def main(cfg):
         if cfg.camera2 is not None:
             images.cam2 = image_cam2
             # tranform coordinates from cam1 to cam2
-            selected_areas_cam2 = list(map(corregistrator.transform, selected_areas_cam1))
+            selected_areas_cam2 = list(
+                map(corregistrator.transform, selected_areas_cam1)
+            )
             # limit coordinates to the image size
-            selected_areas.cam2 = list(map(limit_to_bounds(images.cam2.shape), selected_areas_cam2))
+            selected_areas.cam2 = list(
+                map(limit_to_bounds(images.cam2.shape), selected_areas_cam2)
+            )
 
         # check whether first objet on image selected represents reference panel
         selected_area_panel_cam1 = None

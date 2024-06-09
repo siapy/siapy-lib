@@ -3,13 +3,14 @@ from types import SimpleNamespace
 import matplotlib.pyplot as plt
 
 from siapy.corregistrator import Corregistrator
-from siapy.data_loader import DataLoader
+from siapy.entities import DataLoader
 from siapy.segmentator import Segmentator
 from siapy.utils.image_utils import limit_to_bounds
 from siapy.utils.plot_utils import display_images, pixels_select_lasso
 from siapy.utils.utils import get_logger
 
 logger = get_logger(name="test_segmentation")
+
 
 def main(cfg):
     data_loader = DataLoader(cfg).load_images()
@@ -38,11 +39,11 @@ def main(cfg):
         # tranform coordinates from cam1 to cam2
         selected_areas_cam2 = list(map(corregistrator.transform, selected_areas_cam1))
         # limit coordinates to the image size
-        selected_areas.cam2 = list(map(limit_to_bounds(images.cam2.shape), selected_areas_cam2))
+        selected_areas.cam2 = list(
+            map(limit_to_bounds(images.cam2.shape), selected_areas_cam2)
+        )
 
     selected_areas = segmentator.run(images, selected_areas)
 
     display_images(images, selected_areas, colors=cfg.selector.color)
     plt.show()
-
-

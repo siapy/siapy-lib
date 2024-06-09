@@ -1,6 +1,6 @@
 import numpy as np
 
-from siapy.data_loader.data_loader import DataLoader
+from siapy.entities.data_loader import DataLoader
 from siapy.utils.utils import get_logger
 
 logger = get_logger(name="check_images")
@@ -31,9 +31,13 @@ def main(cfg):
     labels_pd = cfg.preparator.labels_path_deliminator
     labels_d = cfg.preparator.labels_deliminator
 
-    labels_cam1 = [parse_labels(filename, labels_pd, labels_d) for filename in filenames_cam1]
+    labels_cam1 = [
+        parse_labels(filename, labels_pd, labels_d) for filename in filenames_cam1
+    ]
     labels_cam1 = list(np.concatenate(labels_cam1))
-    labels_cam2 = [parse_labels(filename, labels_pd, labels_d) for filename in filenames_cam2]
+    labels_cam2 = [
+        parse_labels(filename, labels_pd, labels_d) for filename in filenames_cam2
+    ]
     if labels_cam2:
         labels_cam2 = list(np.concatenate(labels_cam2))
 
@@ -41,8 +45,12 @@ def main(cfg):
     labels_duplicated = check_duplicate_labels(labels_cam1)
 
     msg = ""
-    msg += f"   Number of images: {len(images_cam1)} (cam1), {len(images_cam2)} (cam2)\n"
-    msg += f"   Number of labels: {len(labels_cam1)} (cam1), {len(labels_cam2)} (cam2)\n"
+    msg += (
+        f"   Number of images: {len(images_cam1)} (cam1), {len(images_cam2)} (cam2)\n"
+    )
+    msg += (
+        f"   Number of labels: {len(labels_cam1)} (cam1), {len(labels_cam2)} (cam2)\n"
+    )
     msg += f"   Number of unique labels: {len(labels_unique)} \n"
     msg += f"   Labels: \n{str(labels_unique)} \n"
     msg += f"   Duplicated labels: \n{str(labels_duplicated)} \n"

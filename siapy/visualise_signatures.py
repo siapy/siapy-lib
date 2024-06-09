@@ -1,11 +1,16 @@
 import numpy as np
 
-from siapy.data_loader import DataLoader
+from siapy.entities import DataLoader
 from siapy.utils.plot_utils import plot_signatures
-from siapy.utils.utils import (get_increasing_seq_indices, get_logger,
-                               load_data, save_data)
+from siapy.utils.utils import (
+    get_increasing_seq_indices,
+    get_logger,
+    load_data,
+    save_data,
+)
 
 logger = get_logger(name="visualise_signatures")
+
 
 def modify_dataframe(data, col_name, instructions):
     instruction = instructions[0]
@@ -23,6 +28,7 @@ def modify_dataframe(data, col_name, instructions):
         logger.warning(f"No instructions for {col_name}")
     return data.reset_index(drop=True)
 
+
 def append_groups_to_dataframe(data, groups, group_data_by):
     # create new column called groups
     data = data.assign(groups=np.nan)
@@ -37,6 +43,7 @@ def append_groups_to_dataframe(data, groups, group_data_by):
     else:
         logger.warning(f"Data groups not set by: <{group_data_by}>")
     return data
+
 
 def merge_cameras_rows(cfg, data):
     cam1_name = cfg.camera1.name
@@ -57,31 +64,50 @@ def merge_cameras_rows(cfg, data):
         data_cam2[["signatures", "filenames"]] = np.nan
 
     # rename colunms of each dataframe and merge
-    data_cam1 = data_cam1.rename(columns={"signatures":"signatures_camera1",
-                                          "filenames":"filenames_camera1",
-                                          })
-    data_cam2 = data_cam2.rename(columns={"signatures":"signatures_camera2",
-                                          "filenames":"filenames_camera2",
-                                          })
-    data = data_cam1.merge(data_cam2, on=["images_indices", "objects_indices",
-                                        "slices_indices", "labels_all",
-                                        "labels_names", "groups"])
+    data_cam1 = data_cam1.rename(
+        columns={
+            "signatures": "signatures_camera1",
+            "filenames": "filenames_camera1",
+        }
+    )
+    data_cam2 = data_cam2.rename(
+        columns={
+            "signatures": "signatures_camera2",
+            "filenames": "filenames_camera2",
+        }
+    )
+    data = data_cam1.merge(
+        data_cam2,
+        on=[
+            "images_indices",
+            "objects_indices",
+            "slices_indices",
+            "labels_all",
+            "labels_names",
+            "groups",
+        ],
+    )
     # create signature_megred column
     data["signatures_merged"] = np.nan
     return data
 
+
 def merge_signatures_and_evaluate(row):
-    if str(row.signatures_camera1) == 'nan':
+    if str(row.signatures_camera1) == "nan":
         row.signatures_merged = eval(row.signatures_camera2)
-    elif str(row.signatures_camera2) == 'nan':
+    elif str(row.signatures_camera2) == "nan":
         row.signatures_merged = eval(row.signatures_camera1)
     else:
-        row.signatures_merged = eval(row.signatures_camera1) + eval(row.signatures_camera2)
+        row.signatures_merged = eval(row.signatures_camera1) + eval(
+            row.signatures_camera2
+        )
     return row
+
 
 def evaluate_signatures(row):
     row.signatures_merged = eval(row.signatures_merged)
     return row
+
 
 def filter_by_indices(row, indices_inc):
     if indices_inc is not None:
@@ -103,10 +129,12 @@ def main(cfg):
         return
 
     # modify df based on config
-    temp_cfg = {"images_indices": config_vis.images_indices,
-                "objects_indices": config_vis.objects_indices,
-                "slices_indices": config_vis.slices_indices,
-                "labels_names": config_vis.labels_names}
+    temp_cfg = {
+        "images_indices": config_vis.images_indices,
+        "objects_indices": config_vis.objects_indices,
+        "slices_indices": config_vis.slices_indices,
+        "labels_names": config_vis.labels_names,
+    }
 
     for col_name, instructions in temp_cfg.items():
         data = modify_dataframe(data, col_name, instructions)
@@ -148,35 +176,54 @@ def main(cfg):
     # check whether images were merged in preparation proces
     if not cfg.preparator.merge_images_by_specter:
         # merge dataframe and signatures from both cameras
-        data =  merge_cameras_rows(cfg, data)
+        data = merge_cameras_rows(cfg, data)
         # merge signatures from both cameras
         data = data.apply(lambda row: merge_signatures_and_evaluate(row), axis=1)
 
     else:
-        data = data.rename(columns={"signatures":"signatures_merged"})
+        data = data.rename(columns={"signatures": "signatures_merged"})
         data = data.apply(lambda row: evaluate_signatures(row), axis=1)
     # filter by wavelengts
     data = data.apply(lambda row: filter_by_indices(row, indices_inc), axis=1)
 
-	# save modified data
-    save_data(cfg, data=data,
-              data_file_name="files/data_parsed", saver="df_csv")
+    # save modified data
+    save_data(cfg, data=data, data_file_name="files/data_parsed", saver="df_csv")
 
     # if iteration over seperate image enabled
     if config_vis.iterate_over_images:
         for image_idx in data.images_indices.unique():
             # get data part coresponding to particular image
             data_slice = data[data.images_indices == image_idx]
-            plot_df = str(data_slice[["images_indices", "objects_indices",
-                                      "slices_indices", "labels_names", "groups"]])
+            plot_df = str(
+                data_slice[
+                    [
+                        "images_indices",
+                        "objects_indices",
+                        "slices_indices",
+                        "labels_names",
+                        "groups",
+                    ]
+                ]
+            )
             logger.info(f"Data plotted: \n {plot_df}")
-            plot_signatures(data_slice.signatures_merged.tolist(),
-                            data_slice.objects_indices.tolist(), x_scat=x_scat)
+            plot_signatures(
+                data_slice.signatures_merged.tolist(),
+                data_slice.objects_indices.tolist(),
+                x_scat=x_scat,
+            )
     else:
         signatures = data.signatures_merged.to_list()
         groups_labels = data.groups.to_list()
-        plot_df = str(data[["images_indices", "objects_indices",
-                                    "slices_indices", "labels_names", "groups"]])
+        plot_df = str(
+            data[
+                [
+                    "images_indices",
+                    "objects_indices",
+                    "slices_indices",
+                    "labels_names",
+                    "groups",
+                ]
+            ]
+        )
         logger.info(f"Data plotted: \n {plot_df}")
         plot_signatures(signatures, groups_labels, x_scat=x_scat)
-

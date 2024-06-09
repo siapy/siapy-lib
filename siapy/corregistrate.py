@@ -1,17 +1,20 @@
 from siapy.corregistrator import Corregistrator
-from siapy.data_loader import DataLoader
+from siapy.entities import DataLoader
 from siapy.utils.plot_utils import pixels_select_click
 from siapy.utils.utils import get_logger
 
 logger = get_logger(name="select_signatures")
+
 
 def main(cfg):
     data_loader_cfg = cfg.data_loader
     if not data_loader_cfg.corregistrate_dir_name:
         logger.warning("No data directory provided to perform corregistration")
         return
-    if not data_loader_cfg.path_ending_camera1 and \
-        not data_loader_cfg.path_ending_camera2:
+    if (
+        not data_loader_cfg.path_ending_camera1
+        and not data_loader_cfg.path_ending_camera2
+    ):
         logger.warning("No camera paths endings provided to perform corregistration")
         return
 
@@ -27,12 +30,10 @@ def main(cfg):
     selected_pixels_cam2 = pixels_select_click(image_cam2)
 
     corregistrator = Corregistrator(cfg)
-    corregistrator.align(selected_pixels_cam2, selected_pixels_cam1,
-                         plot_progress=True, points_ordered=True)
+    corregistrator.align(
+        selected_pixels_cam2,
+        selected_pixels_cam1,
+        plot_progress=True,
+        points_ordered=True,
+    )
     corregistrator.save_params()
-
-
-
-
-
-

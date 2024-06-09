@@ -2,11 +2,12 @@ from types import SimpleNamespace
 
 import matplotlib.pyplot as plt
 
-from siapy.data_loader import DataLoader
+from siapy.entities import DataLoader
 from siapy.utils.plot_utils import display_images
 from siapy.utils.utils import get_logger
 
 logger = get_logger(name="show_image")
+
 
 def main(cfg):
     data_loader = DataLoader(cfg).load_images()
