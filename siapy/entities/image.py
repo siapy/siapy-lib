@@ -10,24 +10,63 @@ from pydantic import validate_call
 
 
 @dataclass
-class SPImage:
+class SpectralImage:
     def __init__(
         self,
         sp_file: sp.io.envi.BilFile | sp.io.envi.BipFile | sp.io.envi.BsqFile,
     ):
         self._sp_file = sp_file
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return repr(self._sp_file)
+
+    def __str__(self) -> str:
+        return str(self._sp_file)
 
     @classmethod
     def envi_open(
         cls, hdr_path: str | Path, img_path: str | Path | None = None
-    ) -> "SPImage":
+    ) -> "SpectralImage":
         sp_file = sp.envi.open(file=hdr_path, image=img_path)
         if isinstance(sp_file, sp.io.envi.SpectralLibrary):
             raise ValueError("Opened file of type SpectralLibrary")
         return cls(sp_file)
+
+    @property
+    def file(self) -> sp.io.envi.BilFile | sp.io.envi.BipFile | sp.io.envi.BsqFile:
+        return self._sp_file
+
+    @property
+    def metadata(self) -> dict[str, Any]:
+        return self._sp_file.metadata
+
+    @property
+    def shape(self) -> tuple[int, int, int]:
+        rows = self._sp_file.nrows
+        samples = self._sp_file.ncols
+        bands = self._sp_file.nbands
+        return (rows, samples, bands)
+
+    @property
+    def rows(self) -> int:
+        return self._sp_file.nrows
+
+    @property
+    def cols(self) -> int:
+        return self._sp_file.ncols
+
+    @property
+    def bands(self) -> int:
+        return self._sp_file.nbands
+
+    @property
+    def filename(self) -> str:
+        return self._sp_file.filename.split(os.sep)[-1].split(".")[0]
+
+    @property
+    def wavelengths(self) -> list[float]:
+        wavelength_data = self._sp_file.metadata["wavelength"]
+        return list(map(float, wavelength_data))
 
     def _remove_nan(self, image: np.ndarray, nan_value: float = 0.0) -> np.ndarray:
         image_mask = np.bitwise_not(np.bool_(np.isnan(image).sum(axis=2)))
@@ -77,39 +116,3 @@ class SPImage:
     def mean(self, axis: int | tuple[int] | None = None) -> float | np.ndarray:
         image_arr = self.to_numpy()
         return np.nanmean(image_arr, axis=axis)
-
-    @property
-    def file(self) -> sp.io.envi.BilFile | sp.io.envi.BipFile | sp.io.envi.BsqFile:
-        return self._sp_file
-
-    @property
-    def metadata(self) -> dict[str, Any]:
-        return self._sp_file.metadata
-
-    @property
-    def shape(self) -> tuple[int, int, int]:
-        rows = self._sp_file.nrows
-        samples = self._sp_file.ncols
-        bands = self._sp_file.nbands
-        return (rows, samples, bands)
-
-    @property
-    def rows(self) -> int:
-        return self._sp_file.nrows
-
-    @property
-    def cols(self) -> int:
-        return self._sp_file.ncols
-
-    @property
-    def bands(self) -> int:
-        return self._sp_file.nbands
-
-    @property
-    def filename(self) -> str:
-        return self._sp_file.filename.split(os.sep)[-1].split(".")[0]
-
-    @property
-    def wavelengths(self) -> list[float]:
-        wavelength_data = self._sp_file.metadata["wavelength"]
-        return list(map(float, wavelength_data))

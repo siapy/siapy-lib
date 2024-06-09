@@ -1,6 +1,6 @@
 import numpy as np
 
-from siapy.entities.data_loader import DataLoader
+from siapy.entities.containers import SpectralImageContainer
 from siapy.utils.utils import get_logger
 
 logger = get_logger(name="check_images")
@@ -20,7 +20,7 @@ def check_duplicate_labels(labels):
 
 
 def main(cfg):
-    data_loader = DataLoader(cfg).load_images()
+    data_loader = SpectralImageContainer(cfg).load_images()
 
     images_cam1 = data_loader.images.cam1
     images_cam2 = data_loader.images.cam2

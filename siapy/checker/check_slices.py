@@ -1,6 +1,6 @@
 import pandas as pd
 
-from siapy.entities.data_loader import DataLoader
+from siapy.entities.containers import SpectralImageContainer
 from siapy.utils.utils import get_logger, load_data, parse_labels
 
 logger = get_logger(name="check_slices")
@@ -45,7 +45,7 @@ def create_output_msg_string(slices_num):
 
 
 def main(cfg):
-    data_loader = DataLoader(cfg)
+    data_loader = SpectralImageContainer(cfg)
     data_loader.change_dir("converted_images").load_images()
 
     images_cam1 = data_loader.images.cam1
