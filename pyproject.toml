@@ -1,0 +1,26 @@
+[project]
+name = "siapy-lib"
+version = "0.2.0"
+description = "A python library for efficient processing of spectral images."
+authors = [{ name = "janezlapajne", email = "janez.lapajne@kis.si" }]
+dependencies = [
+    "pandas>=2.2.2",
+    "opencv-python>=4.10.0.82",
+    "spectral>=0.23.1",
+    "scikit-learn>=1.5.0",
+]
+requires-python = ">=3.10"
+readme = "README.md"
+license = { text = "MIT" }
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+
+[tool.pdm]
+distribution = true
+
+[tool.pdm.dev-dependencies]
+lint = ["black>=24.4.2", "flake8>=7.0.0"]
+dev = ["pre-commit>=3.7.1"]

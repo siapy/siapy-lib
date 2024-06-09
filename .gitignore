@@ -1,6 +1,9 @@
 venv
+.venv
 .idea
 .ipynb_checkpoints
 .mypy_cache
+.pdm-build
 __pycache__
 .pytest_cache
+.pdm-python
