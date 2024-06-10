@@ -1,15 +1,13 @@
-import logging
 from dataclasses import dataclass
 from itertools import zip_longest
 from pathlib import Path
 from typing import Iterator
 
 from pydantic import BaseModel
-from rich.progress import track  # pylint: disable=import-error
+from rich.progress import track
 
+from siapy.core import logger
 from siapy.entities import SpectralImage
-
-logger = logging.getLogger(__name__)
 
 
 class SpectralImageContainerConfig(BaseModel):
@@ -30,10 +28,10 @@ class SpectralImageContainer:
         return f"<{self.__class__.__name__} object with {len(self)} spectral images>"
 
     def __repr__(self) -> str:
-        return f"{self.__class__.__name__}(config={self._config!r})"
+        return f"{self.__class__.__name__}(config={self.config!r})"
 
     def __iter__(self) -> Iterator[SpectralImage]:
-        return iter(self._images)
+        return iter(self.images)
 
     def __getitem__(self, index) -> SpectralImage:
         return self.images[index]

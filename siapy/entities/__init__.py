@@ -3,7 +3,7 @@ from .containers import (
     SpectralImageContainerConfig,
     SpectralImageMultiCameraContainer,
 )
-from .image import SpectralImage
+from .images import SpectralImage
 
 __all__ = [
     "SpectralImage",
