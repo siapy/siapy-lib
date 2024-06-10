@@ -4,9 +4,9 @@ from pathlib import Path
 from typing import Any
 
 import numpy as np
-import pandas as pd
 import spectral as sp
-from pydantic import validate_call
+
+from siapy.entities import Pixels, Signatures
 
 
 @dataclass
@@ -95,23 +95,10 @@ class SpectralImage:
             image = self._remove_nan(image, nan_value)
         return image
 
-    @validate_call
-    def to_signatures(
-        self, pixel_coords: pd.DataFrame, append_to_input: bool = True
-    ) -> pd.DataFrame:
-        if "u" not in pixel_coords or "v" not in pixel_coords:
-            raise ValueError("Input DataFrame must contain 'u' and 'v' columns.")
-        u = pixel_coords.get("u")
-        v = pixel_coords.get("v")
-
+    def to_signatures(self, pixels: Pixels) -> Signatures:
         image_arr = self.to_numpy()
-        signatures = list(image_arr[v, u, :])
-
-        data_out = pd.DataFrame(signatures, columns=["signature"])
-        if append_to_input:
-            data_out = pd.concat([pixel_coords, data_out], axis=1)
-
-        return data_out
+        signatures = Signatures.from_image_and_pixels(image_arr, pixels)
+        return signatures
 
     def mean(self, axis: int | tuple[int] | None = None) -> float | np.ndarray:
         image_arr = self.to_numpy()
