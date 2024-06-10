@@ -1,14 +1,10 @@
 import matplotlib.pyplot as plt
 import numpy as np
-import pandas as pd
+
+from siapy.entities.pixels import Pixels
 
 
 class Corregistrator:
-    def __init__(self, config):
-        self.cfg = config
-        self.matx_2d_combined = None
-        self.errors = None
-
     def _find_corresponding_points(
         self,
         points_ref: np.ndarray,
@@ -66,7 +62,7 @@ class Corregistrator:
         iTrans: tuple[float, float] = (0, 0),
         iRot: float = 0,
         iShear: tuple[float, float] = (0, 0),
-    ):
+    ) -> np.ndarray:
         """Create arbitrary affine transformation matrix"""
         iRot = iRot * np.pi / 180
         matx_scale = np.array(((iScale[0], 0, 0), (0, iScale[1], 0), (0, 0, 1)))
@@ -84,17 +80,17 @@ class Corregistrator:
 
     def align(
         self,
-        points_ref: pd.DataFrame,
-        points_mov: pd.DataFrame,
+        pixels_ref: Pixels,
+        pixels_mov: Pixels,
         eps: float = 1e-6,
         max_iter: int = 50,
         plot_progress: bool = False,
         points_ordered: bool = True,
-    ):
+    ) -> tuple[np.ndarray, np.ndarray]:
         """Align interactive corresponding points"""
 
-        points_ref = points_ref.to_numpy()
-        points_mov = points_mov.to_numpy()
+        points_ref = pixels_ref.df_homogenious().to_numpy()
+        points_mov = pixels_mov.df_homogenious().to_numpy()
 
         matrices = []
         errors = []
@@ -137,15 +133,14 @@ class Corregistrator:
             # multiply all matrices to get the final transformation
             matx_2d_combined = np.dot(matx_2d, matx_2d_combined)
 
-        self.matx_2d_combined = matx_2d_combined
-        self.errors = errors
+        errors_np = np.array(errors)
 
-    def transform(self, points):
-        """Transform points"""
+        return matx_2d_combined, errors_np
+
+    def transform(self, pixels: Pixels, transformation_matx: np.ndarray):
+        """Transform pixels"""
         points_transformed = np.dot(
-            points.to_numpy(), self.matx_2d_combined.transpose()
+            pixels.df_homogenious().to_numpy(), transformation_matx.transpose()
         )
-        points_transformed = pd.DataFrame(
-            points_transformed.astype("int"), columns=["x", "y", "z"]
-        )
-        return points_transformed.drop_duplicates()
+        points_transformed = points_transformed[:, :2].astype("int")
+        return Pixels.from_iterable(points_transformed)

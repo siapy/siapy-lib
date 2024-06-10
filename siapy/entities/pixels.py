@@ -9,8 +9,9 @@ class Pixels:
     _data: pd.DataFrame
 
     # Constants:
-    U: Annotated[ClassVar[str], "u coordinate on the image"] = "u"
-    V: Annotated[ClassVar[str], "v coordinate on the image"] = "v"
+    U: Annotated[ClassVar[str], "u - x coordinate on the image"] = "u"
+    V: Annotated[ClassVar[str], "v - y coordinate on the image"] = "v"
+    H: Annotated[ClassVar[str], "h - homogenious coordinate"] = "h"
 
     @classmethod
     def from_iterable(
@@ -28,3 +29,8 @@ class Pixels:
     @property
     def df(self) -> pd.DataFrame:
         return self._data
+
+    def df_homogenious(self) -> pd.DataFrame:
+        df_homo = self.df.copy()
+        df_homo[Pixels.H] = 1
+        return df_homo
