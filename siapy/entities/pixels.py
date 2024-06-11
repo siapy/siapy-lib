@@ -34,3 +34,9 @@ class Pixels:
         df_homo = self.df.copy()
         df_homo[Pixels.H] = 1
         return df_homo
+
+    def x(self):
+        return self.df[self.U]
+
+    def y(self):
+        return self.df[self.V]
