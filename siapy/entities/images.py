@@ -1,12 +1,15 @@
 import os
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import numpy as np
 import spectral as sp
 
-from siapy.entities import Pixels, Signatures
+from .signatures import Signatures
+
+if TYPE_CHECKING:
+    from .pixels import Pixels
 
 
 @dataclass
@@ -95,7 +98,7 @@ class SpectralImage:
             image = self._remove_nan(image, nan_value)
         return image
 
-    def to_signatures(self, pixels: Pixels) -> Signatures:
+    def to_signatures(self, pixels: "Pixels") -> Signatures:
         image_arr = self.to_numpy()
         signatures = Signatures.from_image_and_pixels(image_arr, pixels)
         return signatures

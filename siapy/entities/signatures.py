@@ -5,7 +5,7 @@ from typing import Annotated, ClassVar
 import numpy as np
 import pandas as pd
 
-from siapy.entities import Pixels
+from .pixels import Pixels
 
 
 class SigFilterEnum(Enum):

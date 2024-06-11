@@ -7,7 +7,7 @@ from pydantic import BaseModel
 from rich.progress import track
 
 from siapy.core import logger
-from siapy.entities import SpectralImage
+from .images import SpectralImage
 
 
 class SpectralImageContainerConfig(BaseModel):
