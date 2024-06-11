@@ -100,7 +100,7 @@ class SpectralImage:
 
     def to_signatures(self, pixels: "Pixels") -> Signatures:
         image_arr = self.to_numpy()
-        signatures = Signatures.from_image_and_pixels(image_arr, pixels)
+        signatures = Signatures.from_array_and_pixels(image_arr, pixels)
         return signatures
 
     def mean(self, axis: int | tuple[int] | None = None) -> float | np.ndarray:

@@ -5,7 +5,7 @@ from .containers import (
 )
 from .images import SpectralImage
 from .pixels import Pixels
-from .signatures import Signatures
+from .signatures import Signatures, SigFilterEnum
 
 __all__ = [
     "SpectralImage",
@@ -14,4 +14,5 @@ __all__ = [
     "SpectralImageMultiCameraContainer",
     "Pixels",
     "Signatures",
+    "SigFilterEnum",
 ]
