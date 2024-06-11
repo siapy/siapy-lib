@@ -2,7 +2,7 @@ from types import SimpleNamespace
 
 import matplotlib.pyplot as plt
 
-from siapy.corregistrator import Corregistrator
+from siapy.transformations import Corregistrator
 from siapy.entities import DataLoader
 from siapy.segmentator import Segmentator
 from siapy.utils.image_utils import limit_to_bounds

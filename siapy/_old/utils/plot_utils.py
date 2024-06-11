@@ -64,7 +64,9 @@ def pixels_select_click(image):
 
 def pixels_select_lasso(image):
     image_display = image.to_display()
-    x, y = np.meshgrid(np.arange(image_display.shape[1]), np.arange(image_display.shape[0]))
+    x, y = np.meshgrid(
+        np.arange(image_display.shape[1]), np.arange(image_display.shape[0])
+    )
     pixes_all_stack = np.vstack((x.flatten(), y.flatten())).T
 
     fig, ax = plt.subplots(1, 1)
@@ -112,7 +114,9 @@ def pixels_select_lasso(image):
         coordinates_list = np.hstack(
             (pixes_all_stack[indices], np.ones((pixes_all_stack[indices].shape[0], 1)))
         )
-        coordinates_df = pd.DataFrame(coordinates_list.astype("int"), columns=["x", "y", "z"])
+        coordinates_df = pd.DataFrame(
+            coordinates_list.astype("int"), columns=["x", "y", "z"]
+        )
         selected_areas.append(coordinates_df.drop_duplicates())
     logger.info(f"Number of selected areas: {len(selected_areas)}")
 
@@ -179,19 +183,19 @@ def segmentation_buttons():
 
     def repeat(event):
         nonlocal flag
-        logger.info(f"Pressed repeat button.")
+        logger.info("Pressed repeat button.")
         plt.close()
         flag = "repeat"
 
     def save(event):
         nonlocal flag
-        logger.info(f"Pressed save button.")
+        logger.info("Pressed save button.")
         plt.close()
         flag = "save"
 
     def skip(event):
         nonlocal flag
-        logger.info(f"Pressed skip button.")
+        logger.info("Pressed skip button.")
         plt.close()
         flag = "skip"
 

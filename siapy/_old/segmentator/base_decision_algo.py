@@ -21,7 +21,7 @@ class BaseDecisionAlgo(ABC):
     ################################
 
     def _transform_data(self, data):
-        """ Transform data to numpy array and encode labels """
+        """Transform data to numpy array and encode labels"""
         data_trans = []
         for class_label, df in data.items():
             df["target"] = class_label
@@ -38,5 +38,3 @@ class BaseDecisionAlgo(ABC):
 
     def predict(self, X):
         return self.encoder.inverse_transform(self._predict(X))
-
-

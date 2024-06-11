@@ -1,4 +1,4 @@
-from siapy.corregistrator import Corregistrator
+from siapy.transformations import Corregistrator
 from siapy.entities import DataLoader
 from siapy.utils.plot_utils import pixels_select_click
 from siapy.utils.utils import get_logger

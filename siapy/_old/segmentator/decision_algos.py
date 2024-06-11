@@ -41,12 +41,13 @@ class Svm(BaseDecisionAlgo):
     def _predict(self, X):
         return self.model.predict(X)
 
+
 class Sid(BaseDecisionAlgo):
     def __init__(self, cfg):
         super().__init__(cfg)
         self.cls_remove = cfg.segmentator.classes_remove
         self.cls_keep = cfg.segmentator.classes_keep
-        if not(len(self.cls_keep) == len(self.cls_remove) == 1):
+        if not (len(self.cls_keep) == len(self.cls_remove) == 1):
             raise ValueError("Sid only works with one class removed and one class kept")
         self.cls_keep = self.cls_keep[0]
         self.cls_remove = self.cls_remove[0]
@@ -56,7 +57,6 @@ class Sid(BaseDecisionAlgo):
 
         self.background_sig = None
         self.sid_threshold = None
-
 
     def _fit(self, X, y):
         y_inv = self.encoder.inverse_transform(y)
@@ -75,17 +75,19 @@ class Sid(BaseDecisionAlgo):
         # here svc is used to determine the threshold
         X = np.concatenate((sid_keep, sid_remove), axis=0)
         y = [0] * len(sid_keep) + [1] * len(sid_remove)
-        clf = SVC(kernel='linear').fit(X, y)
+        clf = SVC(kernel="linear").fit(X, y)
         # calculate boundary by equation:
         # w0*x + b = 0 -> x = -b/w0
-        self.sid_threshold = - clf.intercept_/clf.coef_
+        self.sid_threshold = -clf.intercept_ / clf.coef_
 
     def _predict(self, X):
         self.cls_keep_enc = self.encoder.transform([self.cls_keep])[0]
         self.cls_remove_enc = self.encoder.transform([self.cls_remove])[0]
         targets = np.array(self.sid_multi(np.array(X), self.background_sig, self.sid))
         # replace values above threshold with class keep and below with class remove
-        targets = np.where(targets > self.sid_threshold, self.cls_keep_enc, self.cls_remove_enc)[0]
+        targets = np.where(
+            targets > self.sid_threshold, self.cls_keep_enc, self.cls_remove_enc
+        )[0]
         return targets
 
     @staticmethod
@@ -101,5 +103,5 @@ class Sid(BaseDecisionAlgo):
         n_rows, _ = X.shape
         sid_values = np.zeros(n_rows)
         for idx in prange(n_rows):
-            sid_values[idx] = sid_func(X[idx,:], background_sig)
+            sid_values[idx] = sid_func(X[idx, :], background_sig)
         return sid_values

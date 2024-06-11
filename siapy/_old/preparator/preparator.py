@@ -1,19 +1,13 @@
-import glob
-import logging
-import os
-from email.mime import image
-from types import SimpleNamespace
-
 import numpy as np
 
 import siapy.preparator.panel_pool_ftns as module
 from siapy.utils.image_utils import merge_images_by_specter, save_image
-from siapy.utils.utils import Timer, get_logger, init_ftn
+from siapy.utils.utils import get_logger, init_ftn
 
 logger = get_logger(name="preparator")
 
 
-class Preparator():
+class Preparator:
     def __init__(self, config):
         self.cfg = config
         preparator_cfg = self.cfg.preparator
@@ -36,24 +30,29 @@ class Preparator():
             if 0 < self.ref_panel < 1:
                 logger.info(f"Reference reflactance used: {self.ref_panel}")
             else:
-                logger.info(f"Reflectance panel not included.")
+                logger.info("Reflectance panel not included.")
                 self.ref_panel = False
 
         if self.slices_size_cam1 == -1:
-            logger.info(f"Signatures will be created from whole objects.")
+            logger.info("Signatures will be created from whole objects.")
         elif isinstance(self.slices_size_cam1, int):
-            logger.info(f"Signatures will be created from objects of size {[self.slices_size_cam1]*2} for camera1.")
-            logger.info(f"Signatures will be created from objects of size {[self.slices_size_cam2]*2} for camera2.")
+            logger.info(
+                f"Signatures will be created from objects of size {[self.slices_size_cam1]*2} for camera1."
+            )
+            logger.info(
+                f"Signatures will be created from objects of size {[self.slices_size_cam2]*2} for camera2."
+            )
             if 0 < self.percentage_bg < 100:
-                logger.info(f"Background will be included in signatures with {self.percentage_bg}% of objects.")
+                logger.info(
+                    f"Background will be included in signatures with {self.percentage_bg}% of objects."
+                )
             else:
                 logger.error("Percentage of background must be in range (0, 100).")
         else:
-            logger.warning(f"Parameter image_slices_size must be an integer!")
+            logger.warning("Parameter image_slices_size must be an integer!")
 
         # init filter function of reference panel
         self.panel_pool_ftn = init_ftn(module, self.panel_pool_ftn)
-
 
     def __run(self, images_segmented, slices_size):
         # first image is used to represent reference panel
@@ -65,24 +64,30 @@ class Preparator():
 
         # convert to reflectance image
         if panel_correction is not None:
-            images_arr = [Preparator._convert_to_reflectance(image_segmented,
-                                                             panel_correction)
-                          for image_segmented in images_segmented]
+            images_arr = [
+                Preparator._convert_to_reflectance(image_segmented, panel_correction)
+                for image_segmented in images_segmented
+            ]
 
         # if no reference panel is used
         else:
-            images_arr = [image_segmented.to_numpy()
-                          for image_segmented in images_segmented]
+            images_arr = [
+                image_segmented.to_numpy() for image_segmented in images_segmented
+            ]
 
         # whole converted image prepared for save
         if slices_size == -1:
             self._save_converted(images_segmented, images_arr)
         # converted image is further sliced and then saved
         else:
-            images_slices_cam1 = [Preparator._blockfy(image_arr, slices_size, slices_size)
-                                        for image_arr in images_arr]
-            images_slices_cam1 = [Preparator._remove_background_images(image_slices, self.percentage_bg)
-                                        for image_slices in images_slices_cam1]
+            images_slices_cam1 = [
+                Preparator._blockfy(image_arr, slices_size, slices_size)
+                for image_arr in images_arr
+            ]
+            images_slices_cam1 = [
+                Preparator._remove_background_images(image_slices, self.percentage_bg)
+                for image_slices in images_slices_cam1
+            ]
             self._save_converted(images_segmented, images_slices_cam1)
 
     def run(self, images_segmented):
@@ -99,7 +104,9 @@ class Preparator():
         images_segmented_out = []
         for image_cam1, image_cam2 in zip(images_segmented.cam1, images_segmented.cam2):
             data_file_name = f"images/merged/{image_cam1.filename}"
-            image_merged = merge_images_by_specter(self.cfg.name, image_cam1, image_cam2, data_file_name=data_file_name)
+            image_merged = merge_images_by_specter(
+                self.cfg.name, image_cam1, image_cam2, data_file_name=data_file_name
+            )
             images_segmented_out.append(image_merged)
         return images_segmented_out
 
@@ -131,7 +138,7 @@ class Preparator():
                     # append slice index
                     data_file_name[0] += f"_{slice_idx}"
                     # merge back whole file name
-                    data_file_name = '__'.join(data_file_name)
+                    data_file_name = "__".join(data_file_name)
 
                     data_file_name = f"images/converted/{data_file_name}"
                     metadata = image_seg.file.metadata
@@ -149,9 +156,13 @@ class Preparator():
         if self.ref_panel:
             image_segmented_arr = image_segmented.to_numpy()
             # remove nan values and get signatures
-            image_mask = np.bitwise_not(np.bool_(np.isnan(image_segmented_arr).sum(axis=2)))
+            image_mask = np.bitwise_not(
+                np.bool_(np.isnan(image_segmented_arr).sum(axis=2))
+            )
             panel_radiance = self.panel_pool_ftn(image_segmented_arr[image_mask])
-            panel_reflectance = np.array([self.ref_panel] * image_segmented_arr.shape[-1])
+            panel_reflectance = np.array(
+                [self.ref_panel] * image_segmented_arr.shape[-1]
+            )
             panel_correction = panel_reflectance / panel_radiance
         else:
             panel_correction = None
@@ -178,19 +189,19 @@ class Preparator():
 
     @staticmethod
     def _blockfy(image_arr, p, q):
-        '''
+        """
         Divides image into subarrays of size p-by-q
         p: block row size
         q: block column size
-        '''
+        """
 
         # caclulate how many whole block covers whole image
-        bpr = ((image_arr.shape[0]-1)//p + 1) #blocks per row
-        bpc = ((image_arr.shape[1]-1)//q + 1) #blocks per column
+        bpr = (image_arr.shape[0] - 1) // p + 1  # blocks per row
+        bpc = (image_arr.shape[1] - 1) // q + 1  # blocks per column
 
         # pad array with NaNs so it can be divided by p row-wise and by q column-wise
         A = np.nan * np.ones([p * bpr, q * bpc, image_arr.shape[2]])
-        A[:image_arr.shape[0], :image_arr.shape[1], :image_arr.shape[2]] = image_arr
+        A[: image_arr.shape[0], : image_arr.shape[1], : image_arr.shape[2]] = image_arr
 
         image_slices = []
         previous_row = 0
@@ -199,11 +210,12 @@ class Preparator():
             previous_column = 0
             for column_block in range(bpr):
                 previous_column = column_block * q
-                block = A[previous_row:previous_row+p, previous_column:previous_column+q]
+                block = A[
+                    previous_row : previous_row + p,
+                    previous_column : previous_column + q,
+                ]
 
-                if block.shape == (p,q,image_arr.shape[2]):
+                if block.shape == (p, q, image_arr.shape[2]):
                     image_slices.append(block)
 
         return image_slices
-
-
