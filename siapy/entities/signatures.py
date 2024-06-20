@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Any
 
 import numpy as np
 import pandas as pd
@@ -27,7 +28,7 @@ class SignaturesFilter:
     def build(self) -> "Signatures":
         return Signatures._create(self.pixels, self.signals)
 
-    def rows(self, rows: int | list[int] | slice | list[bool]) -> "SignaturesFilter":
+    def rows(self, rows: list[int] | slice | list[bool]) -> "SignaturesFilter":
         filtered_pixels_df = self.pixels.df.iloc[rows]
         filtered_signals_df = self.signals.df.iloc[rows]
         filtered_pixels = Pixels(pd.DataFrame(filtered_pixels_df))
@@ -45,7 +46,7 @@ class Signatures:
     _pixels: Pixels
     _signals: Signals
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: Any, **kwargs: Any):
         raise RuntimeError(
             "Use Signatures.from_array_and_pixels() to create a new instance."
         )
@@ -75,6 +76,9 @@ class Signatures:
 
     def df(self) -> pd.DataFrame:
         return pd.concat([self.pixels.df, self.signals.df], axis=1)
+
+    def to_numpy(self) -> np.ndarray:
+        return self.df().to_numpy()
 
     def filter(self) -> SignaturesFilter:
         return SignaturesFilter(self.pixels, self.signals)
