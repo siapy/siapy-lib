@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from typing import Annotated, ClassVar, Iterable, NamedTuple
 
+import numpy as np
 import pandas as pd
 
 
@@ -37,8 +38,11 @@ class Pixels:
         df_homo[Pixels.coords.H] = 1
         return df_homo
 
-    def x(self):
+    def u(self) -> pd.Series:
         return self.df[Pixels.coords.U]
 
-    def y(self):
+    def v(self) -> pd.Series:
         return self.df[Pixels.coords.V]
+
+    def to_numpy(self) -> np.ndarray:
+        return self.df.to_numpy()

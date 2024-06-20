@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 
 from siapy.entities import Pixels
@@ -31,15 +32,22 @@ def test_df_homogenious():
     )
 
 
-def test_x():
+def test_u():
     df = pd.DataFrame(iterable, columns=[Pixels.coords.U, Pixels.coords.V])
     pixels = Pixels(df)
     expected_x = pd.Series([1, 3, 5], name=Pixels.coords.U)
-    assert pixels.x().equals(expected_x)
+    assert pixels.u().equals(expected_x)
 
 
-def test_y():
+def test_v():
     df = pd.DataFrame(iterable, columns=[Pixels.coords.U, Pixels.coords.V])
     pixels = Pixels(df)
     expected_y = pd.Series([2, 4, 6], name=Pixels.coords.V)
-    assert pixels.y().equals(expected_y)
+    assert pixels.v().equals(expected_y)
+
+
+def test_to_numpy():
+    df = pd.DataFrame(iterable, columns=[Pixels.coords.U, Pixels.coords.V])
+    pixels = Pixels(df)
+    expected_array = df.to_numpy()
+    assert np.array_equal(pixels.to_numpy(), expected_array)
