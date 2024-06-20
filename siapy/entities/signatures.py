@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from typing import Annotated, ClassVar
 
 import numpy as np
 import pandas as pd
@@ -15,48 +14,67 @@ class Signals:
     def df(self) -> pd.DataFrame:
         return self._data
 
+    def to_numpy(self) -> np.ndarray:
+        return self.df.to_numpy()
+
+
+@dataclass
+class SignaturesFilter:
+    def __init__(self, pixels: Pixels, signals: Signals):
+        self.pixels = pixels
+        self.signals = signals
+
+    def build(self) -> "Signatures":
+        return Signatures._create(self.pixels, self.signals)
+
+    def rows(self, rows: int | list[int] | slice | list[bool]) -> "SignaturesFilter":
+        filtered_pixels_df = self.pixels.df.iloc[rows]
+        filtered_signals_df = self.signals.df.iloc[rows]
+        filtered_pixels = Pixels(pd.DataFrame(filtered_pixels_df))
+        filtered_signals = Signals(pd.DataFrame(filtered_signals_df))
+        return SignaturesFilter(filtered_pixels, filtered_signals)
+
+    def cols(self, cols: list[int] | slice | list[bool]) -> "SignaturesFilter":
+        filtered_signals_df = self.signals.df.iloc[:, cols]
+        filtered_signals = Signals(pd.DataFrame(filtered_signals_df))
+        return SignaturesFilter(self.pixels, filtered_signals)
+
 
 @dataclass
 class Signatures:
-    _data: pd.DataFrame
+    _pixels: Pixels
+    _signals: Signals
 
-    # Constants:
-    SIG: Annotated[ClassVar[str], "Spectral signature values"] = "signature"
-    PIX: Annotated[ClassVar[str], "Pixels locations"] = "pixels"
-
-    def __init__(self, data: pd.DataFrame):
+    def __init__(self, *args, **kwargs):
         raise RuntimeError(
             "Use Signatures.from_array_and_pixels() to create a new instance."
         )
 
     @classmethod
-    def from_array_and_pixels(cls, image: np.ndarray, pixels: Pixels):
-        pixels_df = pixels.df
-        u = pixels_df.get(Pixels.U)
-        v = pixels_df.get(Pixels.V)
-        signatures = list(image[v, u, :])
-
-        signatures_df = pd.DataFrame(signatures)
-        data = pd.concat(
-            [pixels_df, signatures_df], axis=1, keys=[Signatures.PIX, Signatures.SIG]
-        )
-        return cls._create(data)
-
-    @classmethod
-    def _create(cls, data: pd.DataFrame):
+    def _create(cls, pixels: Pixels, signals: Signals) -> "Signatures":
         instance = object.__new__(cls)
-        instance._data = data
+        instance._pixels = pixels
+        instance._signals = signals
         return instance
 
+    @classmethod
+    def from_array_and_pixels(cls, image: np.ndarray, pixels: Pixels) -> "Signatures":
+        u = pixels.u()
+        v = pixels.v()
+        signals_list = list(image[v, u, :])
+        signals = Signals(pd.DataFrame(signals_list))
+        return cls._create(pixels, signals)
+
     @property
-    def df(self) -> pd.DataFrame:
-        return self._data
-
-    def signals(self) -> Signals:
-        return Signals(self.df[Signatures.SIG])
-
     def pixels(self) -> Pixels:
-        return Pixels(self.df[Signatures.PIX])
+        return self._pixels
 
-    # def to_numpy(self) -> np.ndarray:
-    #     return np.vstack(self.df_filtered(only).to_numpy().flatten())
+    @property
+    def signals(self) -> Signals:
+        return self._signals
+
+    def df(self) -> pd.DataFrame:
+        return pd.concat([self.pixels.df, self.signals.df], axis=1)
+
+    def filter(self) -> SignaturesFilter:
+        return SignaturesFilter(self.pixels, self.signals)
