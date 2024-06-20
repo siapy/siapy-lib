@@ -1,17 +1,19 @@
 from dataclasses import dataclass
-from typing import Annotated, ClassVar, Iterable
+from typing import Annotated, ClassVar, Iterable, NamedTuple
 
 import pandas as pd
+
+
+class Coordinates(NamedTuple):
+    U: Annotated[str, "u - x coordinate on the image"] = "u"
+    V: Annotated[str, "v - y coordinate on the image"] = "v"
+    H: Annotated[str, "h - homogenious coordinate"] = "h"
 
 
 @dataclass
 class Pixels:
     _data: pd.DataFrame
-
-    # Constants:
-    U: Annotated[ClassVar[str], "u - x coordinate on the image"] = "u"
-    V: Annotated[ClassVar[str], "v - y coordinate on the image"] = "v"
-    H: Annotated[ClassVar[str], "h - homogenious coordinate"] = "h"
+    coords: ClassVar[Coordinates] = Coordinates()
 
     @classmethod
     def from_iterable(
@@ -23,7 +25,7 @@ class Pixels:
             ]
         ],
     ):
-        df = pd.DataFrame(iterable, columns=[Pixels.U, Pixels.V])
+        df = pd.DataFrame(iterable, columns=[Pixels.coords.U, Pixels.coords.V])
         return cls(df)
 
     @property
@@ -32,11 +34,11 @@ class Pixels:
 
     def df_homogenious(self) -> pd.DataFrame:
         df_homo = self.df.copy()
-        df_homo[Pixels.H] = 1
+        df_homo[Pixels.coords.H] = 1
         return df_homo
 
     def x(self):
-        return self.df[self.U]
+        return self.df[Pixels.coords.U]
 
     def y(self):
-        return self.df[self.V]
+        return self.df[Pixels.coords.V]
