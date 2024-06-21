@@ -1,4 +1,3 @@
-import os
 from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
@@ -63,23 +62,21 @@ class SpectralImage:
         return self._sp_file.nbands
 
     @property
-    def filename(self) -> str:
-        return self._sp_file.filename.split(os.sep)[-1].split(".")[0]
+    def default_bands(self) -> list[int]:
+        db = self.metadata["default bands"]
+        return list(map(int, db))
+
+    @property
+    def filepath(self) -> Path:
+        return Path(self._sp_file.filename)
 
     @property
     def wavelengths(self) -> list[float]:
         wavelength_data = self._sp_file.metadata["wavelength"]
         return list(map(float, wavelength_data))
 
-    def _remove_nan(self, image: np.ndarray, nan_value: float = 0.0) -> np.ndarray:
-        image_mask = np.bitwise_not(np.bool_(np.isnan(image).sum(axis=2)))
-        image[~image_mask] = nan_value
-        return image
-
     def to_display(self, brightness: float = 1.0) -> np.ndarray:
-        db = self.metadata["default bands"]
-        db = list(map(int, db))
-        image_3ch = self._sp_file.read_bands(db)
+        image_3ch = self._sp_file.read_bands(self.default_bands)
         image_3ch = self._remove_nan(image_3ch, nan_value=0)
         image_3ch[:, :, 0] = (
             image_3ch[:, :, 0] / (image_3ch[:, :, 0].max() / 255.0) * brightness
@@ -106,3 +103,8 @@ class SpectralImage:
     def mean(self, axis: int | tuple[int] | None = None) -> float | np.ndarray:
         image_arr = self.to_numpy()
         return np.nanmean(image_arr, axis=axis)
+
+    def _remove_nan(self, image: np.ndarray, nan_value: float = 0.0) -> np.ndarray:
+        image_mask = np.bitwise_not(np.bool_(np.isnan(image).sum(axis=2)))
+        image[~image_mask] = nan_value
+        return image
