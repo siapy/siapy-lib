@@ -28,7 +28,7 @@ class SpectralImage:
 
     @classmethod
     def envi_open(
-        cls, hdr_path: str | Path, img_path: str | Path | None = None
+        cls, *, hdr_path: str | Path, img_path: str | Path | None = None
     ) -> "SpectralImage":
         sp_file = sp.envi.open(file=hdr_path, image=img_path)
         if isinstance(sp_file, sp.io.envi.SpectralLibrary):
