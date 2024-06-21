@@ -14,6 +14,14 @@ def test_signals():
     assert np.array_equal(signals.to_numpy(), df.to_numpy())
 
 
+def test_signals_mean():
+    signals_df = pd.DataFrame([[1, 2, 4, 6], [3, 4, 3, 5]])
+    signals = Signals(signals_df)
+    signals_mean = signals.mean()
+    assert np.array_equal(signals_mean, [2.0, 3.0, 3.5, 5.5])
+    assert signals_mean.shape == (4,)
+
+
 def test_signatures_filter_create():
     pixels_df = pd.DataFrame({"u": [0, 1], "v": [0, 1]})
     signals_df = pd.DataFrame([[1, 2], [3, 4]])

@@ -18,6 +18,9 @@ class Signals:
     def to_numpy(self) -> np.ndarray:
         return self.df.to_numpy()
 
+    def mean(self) -> np.ndarray:
+        return np.nanmean(self.to_numpy(), axis=0)
+
 
 @dataclass
 class SignaturesFilter:
