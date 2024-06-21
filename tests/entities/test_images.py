@@ -4,6 +4,7 @@ from types import SimpleNamespace
 import numpy as np
 import pytest
 import spectral as sp
+from PIL import Image
 
 from siapy.core.configs import TEST_DATA_DIR
 from siapy.entities import Pixels, SpectralImage
@@ -203,3 +204,17 @@ def test_mean(spectral_images):
     assert np.allclose(
         mean_axis_tuple, np.nanmean(spectral_image_vnir.to_numpy(), axis=(0, 1))
     )
+
+
+def test_to_display(spectral_images):
+    spectral_image_vnir = spectral_images.vnir
+
+    image = spectral_image_vnir.to_display(equalize=True)
+    assert isinstance(image, Image.Image)
+    assert image.mode == "RGB"
+
+    expected_size = (spectral_image_vnir.cols, spectral_image_vnir.rows)
+    assert image.size == expected_size
+
+    pixel_data = np.array(image)
+    assert (pixel_data >= 0).all() and (pixel_data <= 255).all()

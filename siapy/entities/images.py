@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING, Any
 
 import numpy as np
 import spectral as sp
+from PIL import Image, ImageOps
 
 from .signatures import Signatures
 
@@ -75,19 +76,16 @@ class SpectralImage:
         wavelength_data = self._sp_file.metadata["wavelength"]
         return list(map(float, wavelength_data))
 
-    def to_display(self, brightness: float = 1.0) -> np.ndarray:
+    def to_display(self, equalize: bool = True) -> Image.Image:
         image_3ch = self._sp_file.read_bands(self.default_bands)
         image_3ch = self._remove_nan(image_3ch, nan_value=0)
-        image_3ch[:, :, 0] = (
-            image_3ch[:, :, 0] / (image_3ch[:, :, 0].max() / 255.0) * brightness
-        )
-        image_3ch[:, :, 1] = (
-            image_3ch[:, :, 1] / (image_3ch[:, :, 1].max() / 255.0) * brightness
-        )
-        image_3ch[:, :, 2] = (
-            image_3ch[:, :, 2] / (image_3ch[:, :, 2].max() / 255.0) * brightness
-        )
-        return image_3ch.astype("uint8")
+        image_3ch[:, :, 0] = image_3ch[:, :, 0] / (image_3ch[:, :, 0].max() / 255.0)
+        image_3ch[:, :, 1] = image_3ch[:, :, 1] / (image_3ch[:, :, 1].max() / 255.0)
+        image_3ch[:, :, 2] = image_3ch[:, :, 2] / (image_3ch[:, :, 2].max() / 255.0)
+        image = Image.fromarray(image_3ch.astype("uint8"))
+        if equalize:
+            image = ImageOps.equalize(image)
+        return image
 
     def to_numpy(self, nan_value: float | None = None) -> np.ndarray:
         image = self._sp_file[:, :, :]
