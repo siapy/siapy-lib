@@ -2,17 +2,26 @@ import numpy as np
 import pytest
 from PIL import Image as PILImage
 
-from siapy.utils.plotting import pixels_select_click, validate_and_convert_image
+from siapy.utils.plotting import (
+    display_selected_areas,
+    pixels_select_click,
+    pixels_select_lasso,
+    validate_and_convert_image,
+)
 from tests.fixtures import spectral_images  # noqa: F401
 
 
 @pytest.mark.manual
-def test_pixels_select_click(spectral_images):
+def test_pixels_select_click_manual(spectral_images):
     image_vnir = spectral_images.vnir
-    image_swir = spectral_images.swir
+    pixels_select_click(image_vnir.to_display())
 
-    pixels_vnir = pixels_select_click(image_vnir.to_display())
-    pixels_swir = pixels_select_click(image_swir.to_display())
+
+@pytest.mark.manual
+def test_pixels_select_lasso_manual(spectral_images):
+    image_vnir = spectral_images.vnir
+    selected_areas = pixels_select_lasso(image_vnir)
+    display_selected_areas(image_vnir, selected_areas, color="blue")
 
 
 def test_validate_and_convert_image_with_spectral_image(spectral_images):
