@@ -82,6 +82,7 @@ class Corregistrator:
         self,
         pixels_ref: Pixels,
         pixels_mov: Pixels,
+        *,
         eps: float = 1e-6,
         max_iter: int = 50,
         plot_progress: bool = False,
@@ -142,5 +143,5 @@ class Corregistrator:
         points_transformed = np.dot(
             pixels.df_homogenious().to_numpy(), transformation_matx.transpose()
         )
-        points_transformed = points_transformed[:, :2].astype("int")
+        points_transformed = np.round(points_transformed[:, :2]).astype("int")
         return Pixels.from_iterable(points_transformed)
