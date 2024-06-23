@@ -5,26 +5,11 @@ import numpy as np
 from matplotlib.patches import Polygon
 from matplotlib.path import Path
 from matplotlib.widgets import LassoSelector
-from PIL.Image import Image
 
 from siapy.core.logger import logger
-from siapy.entities import Pixels, SpectralImage
-
-ImageType = SpectralImage | np.ndarray | Image
-
-
-def validate_and_convert_image(image: ImageType) -> np.ndarray:
-    if isinstance(image, SpectralImage):
-        image_display = np.array(image.to_display())
-    elif isinstance(image, Image):
-        image_display = np.array(image)
-    elif (
-        isinstance(image, np.ndarray) and len(image.shape) == 3 and image.shape[-1] == 3
-    ):
-        image_display = image
-    else:
-        raise ValueError("Image must be convertable to 3d numpy array.")
-    return image_display
+from siapy.entities import Pixels
+from siapy.core.types import ImageType
+from siapy.utils.general import validate_and_convert_image
 
 
 def pixels_select_click(image: ImageType) -> Pixels:

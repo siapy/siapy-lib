@@ -4,6 +4,12 @@ from functools import partial
 from pathlib import Path
 from typing import Any, Callable, Generator, Optional
 
+import numpy as np
+from PIL.Image import Image
+
+from siapy.core.types import ImageType
+from siapy.entities import SpectralImage
+
 
 def initialize_object(
     module: types.ModuleType | Any,
@@ -75,3 +81,17 @@ def get_increasing_seq_indices(values_list: list[int]) -> list[int]:
             last_value = value
             indices.append(idx)
     return indices
+
+
+def validate_and_convert_image(image: ImageType) -> np.ndarray:
+    if isinstance(image, SpectralImage):
+        image_display = np.array(image.to_display())
+    elif isinstance(image, Image):
+        image_display = np.array(image)
+    elif (
+        isinstance(image, np.ndarray) and len(image.shape) == 3 and image.shape[-1] == 3
+    ):
+        image_display = image.copy()
+    else:
+        raise ValueError("Image must be convertable to 3d numpy array.")
+    return image_display
