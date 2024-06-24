@@ -4,22 +4,8 @@ from typing import Callable
 import numpy as np
 from skimage import transform
 
-from siapy.core.types import ImageType
-from siapy.utils.general import validate_and_convert_image
-
-OutputSizeType = int | tuple[int, int]
-
-
-def _check_image_output_size(output_size: OutputSizeType) -> tuple[int, int]:
-    if not isinstance(output_size, (int, tuple)):
-        raise TypeError("Argument output_size must be an int or a tuple.")
-    if isinstance(output_size, int):
-        output_size = (output_size, output_size)
-    elif len(output_size) != 2 or not all([isinstance(el, int) for el in output_size]):
-        raise ValueError(
-            "Argument output_size tuple must have 2 elements and contain only integers."
-        )
-    return output_size
+from siapy.core.types import ImageSizeType, ImageType
+from siapy.utils.validators import validate_image_size, validate_image_to_numpy
 
 
 def add_gaussian_noise(
@@ -28,8 +14,8 @@ def add_gaussian_noise(
     std: float = 1.0,
     clip_to_max: bool = True,
 ) -> np.ndarray:
-    image_np = validate_and_convert_image(image)
-    rng = np.random.default_rng(seed=None)
+    image_np = validate_image_to_numpy(image)
+    rng = np.random.default_rng()
     noise = rng.normal(loc=mean, scale=std, size=image_np.shape)
     image_np = image_np + noise
     if clip_to_max:
@@ -37,9 +23,9 @@ def add_gaussian_noise(
     return image_np
 
 
-def random_crop(image: ImageType, output_size: OutputSizeType) -> np.ndarray:
-    image_np = validate_and_convert_image(image)
-    output_size = _check_image_output_size(output_size)
+def random_crop(image: ImageType, output_size: ImageSizeType) -> np.ndarray:
+    image_np = validate_image_to_numpy(image)
+    output_size = validate_image_size(output_size)
     h, w = image_np.shape[:2]
     new_h, new_w = output_size
     top = np.random.randint(0, h - new_h)
@@ -48,7 +34,7 @@ def random_crop(image: ImageType, output_size: OutputSizeType) -> np.ndarray:
 
 
 def random_mirror(image: ImageType) -> np.ndarray:
-    image_np = validate_and_convert_image(image)
+    image_np = validate_image_to_numpy(image)
     axis = random.choices([0, 1, (0, 1), None])[0]
     if isinstance(axis, int) or isinstance(axis, tuple):
         image_np = np.flip(image_np, axis=axis)
@@ -56,19 +42,19 @@ def random_mirror(image: ImageType) -> np.ndarray:
 
 
 def random_rotation(image: ImageType, angle: float) -> np.ndarray:
-    image_np = validate_and_convert_image(image)
+    image_np = validate_image_to_numpy(image)
     rotated_image = transform.rotate(image_np, angle)
     return rotated_image
 
 
-def rescale(image: ImageType, output_size: OutputSizeType) -> np.ndarray:
-    image_np = validate_and_convert_image(image)
-    output_size = _check_image_output_size(output_size)
+def rescale(image: ImageType, output_size: ImageSizeType) -> np.ndarray:
+    image_np = validate_image_to_numpy(image)
+    output_size = validate_image_size(output_size)
     return transform.resize(image_np, output_size)
 
 
 def area_normalization(image: ImageType) -> np.ndarray:
-    image_np = validate_and_convert_image(image)
+    image_np = validate_image_to_numpy(image)
 
     def _signal_normalize(signal: np.ndarray) -> np.ndarray:
         area = np.trapz(signal)

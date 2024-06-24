@@ -7,13 +7,13 @@ from matplotlib.path import Path
 from matplotlib.widgets import LassoSelector
 
 from siapy.core.logger import logger
-from siapy.entities import Pixels
 from siapy.core.types import ImageType
-from siapy.utils.general import validate_and_convert_image
+from siapy.entities import Pixels
+from siapy.utils.validators import validate_image_to_numpy_3channels
 
 
 def pixels_select_click(image: ImageType) -> Pixels:
-    image_display = validate_and_convert_image(image)
+    image_display = validate_image_to_numpy_3channels(image)
 
     coordinates = []
     fig, ax = plt.subplots(1, 1)
@@ -58,7 +58,7 @@ def pixels_select_click(image: ImageType) -> Pixels:
 
 
 def pixels_select_lasso(image: ImageType) -> list[Pixels]:
-    image_display = validate_and_convert_image(image)
+    image_display = validate_image_to_numpy_3channels(image)
 
     x, y = np.meshgrid(
         np.arange(image_display.shape[1]), np.arange(image_display.shape[0])
@@ -119,7 +119,7 @@ def display_selected_areas(
     *,
     color: str = "red",
 ):
-    image_display = validate_and_convert_image(image)
+    image_display = validate_image_to_numpy_3channels(image)
 
     fig, ax = plt.subplots()
     ax.imshow(image_display)
