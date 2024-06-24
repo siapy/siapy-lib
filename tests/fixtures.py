@@ -15,6 +15,8 @@ from tests.configs import (
 class SpectralImages(SimpleNamespace):
     vnir: SpectralImage
     swir: SpectralImage
+    vnir_np: np.ndarray
+    swir_np: np.ndarray
 
 
 @pytest.fixture
@@ -27,7 +29,14 @@ def spectral_images() -> SpectralImages:
         hdr_path=image_swir_hdr_path,
         img_path=image_swir_img_path,
     )
-    return SpectralImages(vnir=spectral_image_vnir, swir=spectral_image_swir)
+    spectral_image_vnir_np = spectral_image_vnir.to_numpy()
+    spectral_image_swir_np = spectral_image_swir.to_numpy()
+    return SpectralImages(
+        vnir=spectral_image_vnir,
+        swir=spectral_image_swir,
+        vnir_np=spectral_image_vnir_np,
+        swir_np=spectral_image_swir_np,
+    )
 
 
 class CorrespondingPixels(SimpleNamespace):

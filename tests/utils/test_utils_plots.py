@@ -8,6 +8,7 @@ from siapy.utils.plots import (
 from tests.fixtures import spectral_images  # noqa: F401
 
 
+@pytest.mark.manual
 def test_pixels_select_click_manual(spectral_images):
     image_vnir = spectral_images.vnir
     pixels_select_click(image_vnir.to_display())
