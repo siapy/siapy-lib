@@ -3,7 +3,7 @@ import pytest
 
 from siapy.entities.pixels import Pixels
 from siapy.transformations import corregistrator
-from siapy.utils.plotting import pixels_select_click  # noqa: F401
+from siapy.utils.plots import pixels_select_click  # noqa: F401
 from tests.fixtures import corresponding_pixels, spectral_images  # noqa: F401
 
 

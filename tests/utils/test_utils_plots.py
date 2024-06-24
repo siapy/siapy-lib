@@ -1,6 +1,6 @@
 import pytest
 
-from siapy.utils.plotting import (
+from siapy.utils.plots import (
     display_selected_areas,
     pixels_select_click,
     pixels_select_lasso,
