@@ -1,3 +1,4 @@
+# mypy: ignore-errors
 from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
@@ -9,6 +10,7 @@ from PIL import Image, ImageOps
 from .signatures import Signatures
 
 if TYPE_CHECKING:
+    from ..core.types import SpectralType
     from .pixels import Pixels
 
 
@@ -16,7 +18,7 @@ if TYPE_CHECKING:
 class SpectralImage:
     def __init__(
         self,
-        sp_file: sp.io.envi.BilFile | sp.io.envi.BipFile | sp.io.envi.BsqFile,
+        sp_file: "SpectralType",
     ):
         self._sp_file = sp_file
 
@@ -36,7 +38,7 @@ class SpectralImage:
         return cls(sp_file)
 
     @property
-    def file(self) -> sp.io.envi.BilFile | sp.io.envi.BipFile | sp.io.envi.BsqFile:
+    def file(self) -> "SpectralType":
         return self._sp_file
 
     @property

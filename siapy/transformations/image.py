@@ -43,14 +43,15 @@ def random_mirror(image: ImageType) -> np.ndarray:
 
 def random_rotation(image: ImageType, angle: float) -> np.ndarray:
     image_np = validate_image_to_numpy(image)
-    rotated_image = transform.rotate(image_np, angle)
+    rotated_image = transform.rotate(image_np, angle, preserve_range=True)
     return rotated_image
 
 
 def rescale(image: ImageType, output_size: ImageSizeType) -> np.ndarray:
     image_np = validate_image_to_numpy(image)
     output_size = validate_image_size(output_size)
-    return transform.resize(image_np, output_size)
+    rescaled_image = transform.resize(image_np, output_size, preserve_range=True)
+    return rescaled_image
 
 
 def area_normalization(image: ImageType) -> np.ndarray:

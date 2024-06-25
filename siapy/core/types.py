@@ -1,8 +1,10 @@
 import numpy as np
+import spectral as sp
 from PIL.Image import Image
 
 from siapy.entities import SpectralImage
 
+SpectralType = sp.io.envi.BilFile | sp.io.envi.BipFile | sp.io.envi.BsqFile
 ImageType = SpectralImage | np.ndarray | Image
 ImageSizeType = int | tuple[int, int]
 ImageDataType = (
