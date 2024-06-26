@@ -7,7 +7,7 @@ import numpy as np
 import pytest
 import spectral as sp
 
-from siapy.entities.images import SpectralImage
+from siapy.entities import SpectralImage
 from siapy.utils.images import create_image, merge_images_by_specter, save_image
 from tests.fixtures import spectral_images  # noqa: F401
 

@@ -7,6 +7,7 @@ import numpy as np
 import spectral as sp
 from PIL import Image, ImageOps
 
+from .shapes import Shape
 from .signatures import Signatures
 
 if TYPE_CHECKING:
@@ -21,6 +22,7 @@ class SpectralImage:
         sp_file: "SpectralType",
     ):
         self._sp_file = sp_file
+        self._geometric_shapes: list[Shape] = []
 
     def __repr__(self) -> str:
         return repr(self._sp_file)
@@ -77,6 +79,16 @@ class SpectralImage:
     def wavelengths(self) -> list[float]:
         wavelength_data = self._sp_file.metadata["wavelength"]
         return list(map(float, wavelength_data))
+
+    @property
+    def geometric_shapes(self) -> list["Shape"]:
+        return self._geometric_shapes
+
+    @geometric_shapes.setter
+    def geometric_shapes(self, shapes: list["Shape"]):
+        if not all(isinstance(shape, Shape) for shape in shapes):
+            raise ValueError("All items in the list must be instances of Shape")
+        self._geometric_shapes = shapes
 
     def to_display(self, equalize: bool = True) -> Image.Image:
         image_3ch = self._sp_file.read_bands(self.default_bands)

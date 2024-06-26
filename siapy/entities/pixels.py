@@ -16,6 +16,9 @@ class Pixels:
     _data: pd.DataFrame
     coords: ClassVar[Coordinates] = Coordinates()
 
+    def __len__(self) -> int:
+        return len(self.df)
+
     @classmethod
     def from_iterable(
         cls,

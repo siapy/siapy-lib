@@ -1,17 +1,18 @@
 from pathlib import Path
 
 import numpy as np
+import pytest
 import spectral as sp
 from PIL import Image
 
-from siapy.entities import Pixels, SpectralImage
+from siapy.entities import Pixels, Shape, SpectralImage
 from tests.configs import (
     image_swir_hdr_path,
     image_swir_img_path,
     image_vnir_hdr_path,
     image_vnir_img_path,
 )
-from tests.fixtures import spectral_images  # noqa: F401
+from tests.fixtures import corresponding_pixels, spectral_images  # noqa: F401
 
 
 def test_envi_open():
@@ -204,3 +205,25 @@ def test_to_display(spectral_images):
 
     pixel_data = np.array(image)
     assert (pixel_data >= 0).all() and (pixel_data <= 255).all()
+
+
+def test_geometric_shapes_getter(spectral_images):
+    assert isinstance(spectral_images.vnir.geometric_shapes, list)
+    assert len(spectral_images.vnir.geometric_shapes) == 0
+
+
+def test_geometric_shapes_setter_valid(spectral_images, corresponding_pixels):
+    pixels_vnir = corresponding_pixels.vnir
+    rect = Shape.from_shape_type(shape_type="rectangle", pixels=pixels_vnir)
+    shapes = [rect, rect]
+    spectral_images.vnir.geometric_shapes = shapes
+    assert spectral_images.vnir.geometric_shapes == shapes
+
+
+def test_geometric_shapes_setter_invalid(spectral_images):
+    # Assuming invalid_shape is not an instance of Shape
+    invalid_shape = "not a shape"
+    shapes = [invalid_shape]
+
+    with pytest.raises(ValueError):
+        spectral_images.vnir.geometric_shapes = shapes
