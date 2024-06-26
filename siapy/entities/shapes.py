@@ -2,9 +2,10 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import Literal
 
-from scipy.spatial import ConvexHull
+import numpy as np
+from matplotlib.path import Path
 
-from siapy.entities.pixels import Pixels
+from .pixels import Pixels
 
 
 @dataclass
@@ -67,7 +68,17 @@ class FreeDraw(Shape):
     def convex_hull(self) -> Pixels:
         if len(self.pixels) < 3:
             return self.pixels
+
         points = self.pixels.to_numpy()
-        hull = ConvexHull(points)
-        hull_points = points[hull.vertices]
-        return Pixels.from_iterable(hull_points.tolist())
+        points_path = Path(points)
+
+        # Create a grid of points that covers the convex hull area
+        u_min, v_min = points.min(axis=0)
+        u_max, v_max = points.max(axis=0)
+        u, v = np.meshgrid(np.arange(u_min, u_max + 1), np.arange(v_min, v_max + 1))
+        grid_points = np.vstack((u.flatten(), v.flatten())).T
+
+        # Filter points that are inside the convex hull
+        inside_points = grid_points[points_path.contains_points(grid_points)]
+
+        return Pixels.from_iterable(inside_points.tolist())

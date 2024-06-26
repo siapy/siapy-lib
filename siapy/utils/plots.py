@@ -2,7 +2,6 @@ import sys
 
 import matplotlib.pyplot as plt
 import numpy as np
-from matplotlib.patches import Polygon
 from matplotlib.path import Path
 from matplotlib.widgets import LassoSelector
 
@@ -77,7 +76,7 @@ def pixels_select_lasso(image: ImageType) -> list[Pixels]:
         logger.info("Selected.")
         nonlocal indices
         path = Path(vertices_selected)
-        indices = np.nonzero(path.contains_points(pixes_all_stack))[0]
+        indices = path.contains_points(pixes_all_stack)
 
     def onrelease(_):
         nonlocal indices, indices_list
@@ -115,17 +114,25 @@ def pixels_select_lasso(image: ImageType) -> list[Pixels]:
 
 def display_selected_areas(
     image: ImageType,
-    selected_areas: list[Pixels],
+    selected_areas: Pixels | list[Pixels],
     *,
     color: str = "red",
 ):
-    image_display = validate_image_to_numpy_3channels(image)
+    if not isinstance(selected_areas, list):
+        selected_areas = [selected_areas]
 
+    image_display = validate_image_to_numpy_3channels(image)
     fig, ax = plt.subplots()
     ax.imshow(image_display)
 
     for pixels in selected_areas:
-        polygon = Polygon(pixels.to_numpy(), color=color)
-        ax.add_patch(polygon)
+        ax.scatter(
+            pixels.u(),
+            pixels.v(),
+            lw=0,
+            marker="o",
+            c=color,
+            s=(72.0 / fig.dpi) ** 2,
+        )
 
     plt.show()
