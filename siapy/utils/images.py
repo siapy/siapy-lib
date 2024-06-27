@@ -154,3 +154,36 @@ def merge_images_by_specter(
         overwrite=overwrite,
         dtype=dtype,
     )
+
+
+def convert_radiance_image_to_reflectance(
+    image: SpectralImage,
+    panel_correction: np.ndarray,
+    save_path: Annotated[
+        str | Path | None, "Header file (with '.hdr' extension) name with path."
+    ],
+    **kwargs: Any,
+) -> np.ndarray | SpectralImage:
+    image_ref_np = image.to_numpy() * panel_correction
+    if save_path is None:
+        return image_ref_np
+
+    return create_image(
+        image=image_ref_np, save_path=save_path, metadata=image.metadata, **kwargs
+    )
+
+
+def calculate_correction_factor_from_panel(
+    image: SpectralImage,
+    panel_reference_reflectance: float,
+    panel_shape_label: str = "reference_panel",
+) -> np.ndarray | None:
+    panel_shape = image.geometric_shapes.get_by_name(panel_shape_label)
+    if panel_shape is None:
+        return None
+
+    panel_signatures = image.to_signatures(panel_shape.convex_hull())
+    panel_radiance_mean = panel_signatures.signals.mean()
+    panel_reflectance_mean = np.full(image.bands, panel_reference_reflectance)
+    panel_correction = panel_reflectance_mean / panel_radiance_mean
+    return panel_correction

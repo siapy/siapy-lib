@@ -8,7 +8,15 @@ import pytest
 import spectral as sp
 
 from siapy.entities import SpectralImage
-from siapy.utils.images import create_image, merge_images_by_specter, save_image
+from siapy.entities.pixels import Pixels
+from siapy.entities.shapes import Shape
+from siapy.utils.images import (
+    calculate_correction_factor_from_panel,
+    convert_radiance_image_to_reflectance,
+    create_image,
+    merge_images_by_specter,
+    save_image,
+)
 from tests.fixtures import spectral_images  # noqa: F401
 
 
@@ -131,3 +139,57 @@ def test_merge_images_by_specter():
             auto_metadata_extraction=False,
         )
         assert save_path.exists()
+
+
+def test_calculate_correction_factor_from_panel(spectral_images):
+    pixels = Pixels.from_iterable([(900, 1150), (1050, 1300)])
+    rect = Shape.from_shape_type(
+        shape_type="rectangle", pixels=pixels, label="reference_panel"
+    )
+    image_vnir = spectral_images.vnir
+    image_vnir.geometric_shapes.append(rect)
+
+    panel_correction = calculate_correction_factor_from_panel(
+        image=image_vnir,
+        panel_reference_reflectance=0.2,
+        panel_shape_label="reference_panel",
+    )
+
+    assert panel_correction is not None
+    assert isinstance(panel_correction, np.ndarray)
+    assert panel_correction.shape == (image_vnir.bands,)
+
+    a = image_vnir.to_numpy()
+    b = rect.convex_hull()
+    c = a[b.v(), b.u(), :]
+    assert np.array_equal(
+        np.full(image_vnir.bands, 0.2), np.round(c.mean(axis=0) * panel_correction, 2)
+    )
+
+
+def test_convert_radiance_image_to_reflectance_without_saving(spectral_images):
+    image_vnir = spectral_images.vnir
+    panel_correction = np.random.default_rng().random(image_vnir.bands)
+
+    result = convert_radiance_image_to_reflectance(
+        image=image_vnir, panel_correction=panel_correction, save_path=None
+    )
+    assert isinstance(result, np.ndarray)
+    assert np.array_equal(result, image_vnir.to_numpy() * panel_correction)
+
+
+def test_convert_radiance_image_to_reflectance_with_saving(spectral_images, tmp_path):
+    image_vnir = spectral_images.vnir
+    panel_correction = np.random.default_rng().random(image_vnir.bands)
+
+    with TemporaryDirectory() as tmpdir:
+        save_path = Path(tmpdir, "test_image.hdr")
+        result = convert_radiance_image_to_reflectance(
+            image=image_vnir, panel_correction=panel_correction, save_path=save_path
+        )
+        assert save_path.exists()
+        assert isinstance(result, SpectralImage)
+        assert np.array_equal(
+            result.to_numpy(),
+            np.array(image_vnir.to_numpy() * panel_correction).astype("float32"),
+        )
