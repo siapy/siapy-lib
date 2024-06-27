@@ -92,6 +92,12 @@ class GeometricShapes:
     def sort(self, key: Any = None, reverse: bool = False):
         self._geometric_shapes.sort(key=key, reverse=reverse)
 
+    def get_by_name(self, name: str) -> Shape | None:
+        names = [shape.label for shape in self.shapes]
+        if name in names:
+            index = names.index(name)
+            return self.shapes[index]
+
     def _check_shape_type(self, shapes: Shape | Iterable[Shape]):
         if isinstance(shapes, Shape):
             return

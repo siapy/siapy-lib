@@ -419,3 +419,26 @@ def test_geometric_shapes_sort(spectral_images, corresponding_pixels):
     spectral_images.vnir.geometric_shapes.sort(key=lambda shape: shape.label)
     assert spectral_images.vnir.geometric_shapes[0].label == "A"
     assert spectral_images.vnir.geometric_shapes[1].label == "B"
+
+
+def test_geometric_shapes_get_by_name_found(spectral_images, corresponding_pixels):
+    rect1 = Shape.from_shape_type(
+        shape_type="rectangle", pixels=corresponding_pixels.vnir, label="Rect1"
+    )
+    rect2 = Shape.from_shape_type(
+        shape_type="rectangle", pixels=corresponding_pixels.vnir, label="Rect2"
+    )
+    spectral_images.vnir.geometric_shapes.shapes = [rect1, rect2]
+    found_shape = spectral_images.vnir.geometric_shapes.get_by_name("Rect1")
+    assert found_shape == rect1
+    assert found_shape.label == "Rect1"
+
+
+def test_geometric_shapes_get_by_name_not_found(spectral_images, corresponding_pixels):
+    # Create a shape
+    rect = Shape.from_shape_type(
+        shape_type="rectangle", pixels=corresponding_pixels.vnir, label="Rect"
+    )
+    spectral_images.vnir.geometric_shapes.shapes = [rect]
+    found_shape = spectral_images.vnir.geometric_shapes.get_by_name("NonExistent")
+    assert found_shape is None
