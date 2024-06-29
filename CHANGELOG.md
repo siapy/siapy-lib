@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/siapy/siapy-lib/compare/v0.2.0...v0.2.1) (2024-06-29)
+
+
+### Bug Fixes
+
+* added missing docs files ([4cd628b](https://github.com/siapy/siapy-lib/commit/4cd628b4da921f736c6d2e9d67b7aa07314c62c3))
+
 ## [0.2.0](https://github.com/siapy/siapy-lib/compare/v0.1.1...v0.2.0) (2024-06-29)
 
 
