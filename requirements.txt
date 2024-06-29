@@ -3,7 +3,7 @@ matplotlib==3.5.2
 numba==0.55.1
 opencv_python==4.5.3.56
 pandas==1.4.3
-rich==12.5.1
+rich==13.7.1
 scikit_learn==1.1.2
 spectral==0.22.4
 hydra_core==1.2.0
