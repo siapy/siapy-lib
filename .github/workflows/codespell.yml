@@ -4,9 +4,9 @@ name: Codespell
 
 on:
   push:
-    branches: [master]
+    branches: [develop, main]
   pull_request:
-    branches: [master]
+    branches: [develop, main]
 
 permissions:
   contents: read

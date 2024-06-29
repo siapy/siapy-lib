@@ -14,6 +14,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          lfs: true # This option ensures that Git LFS files are checked out
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
