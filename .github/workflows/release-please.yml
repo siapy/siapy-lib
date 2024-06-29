@@ -20,6 +20,9 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  statuses: write
+  actions: write
+  issues: write
 
 jobs:
   release-please:
@@ -30,5 +33,5 @@ jobs:
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}
       - uses: googleapis/release-please-action@v4
         with:
-          token: ${{ secrets.XGITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           release-type: python
