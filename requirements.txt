@@ -1,7 +1,7 @@
 inpoly==0.1.2
 matplotlib==3.5.2
 numba==0.55.1
-opencv_python==4.5.3.56
+opencv_python==4.10.0.84
 pandas==1.4.3
 rich==12.5.1
 scikit_learn==1.1.2
