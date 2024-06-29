@@ -1,4 +1,4 @@
-inpoly==0.1.2
+inpoly==0.2.0
 matplotlib==3.5.2
 numba==0.55.1
 opencv_python==4.5.3.56
