@@ -1,6 +1,6 @@
 inpoly==0.1.2
 matplotlib==3.5.2
-numba==0.55.1
+numba==0.60.0
 opencv_python==4.5.3.56
 pandas==1.4.3
 rich==12.5.1
