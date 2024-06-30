@@ -1,5 +1,5 @@
 [project]
-name = "siapy-lib"
+name = "siapy"
 version = "0.2.1"
 description = "A python library for efficient processing of spectral images."
 authors = [{ name = "janezlapajne", email = "janez.lapajne@kis.si" }]
@@ -47,6 +47,9 @@ build-backend = "pdm.backend"
 
 [tool.pdm]
 distribution = true
+
+[tool.pdm.build]
+source-includes = ["tests/", "scripts/", "docs/"]
 
 [tool.pdm.dev-dependencies]
 lint = [
