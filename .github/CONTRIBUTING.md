@@ -118,6 +118,20 @@ Spell check is performed with [CSpell](https://cspell.org/). The CSpell command 
     - Include administrators
     - Do not allow force pushes
     - Require status checks to pass before merging (commits must have previously been pushed to `develop` and passed all checks)
+- **To commit:**
+  - Follow the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/#specification) specification for commit messages. This standardizes the commit history and facilitates automatic generation of the changelog.
+  - _Type_ must be one of the following:
+    - `build`: Changes that affect the build system or external dependencies (example scopes: gulp, broccoli, npm)
+    - `ci`: Changes to our CI configuration files and scripts (example scopes: Travis, Circle, BrowserStack, SauceLabs)
+    - `docs`: Documentation only changes
+    - `feat`: A new feature
+    - `fix`: A bug fix
+    - `perf`: A code change that improves performance
+    - `refactor`: A code change that neither fixes a bug nor adds a feature
+    - `style`: Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)
+    - `test`: Adding missing tests or correcting existing tests
+  - Ensure your commit messages clearly describe the changes made and follow the format `type(scope?): subject`, where `scope` is optional.
+
 - **To create a release:**
   - Follow [SemVer](https://semver.org/) guidelines when choosing a version number. Note that [PEP 440](https://peps.python.org/pep-0440/) Python version specifiers and SemVer version specifiers differ, particularly with regard to specifying prereleases. Use syntax compatible with both.
   - The PEP 440 default (like `1.0.0a0`) is different from SemVer.

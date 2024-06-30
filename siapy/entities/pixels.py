@@ -8,7 +8,7 @@ import pandas as pd
 class Coordinates(NamedTuple):
     U: Annotated[str, "u - x coordinate on the image"] = "u"
     V: Annotated[str, "v - y coordinate on the image"] = "v"
-    H: Annotated[str, "h - homogenious coordinate"] = "h"
+    H: Annotated[str, "h - homogeneous coordinate"] = "h"
 
 
 @dataclass

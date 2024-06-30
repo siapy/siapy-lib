@@ -16,7 +16,7 @@ def validate_image_to_numpy_3channels(image: ImageType) -> np.ndarray:
         image_display = image.copy()
     else:
         raise ValueError(
-            "Argument image must be convertable to numpy array with 3 channels."
+            "Argument image must be convertible to numpy array with 3 channels."
         )
     return image_display
 
