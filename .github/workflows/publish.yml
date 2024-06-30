@@ -1,4 +1,4 @@
-name: Publish To The Python Package Index (PyPI)
+name: Publish To PyPI
 
 on:
   # workflow_run:
@@ -14,14 +14,15 @@ on:
 
 jobs:
   pypi-publish:
-    name: upload release to PyPI
+    name: Upload release to PyPI
     runs-on: ubuntu-latest
     permissions:
       contents: read
       id-token: write
     steps:
-      - uses: actions/checkout@v4
-      - name: Setup PDM
-        uses: pdm-project/setup-pdm@v4
+      - uses: actions/checkout@v3
+      - uses: pdm-project/setup-pdm@v3
+        with:
+          version: "head"
       - name: Publish package distributions to PyPI
         run: pdm publish
