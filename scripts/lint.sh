@@ -4,5 +4,5 @@ set -e
 set -x
 
 pdm run mypy siapy
-pdm run ruff check siapy
-pdm run ruff format siapy --check
+pdm run ruff check siapy tests scripts
+pdm run ruff format siapy tests --check

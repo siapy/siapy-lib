@@ -47,3 +47,11 @@ mypy_path = "stubs"
 [[tool.mypy.overrides]]
 module = "spectral"
 ignore_missing_imports = true
+
+[tool.flake8]
+per-file-ignores = ["tests/*:F401,F811"]
+
+[tool.ruff]
+extend-exclude = []
+exclude = []
+lint.ignore = ["F811"]
