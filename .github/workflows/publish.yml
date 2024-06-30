@@ -1,0 +1,27 @@
+name: Publish To The Python Package Index (PyPI)
+
+on:
+  # workflow_run:
+  #   workflows: [Auto release maker]
+  #   types: [completed]
+  # pull_request:
+  #   branches:
+  #     - main
+  #   types:
+  #     - closed
+  push:
+    branches: [develop, main]
+
+jobs:
+  pypi-publish:
+    name: upload release to PyPI
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup PDM
+        uses: pdm-project/setup-pdm@v4
+      - name: Publish package distributions to PyPI
+        run: pdm publish
