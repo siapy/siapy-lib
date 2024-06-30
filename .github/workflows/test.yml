@@ -46,9 +46,8 @@ jobs:
           jobs: ${{ toJSON(needs) }}
 
   smokeshow:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     needs:
-      - alls-green
+      - test
     runs-on: ubuntu-latest
     permissions:
       actions: read
