@@ -44,7 +44,7 @@ jobs:
           jobs: ${{ toJSON(needs) }}
 
   smokeshow:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    # if: ${{ github.event.workflow_run.conclusion == 'success' }}
     needs:
       - test
     runs-on: ubuntu-latest
