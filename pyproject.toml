@@ -3,6 +3,25 @@ name = "siapy-lib"
 version = "0.2.1"
 description = "A python library for efficient processing of spectral images."
 authors = [{ name = "janezlapajne", email = "janez.lapajne@kis.si" }]
+
+classifiers = [
+	"Intended Audience :: Information Technology",
+	"Operating System :: OS Independent",
+	"Programming Language :: Python :: 3",
+	"Programming Language :: Python",
+	"Topic :: Internet",
+	"Topic :: Software Development :: Libraries :: Python Modules",
+	"Topic :: Software Development :: Libraries",
+	"Topic :: Software Development",
+	"Typing :: Typed",
+	"Intended Audience :: Developers",
+	"License :: OSI Approved :: MIT License",
+	"Programming Language :: Python :: 3 :: Only",
+	"Programming Language :: Python :: 3.10",
+	"Programming Language :: Python :: 3.11",
+	"Programming Language :: Python :: 3.12",
+]
+
 dependencies = [
 	"pandas>=2.2.2",
 	"opencv-python>=4.10.0.82",
@@ -17,10 +36,14 @@ requires-python = ">=3.10"
 readme = "README.md"
 license = { text = "MIT" }
 
+[project.urls]
+Homepage = "https://github.com/siapy/siapy-lib"
+Documentation = "https://github.com/siapy/siapy-lib/docs"
+Repository = "https://github.com/siapy/siapy-lib"
+
 [build-system]
 requires = ["pdm-backend"]
 build-backend = "pdm.backend"
-
 
 [tool.pdm]
 distribution = true
@@ -36,7 +59,6 @@ lint = [
 dev = ["pre-commit>=3.7.1"]
 test = ["pytest>=8.2.2", "pytest-cov>=5.0.0"]
 docs = ["mkdocs>=1.6.0"]
-
 
 [tool.pytest.ini_options]
 markers = ["manual: mark test as manual to run them only on demand."]
@@ -55,3 +77,10 @@ per-file-ignores = ["tests/*:F401,F811"]
 extend-exclude = []
 exclude = []
 lint.ignore = ["F811"]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"]
+
+[tool.ruff.lint.pyupgrade]
+# Preserve types, even if a file imports `from __future__ import annotations`.
+keep-runtime-typing = true
