@@ -25,7 +25,8 @@ jobs:
       - name: Install dependencies with PDM
         run: pdm install
       - name: Run tests with coverage report
-        run: pdm run pytest --cov=./ --cov-report=html -m "not manual"
+        # run: pdm run pytest --cov=./ --cov-report=html -m "not manual"
+        run: ./scripts/test.sh "Coverage for ${{ github.sha }}"
       - name: Store coverage files
         uses: actions/upload-artifact@v4
         with:
