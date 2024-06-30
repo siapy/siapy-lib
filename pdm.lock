@@ -4,8 +4,8 @@
 [metadata]
 groups = ["default", "lint", "dev", "test", "docs"]
 strategy = ["cross_platform", "inherit_metadata"]
-lock_version = "4.4.1"
-content_hash = "sha256:d9797cd42afb629e95d9a2406b7af85cc967ad677e438acd4d7ed80161fc4e31"
+lock_version = "4.4.2"
+content_hash = "sha256:f29fda94cbbc182f67d55d14a493affdd0ffb4e4e5ee2b66a8c780bbb5e9bc11"
 
 [[package]]
 name = "annotated-types"
@@ -92,7 +92,7 @@ name = "contourpy"
 version = "1.2.1"
 requires_python = ">=3.9"
 summary = "Python library for calculating contours of 2D quadrilateral grids"
-groups = ["dev"]
+groups = ["default"]
 dependencies = [
     "numpy>=1.20",
 ]
@@ -225,7 +225,7 @@ name = "cycler"
 version = "0.12.1"
 requires_python = ">=3.8"
 summary = "Composable style cycles"
-groups = ["dev"]
+groups = ["default"]
 files = [
     {file = "cycler-0.12.1-py3-none-any.whl", hash = "sha256:85cef7cff222d8644161529808465972e51340599459b8ac3ccbac5a854e0d30"},
     {file = "cycler-0.12.1.tar.gz", hash = "sha256:88bb128f02ba341da8ef447245a9e138fae777f6a23943da4540077d3601eb1c"},
@@ -285,7 +285,7 @@ name = "fonttools"
 version = "4.53.0"
 requires_python = ">=3.8"
 summary = "Tools to manipulate font files"
-groups = ["dev"]
+groups = ["default"]
 files = [
     {file = "fonttools-4.53.0-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:52a6e0a7a0bf611c19bc8ec8f7592bdae79c8296c70eb05917fd831354699b20"},
     {file = "fonttools-4.53.0-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:099634631b9dd271d4a835d2b2a9e042ccc94ecdf7e2dd9f7f34f7daf333358d"},
@@ -395,7 +395,7 @@ name = "kiwisolver"
 version = "1.4.5"
 requires_python = ">=3.7"
 summary = "A fast implementation of the Cassowary constraint solver"
-groups = ["dev"]
+groups = ["default"]
 files = [
     {file = "kiwisolver-1.4.5-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:05703cf211d585109fcd72207a31bb170a0f22144d68298dc5e61b3c946518af"},
     {file = "kiwisolver-1.4.5-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:146d14bebb7f1dc4d5fbf74f8a6cb15ac42baadee8912eb84ac0b3b2a3dc6ac3"},
@@ -544,7 +544,7 @@ name = "matplotlib"
 version = "3.9.0"
 requires_python = ">=3.9"
 summary = "Python plotting package"
-groups = ["dev"]
+groups = ["default"]
 dependencies = [
     "contourpy>=1.0.1",
     "cycler>=0.10",
@@ -658,6 +658,37 @@ files = [
 ]
 
 [[package]]
+name = "mypy"
+version = "1.10.1"
+requires_python = ">=3.8"
+summary = "Optional static typing for Python"
+groups = ["lint"]
+dependencies = [
+    "mypy-extensions>=1.0.0",
+    "tomli>=1.1.0; python_version < \"3.11\"",
+    "typing-extensions>=4.1.0",
+]
+files = [
+    {file = "mypy-1.10.1-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:e36f229acfe250dc660790840916eb49726c928e8ce10fbdf90715090fe4ae02"},
+    {file = "mypy-1.10.1-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:51a46974340baaa4145363b9e051812a2446cf583dfaeba124af966fa44593f7"},
+    {file = "mypy-1.10.1-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:901c89c2d67bba57aaaca91ccdb659aa3a312de67f23b9dfb059727cce2e2e0a"},
+    {file = "mypy-1.10.1-cp310-cp310-musllinux_1_1_x86_64.whl", hash = "sha256:0cd62192a4a32b77ceb31272d9e74d23cd88c8060c34d1d3622db3267679a5d9"},
+    {file = "mypy-1.10.1-cp310-cp310-win_amd64.whl", hash = "sha256:a2cbc68cb9e943ac0814c13e2452d2046c2f2b23ff0278e26599224cf164e78d"},
+    {file = "mypy-1.10.1-cp311-cp311-macosx_10_9_x86_64.whl", hash = "sha256:bd6f629b67bb43dc0d9211ee98b96d8dabc97b1ad38b9b25f5e4c4d7569a0c6a"},
+    {file = "mypy-1.10.1-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:a1bbb3a6f5ff319d2b9d40b4080d46cd639abe3516d5a62c070cf0114a457d84"},
+    {file = "mypy-1.10.1-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:b8edd4e9bbbc9d7b79502eb9592cab808585516ae1bcc1446eb9122656c6066f"},
+    {file = "mypy-1.10.1-cp311-cp311-musllinux_1_1_x86_64.whl", hash = "sha256:6166a88b15f1759f94a46fa474c7b1b05d134b1b61fca627dd7335454cc9aa6b"},
+    {file = "mypy-1.10.1-cp311-cp311-win_amd64.whl", hash = "sha256:5bb9cd11c01c8606a9d0b83ffa91d0b236a0e91bc4126d9ba9ce62906ada868e"},
+    {file = "mypy-1.10.1-cp312-cp312-macosx_10_9_x86_64.whl", hash = "sha256:d8681909f7b44d0b7b86e653ca152d6dff0eb5eb41694e163c6092124f8246d7"},
+    {file = "mypy-1.10.1-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:378c03f53f10bbdd55ca94e46ec3ba255279706a6aacaecac52ad248f98205d3"},
+    {file = "mypy-1.10.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:6bacf8f3a3d7d849f40ca6caea5c055122efe70e81480c8328ad29c55c69e93e"},
+    {file = "mypy-1.10.1-cp312-cp312-musllinux_1_1_x86_64.whl", hash = "sha256:701b5f71413f1e9855566a34d6e9d12624e9e0a8818a5704d74d6b0402e66c04"},
+    {file = "mypy-1.10.1-cp312-cp312-win_amd64.whl", hash = "sha256:3c4c2992f6ea46ff7fce0072642cfb62af7a2484efe69017ed8b095f7b39ef31"},
+    {file = "mypy-1.10.1-py3-none-any.whl", hash = "sha256:71d8ac0b906354ebda8ef1673e5fde785936ac1f29ff6987c7483cfbd5a4235a"},
+    {file = "mypy-1.10.1.tar.gz", hash = "sha256:1f8f492d7db9e3593ef42d4f115f04e556130f2819ad33ab84551403e97dd4c0"},
+]
+
+[[package]]
 name = "mypy-extensions"
 version = "1.0.0"
 requires_python = ">=3.5"
@@ -695,7 +726,7 @@ name = "numpy"
 version = "1.26.4"
 requires_python = ">=3.9"
 summary = "Fundamental package for array computing in Python"
-groups = ["default", "dev"]
+groups = ["default", "lint"]
 files = [
     {file = "numpy-1.26.4-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:9ff0f4f29c51e2803569d7a51c2304de5554655a60c5d776e35b4a41413830d0"},
     {file = "numpy-1.26.4-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:2e4ee3380d6de9c9ec04745830fd9e2eccb3e6cf790d39d7b98ffd19b0dd754a"},
@@ -758,7 +789,7 @@ name = "packaging"
 version = "24.0"
 requires_python = ">=3.7"
 summary = "Core utilities for Python packages"
-groups = ["default", "dev", "docs", "lint", "test"]
+groups = ["default", "docs", "lint", "test"]
 files = [
     {file = "packaging-24.0-py3-none-any.whl", hash = "sha256:2ddfb553fdf02fb784c234c7ba6ccc288296ceabec964ad2eae3777778130bc5"},
     {file = "packaging-24.0.tar.gz", hash = "sha256:eb82c5e3e56209074766e6885bb04b8c38a0c015d0a30036ebe7ece34c9989e9"},
@@ -804,6 +835,22 @@ files = [
 ]
 
 [[package]]
+name = "pandas-stubs"
+version = "2.2.2.240603"
+requires_python = ">=3.9"
+summary = "Type annotations for pandas"
+groups = ["lint"]
+dependencies = [
+    "numpy>=1.23.5; python_version >= \"3.9\" and python_version < \"3.12\"",
+    "numpy>=1.26.0; python_version >= \"3.12\" and python_version < \"3.13\"",
+    "types-pytz>=2022.1.1",
+]
+files = [
+    {file = "pandas_stubs-2.2.2.240603-py3-none-any.whl", hash = "sha256:e08ce7f602a4da2bff5a67475ba881c39f2a4d4f7fccc1cba57c6f35a379c6c0"},
+    {file = "pandas_stubs-2.2.2.240603.tar.gz", hash = "sha256:2dcc86e8fa6ea41535a4561c1f08b3942ba5267b464eff2e99caeee66f9e4cd1"},
+]
+
+[[package]]
 name = "pathspec"
 version = "0.12.1"
 requires_python = ">=3.8"
@@ -819,7 +866,7 @@ name = "pillow"
 version = "10.3.0"
 requires_python = ">=3.8"
 summary = "Python Imaging Library (Fork)"
-groups = ["default", "dev"]
+groups = ["default"]
 files = [
     {file = "pillow-10.3.0-cp310-cp310-macosx_10_10_x86_64.whl", hash = "sha256:90b9e29824800e90c84e4022dd5cc16eb2d9605ee13f05d47641eb183cd73d45"},
     {file = "pillow-10.3.0-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:a2c405445c79c3f5a124573a051062300936b0281fee57637e706453e452746c"},
@@ -1032,7 +1079,7 @@ name = "pyparsing"
 version = "3.1.2"
 requires_python = ">=3.6.8"
 summary = "pyparsing module - Classes and methods to define and execute parsing grammars"
-groups = ["dev"]
+groups = ["default"]
 files = [
     {file = "pyparsing-3.1.2-py3-none-any.whl", hash = "sha256:f9db75911801ed778fe61bb643079ff86601aca99fcae6345aa67292038fb742"},
     {file = "pyparsing-3.1.2.tar.gz", hash = "sha256:a1bac0ce561155ecc3ed78ca94d3c9378656ad4c94c1270de543f621420f94ad"},
@@ -1077,7 +1124,7 @@ name = "python-dateutil"
 version = "2.9.0.post0"
 requires_python = "!=3.0.*,!=3.1.*,!=3.2.*,>=2.7"
 summary = "Extensions to the standard Python datetime module"
-groups = ["default", "dev", "docs"]
+groups = ["default", "docs"]
 dependencies = [
     "six>=1.5",
 ]
@@ -1286,7 +1333,7 @@ name = "six"
 version = "1.16.0"
 requires_python = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*"
 summary = "Python 2 and 3 compatibility utilities"
-groups = ["default", "dev", "docs"]
+groups = ["default", "docs"]
 files = [
     {file = "six-1.16.0-py2.py3-none-any.whl", hash = "sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254"},
     {file = "six-1.16.0.tar.gz", hash = "sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926"},
@@ -1340,6 +1387,17 @@ marker = "python_version < \"3.11\""
 files = [
     {file = "tomli-2.0.1-py3-none-any.whl", hash = "sha256:939de3e7a6161af0c887ef91b7d41a53e7c5a1ca976325f429cb46ea9bc30ecc"},
     {file = "tomli-2.0.1.tar.gz", hash = "sha256:de526c12914f0c550d15924c62d72abc48d6fe7364aa87328337a31007fe8a4f"},
+]
+
+[[package]]
+name = "types-pytz"
+version = "2024.1.0.20240417"
+requires_python = ">=3.8"
+summary = "Typing stubs for pytz"
+groups = ["lint"]
+files = [
+    {file = "types-pytz-2024.1.0.20240417.tar.gz", hash = "sha256:6810c8a1f68f21fdf0f4f374a432487c77645a0ac0b31de4bf4690cf21ad3981"},
+    {file = "types_pytz-2024.1.0.20240417-py3-none-any.whl", hash = "sha256:8335d443310e2db7b74e007414e74c4f53b67452c0cb0d228ca359ccfba59659"},
 ]
 
 [[package]]
