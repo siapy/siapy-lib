@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.2.2](https://github.com/siapy/siapy-lib/compare/v0.2.1...v0.2.2) (2024-06-30)
+
+
+### Bug Fixes
+
+* adapt codespell settings to siapy project ([70649e4](https://github.com/siapy/siapy-lib/commit/70649e4daa3eeffa3a4947a039025c3e26022802))
+* fixed test; linter add; dependencies upgrated ([a8e8e8b](https://github.com/siapy/siapy-lib/commit/a8e8e8b2fea95be54aeebbee3a77a8aafd7c61cd))
+* pyptoject.toml rename and add additional files to source pdm build ([951f3f7](https://github.com/siapy/siapy-lib/commit/951f3f747b2ad5062ec266f3b79952b605e06bf5))
+* success flag added back and run_id ([4e62181](https://github.com/siapy/siapy-lib/commit/4e62181acb6604258569e1ca95178da2b78c229f))
+* Update codespell settings to exclude unnecessary directories ([383792b](https://github.com/siapy/siapy-lib/commit/383792be91f7aeba27febeb53a068fb44f29abcd))
+
+
+### Documentation
+
+* conventional commits type description ([d4f05bd](https://github.com/siapy/siapy-lib/commit/d4f05bd481e0853751baf2b792789f1506316082))
+* remove initial contributing readme ([afd7e0b](https://github.com/siapy/siapy-lib/commit/afd7e0b8e23478f9aaff262c7f6fa09e7c5550e7))
+
 ## [0.2.1](https://github.com/siapy/siapy-lib/compare/v0.2.0...v0.2.1) (2024-06-29)
 
 
