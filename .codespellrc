@@ -1,6 +1,6 @@
 [codespell]
 # Ref: https://github.com/codespell-project/codespell#using-a-config-file
-skip = dist/*, ./_old, docs, htmlcov, LICENCE, *.lock, requirements.txt, *.toml
+skip = dist/*, ./_old, docs, htmlcov, LICENCE, *.lock, requirements.txt, *.toml, CHANGELOG.md
 check-hidden = false
 ; ignore-regex =
 # ignore-words-list =
