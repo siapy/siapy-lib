@@ -11,8 +11,6 @@ updates:
     labels:
       - "dependencies"
       - "github-actions"
-    reviewers:
-      - "team-dependencies"
 
   - package-ecosystem: "pip"
     directory: "/"
@@ -25,5 +23,3 @@ updates:
     labels:
       - "dependencies"
       - "python"
-    assignees:
-      - "dependency-manager"
