@@ -38,7 +38,7 @@ license = { text = "MIT" }
 
 [project.urls]
 Homepage = "https://github.com/siapy/siapy-lib"
-Documentation = "https://github.com/siapy/siapy-lib/docs"
+Documentation = "https://github.com/siapy/siapy-lib/tree/main/docs"
 Repository = "https://github.com/siapy/siapy-lib"
 
 [build-system]

@@ -11,8 +11,8 @@ jobs:
       - uses: actions/stale@v9
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          stale-issue-message: "Issue is stale and will be closed in 14 days unless there is new activity"
-          stale-pr-message: "PR is stale and will be closed in 14 days unless there is new activity"
+          stale-issue-message: "Issue is stale and will be closed in 14 days unless there is new activity."
+          stale-pr-message: "PR is stale and will be closed in 14 days unless there is new activity."
           stale-issue-label: "stale"
           exempt-issue-labels: "stale-exempt,kind/feature-request"
           stale-pr-label: "stale"

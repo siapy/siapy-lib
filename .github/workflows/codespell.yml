@@ -2,11 +2,7 @@
 ---
 name: Codespell
 
-on:
-  push:
-    branches: [develop, main]
-  pull_request:
-    branches: [develop, main]
+on: [pull_request, push, workflow_dispatch]
 
 permissions:
   contents: read
@@ -15,7 +11,6 @@ jobs:
   codespell:
     name: Check for spelling errors
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4

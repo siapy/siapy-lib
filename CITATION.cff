@@ -1,0 +1,30 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: SiaPy
+message: >-
+    If you use this software, please cite it using the
+    metadata from this file.
+type: software
+authors:
+    - given-names: Janez
+      family-names: Lapajne
+      email: janez.lapajne@kis.si
+      orcid: "https://orcid.org/0000-0003-2609-700X"
+identifiers:
+    - type: url
+      value: "https://doi.org/10.3920/978-90-8686-947-3_54"
+      description: Conference paper
+    - type: url
+      value: "https://zenodo.org/doi/10.5281/zenodo.7409193"
+      description: Zenodo repository
+repository-code: "https://github.com/siapy/siapy-lib"
+abstract: >-
+    A tool for efficient processing of spectral images with
+    Python.
+keywords:
+    - siapy
+    - spectral imaging analysis
+    - python
+license: MIT
