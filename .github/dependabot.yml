@@ -1,16 +1,29 @@
-# version: 2
-# updates:
-#   - package-ecosystem: "github-actions"
-#     directory: "/"
-#     schedule:
-#       interval: "weekly"
-#     commit-message:
-#       prefix: "bot:"
-#     open-pull-requests-limit: 10
-#   - package-ecosystem: "pip"
-#     directory: "/"
-#     schedule:
-#       interval: "weekly"
-#     commit-message:
-#       prefix: "bot:"
-#     open-pull-requests-limit: 10
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    target-branch: "develop"
+    commit-message:
+      prefix: "chore:"
+    open-pull-requests-limit: 10
+    labels:
+      - "dependencies"
+      - "github-actions"
+    reviewers:
+      - "team-dependencies"
+
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    target-branch: "develop"
+    commit-message:
+      prefix: "chore:"
+    open-pull-requests-limit: 10
+    labels:
+      - "dependencies"
+      - "python"
+    assignees:
+      - "dependency-manager"
