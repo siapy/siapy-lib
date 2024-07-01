@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.3](https://github.com/siapy/siapy-lib/compare/v0.2.2...v0.2.3) (2024-07-01)
+
+
+### Documentation
+
+* fixed annotations, added citation file ([baa3628](https://github.com/siapy/siapy-lib/commit/baa36280f0a95fb6b33006d53a1dcdd67b60bd28))
+
 ## [0.2.2](https://github.com/siapy/siapy-lib/compare/v0.2.1...v0.2.2) (2024-06-30)
 
 
