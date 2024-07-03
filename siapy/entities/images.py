@@ -125,9 +125,9 @@ class SpectralImage:
 
     @classmethod
     def envi_open(
-        cls, *, hdr_path: str | Path, img_path: str | Path | None = None
+        cls, *, header_path: str | Path, image_path: str | Path | None = None
     ) -> "SpectralImage":
-        sp_file = sp.envi.open(file=hdr_path, image=img_path)
+        sp_file = sp.envi.open(file=header_path, image=image_path)
         if isinstance(sp_file, sp.io.envi.SpectralLibrary):
             raise ValueError("Opened file of type SpectralLibrary")
         return cls(sp_file)

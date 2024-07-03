@@ -18,14 +18,14 @@ from tests.fixtures import corresponding_pixels, spectral_images  # noqa: F401
 
 def test_envi_open():
     spectral_image_vnir = SpectralImage.envi_open(
-        hdr_path=image_vnir_hdr_path,
-        img_path=image_vnir_img_path,
+        header_path=image_vnir_hdr_path,
+        image_path=image_vnir_img_path,
     )
     assert isinstance(spectral_image_vnir, SpectralImage)
 
     spectral_image_swir = SpectralImage.envi_open(
-        hdr_path=image_swir_hdr_path,
-        img_path=image_swir_img_path,
+        header_path=image_swir_hdr_path,
+        image_path=image_swir_img_path,
     )
     assert isinstance(spectral_image_swir, SpectralImage)
 
