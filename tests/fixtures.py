@@ -22,12 +22,12 @@ class SpectralImages(SimpleNamespace):
 @pytest.fixture
 def spectral_images() -> SpectralImages:
     spectral_image_vnir = SpectralImage.envi_open(
-        hdr_path=image_vnir_hdr_path,
-        img_path=image_vnir_img_path,
+        header_path=image_vnir_hdr_path,
+        image_path=image_vnir_img_path,
     )
     spectral_image_swir = SpectralImage.envi_open(
-        hdr_path=image_swir_hdr_path,
-        img_path=image_swir_img_path,
+        header_path=image_swir_hdr_path,
+        image_path=image_swir_img_path,
     )
     spectral_image_vnir_np = spectral_image_vnir.to_numpy()
     spectral_image_swir_np = spectral_image_swir.to_numpy()
