@@ -6,7 +6,7 @@ import spectral as sp
 from PIL import Image
 
 from siapy.entities import Pixels, Shape, SpectralImage
-from siapy.entities.images import GeometricShapes
+from siapy.entities.images import GeometricShapes, _parse_description
 from tests.configs import (
     image_swir_hdr_path,
     image_swir_img_path,
@@ -61,7 +61,7 @@ def test_metadata(spectral_images):
     swir_meta = spectral_images.swir.metadata
     assert isinstance(vnir_meta, dict)
     assert isinstance(swir_meta, dict)
-    required_keys = ["default bands", "wavelength"]
+    required_keys = ["default bands", "wavelength", "description"]
     assert all(key in vnir_meta.keys() for key in required_keys)
     assert all(key in swir_meta.keys() for key in required_keys)
 
@@ -111,6 +111,23 @@ def test_wavelengths(spectral_images):
     assert isinstance(swir_wave, list)
     assert all(isinstance(w, float) for w in swir_wave)
     assert len(swir_wave) == 288
+
+
+def test_description(spectral_images):
+    vnir_desc = spectral_images.vnir.description
+    swir_desc = spectral_images.swir.description
+    assert isinstance(vnir_desc, dict)
+    assert isinstance(swir_desc, dict)
+    required_keys = ["ID"]
+    assert all(key in vnir_desc.keys() for key in required_keys)
+    assert all(key in swir_desc.keys() for key in required_keys)
+
+
+def test_camera_id(spectral_images):
+    vnir_cam_id = spectral_images.vnir.camera_id
+    swir_cam_id = spectral_images.swir.camera_id
+    assert vnir_cam_id == "VNIR_1600_SN0034"
+    assert swir_cam_id == "SWIR_384me_SN3109"
 
 
 def test_to_numpy(spectral_images):
@@ -442,3 +459,33 @@ def test_geometric_shapes_get_by_name_not_found(spectral_images, corresponding_p
     spectral_images.vnir.geometric_shapes.shapes = [rect]
     found_shape = spectral_images.vnir.geometric_shapes.get_by_name("NonExistent")
     assert found_shape is None
+
+
+def test_parse_description_simple():
+    description = "Frameperiod = 20060\nIntegration time = 20000"
+    expected = {"Frameperiod": 20060, "Integration time": 20000}
+    assert _parse_description(description) == expected
+
+
+def test_parse_description_with_floats_and_ints():
+    description = "Binning = 2\nPixelsize x = 0.000187"
+    expected = {"Binning": 2, "Pixelsize x": 0.000187}
+    assert _parse_description(description) == expected
+
+
+def test_parse_description_with_commas():
+    description = "Rotating stage position = 0.000000,15.700000,degrees"
+    expected = {"Rotating stage position": [0.000000, 15.700000, "degrees"]}
+    assert _parse_description(description) == expected
+
+
+def test_parse_description_empty_value():
+    description = "Comment ="
+    expected = {"Comment": ""}
+    assert _parse_description(description) == expected
+
+
+def test_parse_description_invalid_format_raises_value_error():
+    description = "This is not a valid format"
+    with pytest.raises(ValueError):
+        _parse_description(description)
