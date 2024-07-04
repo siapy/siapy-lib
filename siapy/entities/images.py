@@ -125,9 +125,9 @@ class SpectralImage:
 
     @classmethod
     def envi_open(
-        cls, *, hdr_path: str | Path, img_path: str | Path | None = None
+        cls, *, header_path: str | Path, image_path: str | Path | None = None
     ) -> "SpectralImage":
-        sp_file = sp.envi.open(file=hdr_path, image=img_path)
+        sp_file = sp.envi.open(file=header_path, image=image_path)
         if isinstance(sp_file, sp.io.envi.SpectralLibrary):
             raise ValueError("Opened file of type SpectralLibrary")
         return cls(sp_file)
@@ -165,17 +165,22 @@ class SpectralImage:
 
     @property
     def default_bands(self) -> list[int]:
-        if "default bands" not in self.metadata.keys():
-            return []
-        db = self.metadata["default bands"]
+        db = self.metadata.get("default bands", [])
         return list(map(int, db))
 
     @property
     def wavelengths(self) -> list[float]:
-        if "wavelength" not in self.metadata.keys():
-            return []
-        wavelength_data = self.metadata["wavelength"]
+        wavelength_data = self.metadata.get("wavelength", [])
         return list(map(float, wavelength_data))
+
+    @property
+    def description(self) -> dict[str, Any]:
+        description_str = self.metadata.get("description", {})
+        return _parse_description(description_str)
+
+    @property
+    def camera_id(self) -> str:
+        return self.description.get("ID", "")
 
     @property
     def geometric_shapes(self) -> GeometricShapes:
@@ -212,3 +217,32 @@ class SpectralImage:
         image_mask = np.bitwise_not(np.bool_(np.isnan(image).sum(axis=2)))
         image[~image_mask] = nan_value
         return image
+
+
+def _parse_description(description: str) -> dict[str, Any]:
+    def _parse():
+        data_dict = {}
+        for line in description.split("\n"):
+            key, value = line.split("=", 1)
+            key = key.strip()
+            value = value.strip()
+            if "," in value:  # Special handling for values with commas
+                value = [
+                    float(v) if v.replace(".", "", 1).isdigit() else v
+                    for v in value.split(",")
+                ]
+            elif value.isdigit():
+                value = int(value)
+            elif value.replace(".", "", 1).isdigit():
+                value = float(value)
+            data_dict[key] = value
+        return data_dict
+
+    try:
+        return _parse()
+    except ValueError as e:
+        raise ValueError(f"Error parsing description: {e}") from e
+    except KeyError as e:
+        raise KeyError(f"Missing key in description: {e}") from e
+    except Exception as e:
+        raise Exception(f"Unexpected error parsing description: {e}") from e

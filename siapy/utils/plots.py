@@ -96,7 +96,7 @@ def pixels_select_lasso(image: ImageType) -> list[Pixels]:
             enter_clicked = 1
             plt.close()
 
-    LassoSelector(ax, onselect)
+    lasso = LassoSelector(ax, onselect)  # noqa: F841
     fig.canvas.mpl_connect("button_release_event", onrelease)
     fig.canvas.mpl_connect("close_event", onexit)
     fig.canvas.mpl_connect("key_press_event", accept)
