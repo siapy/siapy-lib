@@ -310,6 +310,7 @@ def test_geometric_shapes_append_valid(spectral_images, corresponding_pixels):
     rect = Shape.from_shape_type(
         shape_type="rectangle", pixels=corresponding_pixels.vnir
     )
+    spectral_images.vnir.geometric_shapes.clear()
     spectral_images.vnir.geometric_shapes.append(rect)
     assert rect in spectral_images.vnir.geometric_shapes
     assert len(spectral_images.vnir.geometric_shapes) == 1
@@ -325,6 +326,7 @@ def test_geometric_shapes_extend_valid(spectral_images, corresponding_pixels):
     rect = Shape.from_shape_type(
         shape_type="rectangle", pixels=corresponding_pixels.vnir
     )
+    spectral_images.vnir.geometric_shapes.clear()
     spectral_images.vnir.geometric_shapes.extend([rect, rect])
     assert len(spectral_images.vnir.geometric_shapes) == 2
 
@@ -353,6 +355,7 @@ def test_geometric_shapes_remove_valid(spectral_images, corresponding_pixels):
     rect = Shape.from_shape_type(
         shape_type="rectangle", pixels=corresponding_pixels.vnir
     )
+    spectral_images.vnir.geometric_shapes.clear()
     spectral_images.vnir.geometric_shapes.append(rect)
     spectral_images.vnir.geometric_shapes.remove(rect)
     assert rect not in spectral_images.vnir.geometric_shapes
@@ -368,6 +371,7 @@ def test_geometric_shapes_pop(spectral_images, corresponding_pixels):
     rect = Shape.from_shape_type(
         shape_type="rectangle", pixels=corresponding_pixels.vnir
     )
+    spectral_images.vnir.geometric_shapes.clear()
     spectral_images.vnir.geometric_shapes.append(rect)
     popped_shape = spectral_images.vnir.geometric_shapes.pop()
     assert popped_shape == rect
@@ -406,6 +410,7 @@ def test_geometric_shapes_count(spectral_images, corresponding_pixels):
     rect = Shape.from_shape_type(
         shape_type="rectangle", pixels=corresponding_pixels.vnir
     )
+    spectral_images.vnir.geometric_shapes.clear()
     spectral_images.vnir.geometric_shapes.append(rect)
     spectral_images.vnir.geometric_shapes.append(rect)
     count = spectral_images.vnir.geometric_shapes.count(rect)
@@ -433,6 +438,7 @@ def test_geometric_shapes_sort(spectral_images, corresponding_pixels):
     rect2 = Shape.from_shape_type(
         shape_type="rectangle", pixels=corresponding_pixels.vnir, label="A"
     )
+    spectral_images.vnir.geometric_shapes.clear()
     spectral_images.vnir.geometric_shapes.append(rect1)
     spectral_images.vnir.geometric_shapes.append(rect2)
     spectral_images.vnir.geometric_shapes.sort(key=lambda shape: shape.label)
