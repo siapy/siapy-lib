@@ -7,7 +7,6 @@ from siapy.utils.validators import (
     validate_image_to_numpy,
     validate_image_to_numpy_3channels,
 )
-from tests.fixtures import spectral_images  # noqa: F401
 
 
 def test_validate_image_to_numpy_3channels_with_spectral_image(spectral_images):

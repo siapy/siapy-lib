@@ -123,6 +123,17 @@ class SpectralImage:
     def __str__(self) -> str:
         return str(self._sp_file)
 
+    def __lt__(self, other: "SpectralImage") -> bool:
+        return self.filepath.name < other.filepath.name
+
+    def __eq__(self, other: Any) -> bool:
+        if not isinstance(other, SpectralImage):
+            return NotImplemented
+        return (
+            self.filepath.name == other.filepath.name
+            and self._sp_file == other._sp_file
+        )
+
     @classmethod
     def envi_open(
         cls, *, header_path: str | Path, image_path: str | Path | None = None

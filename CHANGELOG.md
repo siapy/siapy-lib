@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.4](https://github.com/siapy/siapy-lib/compare/v0.2.3...v0.2.4) (2024-07-04)
+
+
+### Documentation
+
+* moved files from .github -&gt; repo root ([b1a3989](https://github.com/siapy/siapy-lib/commit/b1a3989e07d20825414713dddcbe859837f6e281))
+* security put in place ([8585538](https://github.com/siapy/siapy-lib/commit/8585538064f0e3eee1c2a76e156a1400d94abbcc))
+
 ## [0.2.3](https://github.com/siapy/siapy-lib/compare/v0.2.2...v0.2.3) (2024-07-01)
 
 
