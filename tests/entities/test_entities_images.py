@@ -10,8 +10,10 @@ from siapy.entities.images import GeometricShapes, _parse_description
 from tests.configs import (
     image_swir_hdr_path,
     image_swir_img_path,
+    image_swir_name,
     image_vnir_hdr_path,
     image_vnir_img_path,
+    image_vnir_name,
 )
 from tests.fixtures import corresponding_pixels, spectral_images  # noqa: F401
 
@@ -126,8 +128,8 @@ def test_description(spectral_images):
 def test_camera_id(spectral_images):
     vnir_cam_id = spectral_images.vnir.camera_id
     swir_cam_id = spectral_images.swir.camera_id
-    assert vnir_cam_id == "VNIR_1600_SN0034"
-    assert swir_cam_id == "SWIR_384me_SN3109"
+    assert vnir_cam_id == image_vnir_name
+    assert swir_cam_id == image_swir_name
 
 
 def test_to_numpy(spectral_images):

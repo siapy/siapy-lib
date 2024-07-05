@@ -6,8 +6,10 @@ from siapy.entities import SpectralImage, SpectralImageSet
 from tests.configs import (
     image_swir_hdr_path,
     image_swir_img_path,
+    image_swir_name,
     image_vnir_hdr_path,
     image_vnir_img_path,
+    image_vnir_name,
 )
 
 
@@ -65,3 +67,12 @@ def test_getitem():
     vnir_image = create_spectral_image(image_vnir_hdr_path, image_vnir_img_path)
     image_set = SpectralImageSet(spectral_images=[vnir_image])
     assert image_set[0] == vnir_image
+
+
+def test_images_by_camera_id():
+    vnir_image1 = create_spectral_image(image_vnir_hdr_path, image_vnir_img_path)
+    vnir_image2 = create_spectral_image(image_vnir_hdr_path, image_vnir_img_path)
+    swir_image = create_spectral_image(image_swir_hdr_path, image_swir_img_path)
+    image_set = SpectralImageSet(spectral_images=[vnir_image1, vnir_image2, swir_image])
+    assert [swir_image] == image_set.images_by_camera_id(image_swir_name)
+    assert [vnir_image1, vnir_image2] == image_set.images_by_camera_id(image_vnir_name)

@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterator
 
+import numpy as np
 from rich.progress import track
 
 from siapy.core import logger
@@ -57,3 +58,12 @@ class SpectralImageSet:
     @property
     def images(self) -> list[SpectralImage]:
         return self._images
+
+    @property
+    def cameras_id(self) -> list[str]:
+        return list({image.camera_id for image in self.images})
+
+    def images_by_camera_id(self, camera_id: str):
+        ids = np.array([image.camera_id for image in self.images])
+        indices = np.nonzero(ids == camera_id)[0]
+        return [image for idx, image in enumerate(self.images) if idx in indices]
