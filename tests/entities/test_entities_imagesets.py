@@ -76,3 +76,25 @@ def test_images_by_camera_id():
     image_set = SpectralImageSet(spectral_images=[vnir_image1, vnir_image2, swir_image])
     assert [swir_image] == image_set.images_by_camera_id(image_swir_name)
     assert [vnir_image1, vnir_image2] == image_set.images_by_camera_id(image_vnir_name)
+
+
+def test_sort():
+    vnir_image1 = create_spectral_image(image_vnir_hdr_path, image_vnir_img_path)
+    vnir_image2 = create_spectral_image(image_vnir_hdr_path, image_vnir_img_path)
+    swir_image1 = create_spectral_image(image_swir_hdr_path, image_swir_img_path)
+    swir_image2 = create_spectral_image(image_swir_hdr_path, image_swir_img_path)
+    swir_image3 = create_spectral_image(image_swir_hdr_path, image_swir_img_path)
+
+    unordered_set = [vnir_image1, swir_image1, vnir_image2, swir_image2, swir_image3]
+    ordered_set = [swir_image1, swir_image2, swir_image3, vnir_image1, vnir_image2]
+
+    image_set = SpectralImageSet(unordered_set.copy())
+
+    assert image_set.images == unordered_set != ordered_set
+    assert sorted(image_set.images) == ordered_set != unordered_set
+    assert image_set.images == unordered_set != ordered_set
+    image_set.sort()
+    assert image_set.images == ordered_set != unordered_set
+    image_set = SpectralImageSet(unordered_set.copy())
+    image_set.images.sort()
+    assert image_set.images == ordered_set != unordered_set

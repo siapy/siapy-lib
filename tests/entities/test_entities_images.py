@@ -47,6 +47,15 @@ def test_str(spectral_images):
     assert isinstance(str(spectral_images.swir), str)
 
 
+def test_lt(spectral_images):
+    assert spectral_images.vnir > spectral_images.swir
+
+
+def test_eq(spectral_images):
+    assert spectral_images.vnir == spectral_images.vnir
+    assert spectral_images.swir != spectral_images.vnir
+
+
 def test_file(spectral_images):
     assert isinstance(
         spectral_images.vnir.file,
