@@ -16,7 +16,7 @@ class PytestConfigs(SimpleNamespace):
     image_swir_name = "SWIR_384me_SN3109"
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def configs():
     return PytestConfigs()
 
@@ -28,7 +28,7 @@ class SpectralImages(SimpleNamespace):
     swir_np: np.ndarray
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def spectral_images(configs) -> SpectralImages:
     spectral_image_vnir = SpectralImage.envi_open(
         header_path=configs.image_vnir_hdr_path,
@@ -53,7 +53,7 @@ class CorrespondingPixels(SimpleNamespace):
     swir: Pixels
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def corresponding_pixels() -> CorrespondingPixels:
     pixels_vnir = np.array(
         [
