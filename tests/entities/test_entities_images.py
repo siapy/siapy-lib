@@ -7,27 +7,18 @@ from PIL import Image
 
 from siapy.entities import Pixels, Shape, SpectralImage
 from siapy.entities.images import GeometricShapes, _parse_description
-from tests.configs import (
-    image_swir_hdr_path,
-    image_swir_img_path,
-    image_swir_name,
-    image_vnir_hdr_path,
-    image_vnir_img_path,
-    image_vnir_name,
-)
-from tests.fixtures import corresponding_pixels, spectral_images  # noqa: F401
 
 
-def test_envi_open():
+def test_envi_open(configs):
     spectral_image_vnir = SpectralImage.envi_open(
-        header_path=image_vnir_hdr_path,
-        image_path=image_vnir_img_path,
+        header_path=configs.image_vnir_hdr_path,
+        image_path=configs.image_vnir_img_path,
     )
     assert isinstance(spectral_image_vnir, SpectralImage)
 
     spectral_image_swir = SpectralImage.envi_open(
-        header_path=image_swir_hdr_path,
-        image_path=image_swir_img_path,
+        header_path=configs.image_swir_hdr_path,
+        image_path=configs.image_swir_img_path,
     )
     assert isinstance(spectral_image_swir, SpectralImage)
 
@@ -106,11 +97,11 @@ def test_default_bands(spectral_images):
     assert np.array_equal(swir_db, [20, 117, 57])
 
 
-def test_filename(spectral_images):
+def test_filename(spectral_images, configs):
     assert isinstance(spectral_images.vnir.filepath, Path)
     assert isinstance(spectral_images.swir.filepath, Path)
-    assert spectral_images.vnir.filepath.name == image_vnir_img_path.name
-    assert spectral_images.swir.filepath.name == image_swir_img_path.name
+    assert spectral_images.vnir.filepath.name == configs.image_vnir_img_path.name
+    assert spectral_images.swir.filepath.name == configs.image_swir_img_path.name
 
 
 def test_wavelengths(spectral_images):
@@ -134,11 +125,11 @@ def test_description(spectral_images):
     assert all(key in swir_desc.keys() for key in required_keys)
 
 
-def test_camera_id(spectral_images):
+def test_camera_id(spectral_images, configs):
     vnir_cam_id = spectral_images.vnir.camera_id
     swir_cam_id = spectral_images.swir.camera_id
-    assert vnir_cam_id == image_vnir_name
-    assert swir_cam_id == image_swir_name
+    assert vnir_cam_id == configs.image_vnir_name
+    assert swir_cam_id == configs.image_swir_name
 
 
 def test_to_numpy(spectral_images):

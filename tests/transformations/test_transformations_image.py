@@ -1,7 +1,6 @@
 import numpy as np
 
 from siapy.transformations import image
-from tests.fixtures import spectral_images  # noqa: F401
 
 
 def test_add_gaussian_noise(spectral_images):

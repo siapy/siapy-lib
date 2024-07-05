@@ -3,13 +3,22 @@ from types import SimpleNamespace
 import numpy as np
 import pytest
 
+from siapy.core.configs import TEST_DATA_DIR
 from siapy.entities import Pixels, SpectralImage
-from tests.configs import (
-    image_swir_hdr_path,
-    image_swir_img_path,
-    image_vnir_hdr_path,
-    image_vnir_img_path,
-)
+
+
+class PytestConfigs(SimpleNamespace):
+    image_vnir_hdr_path = TEST_DATA_DIR / "vnir.hdr"
+    image_vnir_img_path = TEST_DATA_DIR / "vnir.hyspex"
+    image_swir_hdr_path = TEST_DATA_DIR / "swir.hdr"
+    image_swir_img_path = TEST_DATA_DIR / "swir.hyspex"
+    image_vnir_name = "VNIR_1600_SN0034"
+    image_swir_name = "SWIR_384me_SN3109"
+
+
+@pytest.fixture
+def configs():
+    return PytestConfigs()
 
 
 class SpectralImages(SimpleNamespace):
@@ -20,14 +29,14 @@ class SpectralImages(SimpleNamespace):
 
 
 @pytest.fixture
-def spectral_images() -> SpectralImages:
+def spectral_images(configs) -> SpectralImages:
     spectral_image_vnir = SpectralImage.envi_open(
-        header_path=image_vnir_hdr_path,
-        image_path=image_vnir_img_path,
+        header_path=configs.image_vnir_hdr_path,
+        image_path=configs.image_vnir_img_path,
     )
     spectral_image_swir = SpectralImage.envi_open(
-        header_path=image_swir_hdr_path,
-        image_path=image_swir_img_path,
+        header_path=configs.image_swir_hdr_path,
+        image_path=configs.image_swir_img_path,
     )
     spectral_image_vnir_np = spectral_image_vnir.to_numpy()
     spectral_image_swir_np = spectral_image_swir.to_numpy()

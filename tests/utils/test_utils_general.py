@@ -9,10 +9,10 @@ import pytest
 from siapy.utils.general import (
     dict_zip,
     ensure_dir,
+    get_increasing_seq_indices,
     get_number_cpus,
     initialize_function,
     initialize_object,
-    get_increasing_seq_indices,
 )
 
 

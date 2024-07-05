@@ -17,7 +17,6 @@ from siapy.utils.images import (
     merge_images_by_specter,
     save_image,
 )
-from tests.fixtures import spectral_images  # noqa: F401
 
 
 @pytest.mark.manual
