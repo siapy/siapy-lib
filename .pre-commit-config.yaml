@@ -14,7 +14,7 @@ repos:
       - id: end-of-file-fixer
       - id: trailing-whitespace
   - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.5.0
+    rev: v0.5.1
     hooks:
       - id: ruff
         args:
@@ -24,6 +24,12 @@ repos:
     rev: v8.18.4
     hooks:
       - id: gitleaks
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.3.0
+    hooks:
+      - id: codespell
+        additional_dependencies:
+          - tomli
 ci:
-  autofix_commit_msg: 🎨 [pre-commit.ci] Auto format from pre-commit.com hooks
-  autoupdate_commit_msg: ⬆ [pre-commit.ci] pre-commit autoupdate
+  autofix_commit_msg: "chore: [pre-commit.ci] Auto format from pre-commit.com hooks"
+  autoupdate_commit_msg: "chore: [pre-commit.ci] pre-commit autoupdate"
