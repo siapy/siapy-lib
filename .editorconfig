@@ -5,21 +5,13 @@ end_of_line = lf
 charset = utf-8
 insert_final_newline = true
 trim_trailing_whitespace = true
-indent_style = tab
+indent_style = space
 indent_size = 4
 
 [{*.md}]
 indent_style = unset
 indent_size = unset
 
-[**/Dockerfile]
-indent_style = space
-indent_size = 2
-
 [*.{yml,yaml,js,json,sh}]
 indent_style = space
 indent_size = 2
-
-[*.{py}]
-indent_style = space
-indent_size = 4

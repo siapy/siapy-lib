@@ -67,4 +67,3 @@ $ run program=select_signatures selector.item=object
 ```
 $ run program=select_signatures selector.item=background
 ```
-

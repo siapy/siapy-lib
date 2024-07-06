@@ -7,25 +7,18 @@ from PIL import Image
 
 from siapy.entities import Pixels, Shape, SpectralImage
 from siapy.entities.images import GeometricShapes, _parse_description
-from tests.configs import (
-    image_swir_hdr_path,
-    image_swir_img_path,
-    image_vnir_hdr_path,
-    image_vnir_img_path,
-)
-from tests.fixtures import corresponding_pixels, spectral_images  # noqa: F401
 
 
-def test_envi_open():
+def test_envi_open(configs):
     spectral_image_vnir = SpectralImage.envi_open(
-        header_path=image_vnir_hdr_path,
-        image_path=image_vnir_img_path,
+        header_path=configs.image_vnir_hdr_path,
+        image_path=configs.image_vnir_img_path,
     )
     assert isinstance(spectral_image_vnir, SpectralImage)
 
     spectral_image_swir = SpectralImage.envi_open(
-        header_path=image_swir_hdr_path,
-        image_path=image_swir_img_path,
+        header_path=configs.image_swir_hdr_path,
+        image_path=configs.image_swir_img_path,
     )
     assert isinstance(spectral_image_swir, SpectralImage)
 
@@ -43,6 +36,15 @@ def test_repr(spectral_images):
 def test_str(spectral_images):
     assert isinstance(str(spectral_images.vnir), str)
     assert isinstance(str(spectral_images.swir), str)
+
+
+def test_lt(spectral_images):
+    assert spectral_images.vnir > spectral_images.swir
+
+
+def test_eq(spectral_images):
+    assert spectral_images.vnir == spectral_images.vnir
+    assert spectral_images.swir != spectral_images.vnir
 
 
 def test_file(spectral_images):
@@ -95,11 +97,11 @@ def test_default_bands(spectral_images):
     assert np.array_equal(swir_db, [20, 117, 57])
 
 
-def test_filename(spectral_images):
+def test_filename(spectral_images, configs):
     assert isinstance(spectral_images.vnir.filepath, Path)
     assert isinstance(spectral_images.swir.filepath, Path)
-    assert spectral_images.vnir.filepath.name == image_vnir_img_path.name
-    assert spectral_images.swir.filepath.name == image_swir_img_path.name
+    assert spectral_images.vnir.filepath.name == configs.image_vnir_img_path.name
+    assert spectral_images.swir.filepath.name == configs.image_swir_img_path.name
 
 
 def test_wavelengths(spectral_images):
@@ -123,11 +125,11 @@ def test_description(spectral_images):
     assert all(key in swir_desc.keys() for key in required_keys)
 
 
-def test_camera_id(spectral_images):
+def test_camera_id(spectral_images, configs):
     vnir_cam_id = spectral_images.vnir.camera_id
     swir_cam_id = spectral_images.swir.camera_id
-    assert vnir_cam_id == "VNIR_1600_SN0034"
-    assert swir_cam_id == "SWIR_384me_SN3109"
+    assert vnir_cam_id == configs.image_vnir_name
+    assert swir_cam_id == configs.image_swir_name
 
 
 def test_to_numpy(spectral_images):
@@ -308,6 +310,7 @@ def test_geometric_shapes_append_valid(spectral_images, corresponding_pixels):
     rect = Shape.from_shape_type(
         shape_type="rectangle", pixels=corresponding_pixels.vnir
     )
+    spectral_images.vnir.geometric_shapes.clear()
     spectral_images.vnir.geometric_shapes.append(rect)
     assert rect in spectral_images.vnir.geometric_shapes
     assert len(spectral_images.vnir.geometric_shapes) == 1
@@ -323,6 +326,7 @@ def test_geometric_shapes_extend_valid(spectral_images, corresponding_pixels):
     rect = Shape.from_shape_type(
         shape_type="rectangle", pixels=corresponding_pixels.vnir
     )
+    spectral_images.vnir.geometric_shapes.clear()
     spectral_images.vnir.geometric_shapes.extend([rect, rect])
     assert len(spectral_images.vnir.geometric_shapes) == 2
 
@@ -351,6 +355,7 @@ def test_geometric_shapes_remove_valid(spectral_images, corresponding_pixels):
     rect = Shape.from_shape_type(
         shape_type="rectangle", pixels=corresponding_pixels.vnir
     )
+    spectral_images.vnir.geometric_shapes.clear()
     spectral_images.vnir.geometric_shapes.append(rect)
     spectral_images.vnir.geometric_shapes.remove(rect)
     assert rect not in spectral_images.vnir.geometric_shapes
@@ -366,6 +371,7 @@ def test_geometric_shapes_pop(spectral_images, corresponding_pixels):
     rect = Shape.from_shape_type(
         shape_type="rectangle", pixels=corresponding_pixels.vnir
     )
+    spectral_images.vnir.geometric_shapes.clear()
     spectral_images.vnir.geometric_shapes.append(rect)
     popped_shape = spectral_images.vnir.geometric_shapes.pop()
     assert popped_shape == rect
@@ -404,6 +410,7 @@ def test_geometric_shapes_count(spectral_images, corresponding_pixels):
     rect = Shape.from_shape_type(
         shape_type="rectangle", pixels=corresponding_pixels.vnir
     )
+    spectral_images.vnir.geometric_shapes.clear()
     spectral_images.vnir.geometric_shapes.append(rect)
     spectral_images.vnir.geometric_shapes.append(rect)
     count = spectral_images.vnir.geometric_shapes.count(rect)
@@ -431,6 +438,7 @@ def test_geometric_shapes_sort(spectral_images, corresponding_pixels):
     rect2 = Shape.from_shape_type(
         shape_type="rectangle", pixels=corresponding_pixels.vnir, label="A"
     )
+    spectral_images.vnir.geometric_shapes.clear()
     spectral_images.vnir.geometric_shapes.append(rect1)
     spectral_images.vnir.geometric_shapes.append(rect2)
     spectral_images.vnir.geometric_shapes.sort(key=lambda shape: shape.label)

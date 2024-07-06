@@ -5,7 +5,6 @@ from siapy.utils.plots import (
     pixels_select_click,
     pixels_select_lasso,
 )
-from tests.fixtures import spectral_images  # noqa: F401
 
 
 @pytest.mark.manual
