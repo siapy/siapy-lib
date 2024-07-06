@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.3.0](https://github.com/siapy/siapy-lib/compare/v0.2.4...v0.3.0) (2024-07-06)
+
+
+### Features
+
+* Add camera_id property and images_by_camera_id method to SpectralImageSet ([c7814dc](https://github.com/siapy/siapy-lib/commit/c7814dc001e4672caacf300dae2fff2b66c7ffb0))
+
+
+### Bug Fixes
+
+* add scope to fixtures. ([9e2befd](https://github.com/siapy/siapy-lib/commit/9e2befdeba037c51e3fc0757635e7ed4ec0daae8))
+* Update indent_style and indent_size in .editorconfig ([a3288dc](https://github.com/siapy/siapy-lib/commit/a3288dc4d3d9a44a2af1e3a11e29619d3bae097e))
+
 ## [0.2.4](https://github.com/siapy/siapy-lib/compare/v0.2.3...v0.2.4) (2024-07-04)
 
 
