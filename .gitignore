@@ -1,6 +1,7 @@
 venv
 __pycache__
 dist
+tests/data
 .venv
 .idea
 .ruff_cache
