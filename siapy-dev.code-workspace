@@ -1,0 +1,63 @@
+{
+    "folders": [
+        {
+            "path": "."
+        }
+    ],
+    "settings": {
+        "editor.formatOnSave": true,
+        "files.autoSave": "afterDelay",
+        "python.languageServer": "Pylance",
+        "python.defaultInterpreterPath": ".venv/bin/python",
+        "python.testing.pytestEnabled": true,
+        "python.testing.pytestArgs": [
+            "tests"
+        ],
+        "python.analysis.typeCheckingMode": "standard",
+        "python.terminal.activateEnvironment": true,
+        "[python]": {
+            "editor.rulers": [
+                {
+                    "column": 80,
+                    "color": "#e2d8e21f"
+                },
+                {
+                    "column": 100,
+                    "color": "#e9b2b2c4"
+                }
+            ],
+            "editor.codeActionsOnSave": {
+                "source.organizeImports": "always"
+            },
+            "editor.defaultFormatter": "charliermarsh.ruff",
+        },
+        "git.enableCommitSigning": true,
+        "git.autofetch": true,
+        "[git-commit]": {
+            "editor.rulers": [
+                50
+            ]
+        },
+        "cSpell.language": "en",
+    },
+    "extensions": {
+        "recommendations": [
+            "ms-python.python",
+            "ms-python.vscode-pylance",
+            "ms-python.mypy-type-checker",
+            "ms-python.isort",
+            "ms-python.pylint",
+            "charliermarsh.ruff",
+            "dchanco.vsc-invoke",
+            "redhat.vscode-yaml",
+            "streetsidesoftware.code-spell-checker",
+            "aaron-bond.better-comments",
+            "njpwerner.autodocstring",
+            "EditorConfig.EditorConfig",
+            "ms-python.debugpy",
+            "sonarsource.sonarlint-vscode",
+            "eamodio.gitlens",
+            "github.vscode-codeql",
+        ]
+    }
+}
