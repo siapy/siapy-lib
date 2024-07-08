@@ -121,15 +121,19 @@ Spell check is performed with [CSpell](https://cspell.org/). The CSpell command 
 - **To commit:**
   - Follow the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/#specification) specification for commit messages. This standardizes the commit history and facilitates automatic generation of the changelog.
   - _Type_ must be one of the following:
-    - `build`: Changes that affect the build system or external dependencies (example scopes: gulp, broccoli, npm)
-    - `ci`: Changes to our CI configuration files and scripts (example scopes: Travis, Circle, BrowserStack, SauceLabs)
-    - `docs`: Documentation only changes
     - `feat`: A new feature
     - `fix`: A bug fix
     - `perf`: A code change that improves performance
-    - `refactor`: A code change that neither fixes a bug nor adds a feature
-    - `style`: Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)
-    - `test`: Adding missing tests or correcting existing tests
+    - `deps`: Dependency updates
+    - `revert`: Reverts a previous commit
+    - `docs`: Documentation only changes
+    - `style`: Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc), hidden
+    - `chore`: Miscellaneous chores, hidden
+    - `refactor`: A code change that neither fixes a bug nor adds a feature, hidden
+    - `test`: Adding missing tests or correcting existing tests, hidden
+    - `build`: Changes that affect the build system or external dependencies (example scopes: gulp, broccoli, npm), hidden
+    - `ci`: Changes to our CI configuration files and scripts (example scopes: Travis, Circle, BrowserStack, SauceLabs), hidden
+
   - Ensure your commit messages clearly describe the changes made and follow the format `type(scope?): subject`, where `scope` is optional.
 
 - **To create a release:**

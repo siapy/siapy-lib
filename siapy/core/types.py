@@ -2,7 +2,7 @@ import numpy as np
 import spectral as sp
 from PIL.Image import Image
 
-from siapy.entities import SpectralImage
+from siapy.entities import SpectralImage, SpectralImageSet
 
 SpectralType = sp.io.envi.BilFile | sp.io.envi.BipFile | sp.io.envi.BsqFile
 ImageType = SpectralImage | np.ndarray | Image
@@ -20,3 +20,4 @@ ImageDataType = (
     | np.int64
     | np.uint64
 )
+ImageContainerType = SpectralImage | SpectralImageSet
