@@ -13,8 +13,14 @@ git pull origin main
 # Update develop
 git checkout develop
 git pull origin develop
-git rebase main
-git push
+
+# Check if develop is behind main
+behind_count=$(git rev-list --left-right --count develop...main | cut -f2)
+
+if [ "$behind_count" -gt 0 ]; then
+  git rebase main
+  git push
+fi
 
 # Switch back to the original branch
 git checkout "$current_branch"
