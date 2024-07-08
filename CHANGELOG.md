@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.2](https://github.com/siapy/siapy-lib/compare/v0.3.1...v0.3.2) (2024-07-08)
+
+
+### Bug Fixes
+
+* Update mypy configuration to ignore missing imports for sklearn module ([15ad789](https://github.com/siapy/siapy-lib/commit/15ad789c45c63c6ed67eb2c103018a7944e8b286))
+
 ## [0.3.1](https://github.com/siapy/siapy-lib/compare/v0.3.0...v0.3.1) (2024-07-08)
 
 
