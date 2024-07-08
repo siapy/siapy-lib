@@ -73,6 +73,10 @@ mypy_path = "stubs"
 module = "spectral"
 ignore_missing_imports = true
 
+[[tool.mypy.overrides]]
+module = "sklearn.*"
+ignore_missing_imports = true
+
 [tool.flake8]
 ignore = "E302, E305, E203, E501, W503, E501"
 select = "C,E,F,W,B,B950"
