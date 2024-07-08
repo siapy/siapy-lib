@@ -1,8 +1,11 @@
 import multiprocessing
+import random
 import types
 from functools import partial
 from pathlib import Path
 from typing import Any, Callable, Generator, Optional
+
+import numpy as np
 
 
 def initialize_object(
@@ -75,3 +78,8 @@ def get_increasing_seq_indices(values_list: list[int]) -> list[int]:
             last_value = value
             indices.append(idx)
     return indices
+
+
+def set_random_seed(seed: int):
+    random.seed(seed)
+    np.random.seed(seed)
