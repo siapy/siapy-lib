@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.1](https://github.com/siapy/siapy-lib/compare/v0.3.0...v0.3.1) (2024-07-08)
+
+
+### Bug Fixes
+
+* Update gitignore to include tests/data directory and ignore E501 in flake8 configuration ([3664bd1](https://github.com/siapy/siapy-lib/commit/3664bd1a1668ff7d4cedfd489961ee69e68baf00))
+
 ## [0.3.0](https://github.com/siapy/siapy-lib/compare/v0.2.4...v0.3.0) (2024-07-06)
 
 
