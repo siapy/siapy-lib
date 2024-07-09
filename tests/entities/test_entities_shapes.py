@@ -2,7 +2,14 @@ import numpy as np
 import pytest
 
 from siapy.entities import Pixels, Shape
-from siapy.entities.shapes import FreeDraw, Point, Rectangle
+from siapy.entities.shapes import (
+    SHAPE_TYPE_FREEDRAW,
+    SHAPE_TYPE_POINT,
+    SHAPE_TYPE_RECTANGLE,
+    FreeDraw,
+    Point,
+    Rectangle,
+)
 from siapy.utils.plots import display_selected_areas
 
 
@@ -35,6 +42,16 @@ def test_shape_init():
     pixels_input = [(10, 15), (60, 66)]
     with pytest.raises(TypeError):
         Shape(pixels=pixels_input)
+
+
+def test_shape_type_property():
+    pixels = Pixels.from_iterable([(10, 15), (20, 25)])
+    rectangle = Rectangle(pixels=pixels)
+    assert rectangle.shape_type == SHAPE_TYPE_RECTANGLE
+    point = Point(pixels=pixels)
+    assert point.shape_type == SHAPE_TYPE_POINT
+    freedraw = FreeDraw(pixels=pixels)
+    assert freedraw.shape_type == SHAPE_TYPE_FREEDRAW
 
 
 def test_shape_pixels_property():
