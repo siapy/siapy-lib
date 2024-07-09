@@ -18,4 +18,5 @@ def test_tabular(spectral_images):
 
     image_set = SpectralImageSet(images)
     dataset = TabularDataset(image_set)
-    dataset.generate()
+    dataset.process_image_data()
+    dataset.generate_dataset()
