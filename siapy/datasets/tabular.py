@@ -7,6 +7,7 @@ from pydantic import BaseModel, ConfigDict
 
 from siapy.core.types import ImageContainerType
 from siapy.entities import Pixels, Signatures, SpectralImage, SpectralImageSet
+from siapy.models.schemas import ClassificationTarget, RegressionTarget
 
 
 class MetaDataEntity(BaseModel):
@@ -48,6 +49,22 @@ class DatasetDataFrame(pd.DataFrame):
 
     def _return_dataframe(self, columns: list[str]) -> "DatasetDataFrame":
         return DatasetDataFrame(self[columns].copy())
+
+    def generate_classification_target(
+        self, column_names: str | list[str]
+    ) -> ClassificationTarget:
+        if isinstance(column_names, str):
+            column_names = [column_names]
+        # create one column labels from multiple columns
+        label = self[column_names].apply(tuple, axis=1)
+        # encode to numbers
+        encoded_np, encoding_np = pd.factorize(label)
+        encoded = pd.Series(encoded_np, name="encoded")
+        encoding = pd.Series(encoding_np, name="encoding")
+        return ClassificationTarget(label=label, value=encoded, encoding=encoding)
+
+    def generate_regression_target(self, column_name: str) -> RegressionTarget:
+        return RegressionTarget(name=column_name, value=self[column_name])
 
 
 @dataclass()
