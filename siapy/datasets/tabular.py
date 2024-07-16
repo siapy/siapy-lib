@@ -14,6 +14,7 @@ class MetaDataEntity(BaseModel):
     image_idx: int
     image_filepath: Path
     camera_id: str
+    shape_idx: int
     shape_type: str
     shape_label: str | None
 
@@ -100,11 +101,12 @@ class TabularDataset:
         return self._data_entities
 
     def process_image_data(self):
-        for idx, image in enumerate(self.image_set):
-            for shape in image.geometric_shapes.shapes:
+        for image_idx, image in enumerate(self.image_set):
+            for shape_idx, shape in enumerate(image.geometric_shapes.shapes):
                 signatures = image.to_signatures(shape.convex_hull())
                 entity = TabularDataEntity(
-                    image_idx=idx,
+                    image_idx=image_idx,
+                    shape_idx=shape_idx,
                     image_filepath=image.filepath,
                     camera_id=image.camera_id,
                     shape_type=shape.shape_type,
@@ -128,6 +130,7 @@ class TabularDataset:
                     "image_idx": [str(entity.image_idx)] * signatures_len,
                     "image_filepath": [str(entity.image_filepath)] * signatures_len,
                     "camera_id": [entity.camera_id] * signatures_len,
+                    "shape_idx": [str(entity.shape_idx)] * signatures_len,
                     "shape_type": [entity.shape_type] * signatures_len,
                     "shape_label": [entity.shape_label] * signatures_len,
                 }
