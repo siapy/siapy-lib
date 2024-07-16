@@ -1,3 +1,5 @@
+from typing import Any
+
 import pandas as pd
 from pydantic import BaseModel, ConfigDict
 
@@ -8,7 +10,7 @@ class ClassificationTarget(BaseModel):
     value: pd.Series
     encoding: pd.Series
 
-    def __getitem__(self, indices):
+    def __getitem__(self, indices: Any):
         label = self.label.iloc[indices]
         value = self.value.iloc[indices]
         return ClassificationTarget(label=label, value=value, encoding=self.encoding)
@@ -17,7 +19,7 @@ class ClassificationTarget(BaseModel):
         return len(self.label)
 
     @classmethod
-    def from_dict(cls, data):
+    def from_dict(cls, data: dict[str, Any]):
         label = pd.Series(data["label"], name="label")
         value = pd.Series(data["value"], name="value")
         encoding = pd.Series(data["encoding"], name="encoding")
@@ -43,7 +45,7 @@ class RegressionTarget(BaseModel):
     value: pd.Series
     name: str
 
-    def __getitem__(self, indices):
+    def __getitem__(self, indices: Any):
         value = self.value.iloc[indices]
         return RegressionTarget(value=value, name=self.name)
 
@@ -51,7 +53,7 @@ class RegressionTarget(BaseModel):
         return len(self.value)
 
     @classmethod
-    def from_dict(cls, data):
+    def from_dict(cls, data: dict[str, Any]):
         value = pd.Series(data["value"], name="value")
         name = data["name"]
         return cls(value=value, name=name)
