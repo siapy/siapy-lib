@@ -4,7 +4,8 @@ import numpy as np
 import pytest
 
 from siapy.core.configs import TEST_DATA_DIR
-from siapy.entities import Pixels, SpectralImage
+from siapy.datasets.tabular import DatasetDataFrame, TabularDataset
+from siapy.entities import Pixels, Shape, SpectralImage, SpectralImageSet
 
 
 class PytestConfigs(SimpleNamespace):
@@ -83,3 +84,34 @@ def corresponding_pixels() -> CorrespondingPixels:
         vnir=Pixels.from_iterable(pixels_vnir),
         swir=Pixels.from_iterable(pixels_swir),
     )
+
+
+@pytest.fixture(scope="module")
+def spectral_images_set(spectral_images):
+    pixels_input = [(10, 15), (60, 66)]
+    pixels = Pixels.from_iterable(pixels_input)
+    rectangle = Shape.from_shape_type(shape_type="rectangle", pixels=pixels)
+
+    spectral_images.vnir.geometric_shapes.append(rectangle)
+    spectral_images.swir.geometric_shapes.append(rectangle)
+
+    images = [
+        spectral_images.vnir,
+        spectral_images.swir,
+        spectral_images.vnir,
+    ]
+
+    return SpectralImageSet(images)
+
+
+class TabularDatasetReturn(SimpleNamespace):
+    dataset: TabularDataset
+    dataset_df: DatasetDataFrame
+
+
+@pytest.fixture(scope="module")
+def spectral_tabular_dataset(spectral_images_set):
+    dataset = TabularDataset(spectral_images_set)
+    dataset.process_image_data()
+    dataset_df = dataset.generate_dataset()
+    return TabularDatasetReturn(dataset=dataset, dataset_df=dataset_df)
