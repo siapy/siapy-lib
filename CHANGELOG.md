@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.3](https://github.com/siapy/siapy-lib/compare/v0.3.2...v0.3.3) (2024-07-16)
+
+
+### Bug Fixes
+
+* Add shape_type property to Shape class; fix tests ([0fccc9a](https://github.com/siapy/siapy-lib/commit/0fccc9ae75adaafaf4629c97d8d7187a25520a6e))
+
 ## [0.3.2](https://github.com/siapy/siapy-lib/compare/v0.3.1...v0.3.2) (2024-07-08)
 
 
