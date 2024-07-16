@@ -1,35 +1,54 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import Literal
+from typing import Any, Literal
 
 import numpy as np
 from matplotlib.path import Path
 
 from .pixels import Pixels
 
+SHAPE_TYPE_RECTANGLE = "rectangle"
+SHAPE_TYPE_POINT = "point"
+SHAPE_TYPE_FREEDRAW = "freedraw"
+ShapeType = Literal[SHAPE_TYPE_RECTANGLE, SHAPE_TYPE_POINT, SHAPE_TYPE_FREEDRAW]  # type: ignore
+
 
 @dataclass
 class Shape(ABC):
-    def __init__(self, pixels: Pixels, label: str | None = None):
+    def __init__(
+        self,
+        shape_type: ShapeType,
+        pixels: Pixels,
+        label: str | None = None,
+    ):
+        self._shape_type = shape_type
         self._pixels = pixels
         self._label = label
 
     @classmethod
     def from_shape_type(
         cls,
-        shape_type: Literal["rectangle", "point", "freedraw"],
+        shape_type: ShapeType,
         pixels: Pixels,
         label: str | None = None,
     ) -> "Shape":
-        types_map: dict[str, type[Shape]] = {
-            "rectangle": Rectangle,
-            "point": Point,
-            "freedraw": FreeDraw,
+        types_map: dict[ShapeType, type[Shape]] = {
+            SHAPE_TYPE_RECTANGLE: Rectangle,
+            SHAPE_TYPE_POINT: Point,
+            SHAPE_TYPE_FREEDRAW: FreeDraw,
         }
         if shape_type in types_map:
-            return types_map[shape_type](pixels=pixels, label=label)
+            return types_map[shape_type](
+                shape_type=shape_type,
+                pixels=pixels,
+                label=label,
+            )
         else:
             raise ValueError(f"Unsupported shape type: {shape_type}")
+
+    @property
+    def shape_type(self) -> str:
+        return self._shape_type
 
     @property
     def pixels(self) -> Pixels:
@@ -47,6 +66,9 @@ class Shape(ABC):
 
 
 class Rectangle(Shape):
+    def __init__(self, pixels: Pixels, label: str | None = None, **kwargs: Any):
+        super().__init__(SHAPE_TYPE_RECTANGLE, pixels, label)
+
     def convex_hull(self) -> Pixels:
         # Rectangle is defined by two opposite corners
         u1, u2 = self.pixels.u()
@@ -60,11 +82,17 @@ class Rectangle(Shape):
 
 
 class Point(Shape):
+    def __init__(self, pixels: Pixels, label: str | None = None, **kwargs: Any):
+        super().__init__(SHAPE_TYPE_POINT, pixels, label)
+
     def convex_hull(self) -> Pixels:
         return self.pixels
 
 
 class FreeDraw(Shape):
+    def __init__(self, pixels: Pixels, label: str | None = None, **kwargs: Any):
+        super().__init__(SHAPE_TYPE_FREEDRAW, pixels, label)
+
     def convex_hull(self) -> Pixels:
         if len(self.pixels) < 3:
             return self.pixels

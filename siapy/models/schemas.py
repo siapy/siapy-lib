@@ -1,21 +1,16 @@
-import pickle
+from typing import Any
 
-import numpy as np
 import pandas as pd
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
-class BaseModelConfig(BaseModel):
-    class Config:
-        arbitrary_types_allowed = True
-
-
-class ClassificationTarget(BaseModelConfig):
+class ClassificationTarget(BaseModel):
+    model_config = ConfigDict(arbitrary_types_allowed=True)
     label: pd.Series
     value: pd.Series
     encoding: pd.Series
 
-    def __getitem__(self, indices):
+    def __getitem__(self, indices: Any):
         label = self.label.iloc[indices]
         value = self.value.iloc[indices]
         return ClassificationTarget(label=label, value=value, encoding=self.encoding)
@@ -24,7 +19,7 @@ class ClassificationTarget(BaseModelConfig):
         return len(self.label)
 
     @classmethod
-    def from_dict(cls, data):
+    def from_dict(cls, data: dict[str, Any]):
         label = pd.Series(data["label"], name="label")
         value = pd.Series(data["value"], name="value")
         encoding = pd.Series(data["encoding"], name="encoding")
@@ -45,11 +40,12 @@ class ClassificationTarget(BaseModelConfig):
         )
 
 
-class RegressionTarget(BaseModelConfig):
+class RegressionTarget(BaseModel):
+    model_config = ConfigDict(arbitrary_types_allowed=True)
     value: pd.Series
     name: str
 
-    def __getitem__(self, indices):
+    def __getitem__(self, indices: Any):
         value = self.value.iloc[indices]
         return RegressionTarget(value=value, name=self.name)
 
@@ -57,7 +53,7 @@ class RegressionTarget(BaseModelConfig):
         return len(self.value)
 
     @classmethod
-    def from_dict(cls, data):
+    def from_dict(cls, data: dict[str, Any]):
         value = pd.Series(data["value"], name="value")
         name = data["name"]
         return cls(value=value, name=name)
@@ -70,81 +66,3 @@ class RegressionTarget(BaseModelConfig):
 
     def reset_index(self):
         return RegressionTarget(value=self.value.reset_index(drop=True), name=self.name)
-
-
-class StructuredData(BaseModelConfig):
-    data: pd.DataFrame
-    meta: pd.DataFrame
-    target: ClassificationTarget | RegressionTarget | None = None
-
-    def __getitem__(self, indices):
-        data = self.data.iloc[indices]
-        meta = self.meta.iloc[indices]
-        target = None if self.target is None else self.target[indices]
-        return StructuredData(data=data, meta=meta, target=target)
-
-    @classmethod
-    def from_dict(cls, data):
-        data_ = pd.DataFrame(data["data"])
-        meta = pd.DataFrame(data["meta"])
-        target = StructuredData.target_from_dict(data["target"])
-        return cls(data=data_, meta=meta, target=target)
-
-    @staticmethod
-    def target_from_dict(data):
-        if data is None:
-            return None
-
-        elif "name" in data:
-            return RegressionTarget.from_dict(data)
-
-        elif "encoding" in data:
-            return ClassificationTarget.from_dict(data)
-
-        else:
-            raise ValueError("Invalid target dict.")
-
-    @classmethod
-    def from_bytes(cls, data):
-        return cls.from_dict(pickle.loads(data))
-
-    def to_dict(self):
-        return {
-            "data": self.data.to_dict(),
-            "meta": self.meta.to_dict(),
-            "target": self.target.to_dict() if self.target is not None else None,
-        }
-
-    def to_bytes(self):
-        return pickle.dumps(self.to_dict())
-
-    def reset_index(self):
-        return StructuredData(
-            data=self.data.reset_index(drop=True),
-            meta=self.meta.reset_index(drop=True),
-            target=self.target.reset_index() if self.target is not None else None,
-        )
-
-
-class Prediction(BaseModelConfig):
-    predictions: np.ndarray
-    name: str = ""
-
-    @classmethod
-    def from_dict(cls, data):
-        predictions = np.array(data["predictions"])
-        name = data["name"]
-        return cls(predictions=predictions, name=name)
-
-    @classmethod
-    def from_bytes(cls, data):
-        return cls.from_dict(pickle.loads(data))
-
-    def to_dict(self):
-        return {
-            "predictions": self.predictions,
-            "name": self.name,
-        }
-
-    def to_bytes(self):
-        return pickle.dumps(self.to_dict())
