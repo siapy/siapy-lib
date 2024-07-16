@@ -15,7 +15,8 @@ def sample_dataframe() -> DatasetDataFrame:
         Pixels.coords.V: [3, 4],
         "0": [5, 6],
         "1": [7, 8],
-        "image_idx": ["a", "b"],
+        "image_idx": [0, 1],
+        "shape_idx": [3, 4],
         "image_filepath": [
             Path("/path/to/image_a.tif"),
             Path("/path/to/image_b.tif"),
@@ -44,18 +45,20 @@ def test_dataframe_metadata(sample_dataframe):
         "image_idx",
         "image_filepath",
         "camera_id",
+        "shape_idx",
         "shape_type",
         "shape_label",
     ]
     assert metadata_df.equals(
         pd.DataFrame(
             {
-                "image_idx": ["a", "b"],
+                "image_idx": [0, 1],
                 "image_filepath": [
                     Path("/path/to/image_a.tif"),
                     Path("/path/to/image_b.tif"),
                 ],
                 "camera_id": ["camera_a", "camera_b"],
+                "shape_idx": [3, 4],
                 "shape_type": ["rectangle", "circle"],
                 "shape_label": ["c", "d"],
             }
