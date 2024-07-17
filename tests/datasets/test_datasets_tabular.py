@@ -5,7 +5,7 @@ import pytest
 
 from siapy.datasets.tabular import DatasetDataFrame, TabularDataEntity
 from siapy.entities import Pixels, SpectralImageSet
-from siapy.models.schemas import ClassificationTarget, RegressionTarget
+from siapy.datasets.schemas import ClassificationTarget, RegressionTarget
 
 
 @pytest.fixture(scope="module")

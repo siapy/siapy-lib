@@ -1,6 +1,6 @@
 import pandas as pd
 
-from siapy.models.schemas import ClassificationTarget, RegressionTarget
+from siapy.datasets.schemas import ClassificationTarget, RegressionTarget
 
 
 def test_classification_target_from_dict():
