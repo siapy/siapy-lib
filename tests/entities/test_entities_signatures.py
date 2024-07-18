@@ -120,3 +120,23 @@ def test_signatures_from_array_and_pixels():
     assert from_array_and_pixels.signals.df.equals(
         pd.DataFrame(list(image[pixels.v(), pixels.u(), :]))
     )
+
+
+def test_signatures_from_dataframe():
+    df = pd.DataFrame({"u": [0, 1], "v": [0, 1], "0": [1, 2], "1": [3, 4]})
+    signatures = Signatures.from_dataframe(df)
+    expected_pixels_df = pd.DataFrame({"u": [0, 1], "v": [0, 1]})
+    expected_signals_df = pd.DataFrame({"0": [1, 2], "1": [3, 4]})
+
+    assert signatures.pixels.df.equals(expected_pixels_df)
+    assert signatures.signals.df.equals(expected_signals_df)
+
+    df_missing_u = pd.DataFrame({"V": [0, 1], "0": [1, 2], "1": [3, 4]})
+
+    with pytest.raises(ValueError):
+        Signatures.from_dataframe(df_missing_u)
+
+    df_missing_v = pd.DataFrame({"U": [0, 1], "0": [1, 2], "1": [3, 4]})
+
+    with pytest.raises(ValueError):
+        Signatures.from_dataframe(df_missing_v)
