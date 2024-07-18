@@ -7,7 +7,7 @@ from pydantic import BaseModel, ConfigDict
 
 from siapy.core.types import ImageContainerType
 from siapy.entities import Pixels, Signatures, SpectralImage, SpectralImageSet
-from siapy.models.schemas import ClassificationTarget, RegressionTarget
+from siapy.datasets.schemas import ClassificationTarget, RegressionTarget
 
 
 class MetaDataEntity(BaseModel):

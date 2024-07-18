@@ -69,6 +69,19 @@ class Signatures:
         signals = Signals(pd.DataFrame(signals_list))
         return cls._create(pixels, signals)
 
+    @classmethod
+    def from_dataframe(cls, dataframe: pd.DataFrame) -> "Signatures":
+        if not all(
+            coord in dataframe.columns for coord in [Pixels.coords.U, Pixels.coords.V]
+        ):
+            raise ValueError(
+                f"DataFrame must include columns for both '{Pixels.coords.U}'"
+                f" and '{Pixels.coords.V}' coordinates."
+            )
+        pixels = Pixels(dataframe[[Pixels.coords.U, Pixels.coords.V]])
+        signals = Signals(dataframe.drop(columns=[Pixels.coords.U, Pixels.coords.V]))
+        return cls._create(pixels, signals)
+
     @property
     def pixels(self) -> Pixels:
         return self._pixels
