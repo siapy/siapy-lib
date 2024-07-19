@@ -9,6 +9,7 @@ import pytest
 from siapy.utils.general import (
     dict_zip,
     ensure_dir,
+    get_classmethods,
     get_increasing_seq_indices,
     get_number_cpus,
     initialize_function,
@@ -90,3 +91,26 @@ def test_get_increasing_seq_indices():
     values_list = [1, 3, 2, 5, 4]
     indices = get_increasing_seq_indices(values_list)
     assert indices == [0, 1, 3]
+
+
+class SampleClass:
+    @classmethod
+    def class_method1(cls):
+        pass
+
+    def instance_method(self):
+        pass
+
+    @staticmethod
+    def static_method():
+        pass
+
+    @classmethod
+    def class_method2(cls):
+        pass
+
+
+def test_get_class_methods():
+    expected_methods = ["class_method1", "class_method2"]
+    actual_methods = get_classmethods(SampleClass)
+    assert sorted(actual_methods) == sorted(expected_methods)

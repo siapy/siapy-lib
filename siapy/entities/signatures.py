@@ -4,6 +4,8 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
+from siapy.utils.general import get_classmethods
+
 from .pixels import Pixels
 
 
@@ -51,7 +53,7 @@ class Signatures:
 
     def __init__(self, *args: Any, **kwargs: Any):
         raise RuntimeError(
-            "Use Signatures.from_array_and_pixels() to create a new instance."
+            f"Use any of the @classmethod to create a new instance: {get_classmethods(Signatures)}"
         )
 
     @classmethod
