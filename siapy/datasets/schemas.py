@@ -1,16 +1,39 @@
+from abc import ABC, abstractmethod
 from typing import Any
 
 import pandas as pd
 from pydantic import BaseModel, ConfigDict
 
 
-class ClassificationTarget(BaseModel):
+class Target(BaseModel, ABC):
     model_config = ConfigDict(arbitrary_types_allowed=True)
+
+    @abstractmethod
+    def __getitem__(self, indices: Any) -> "Target": ...
+
+    @abstractmethod
+    def __len__(self) -> int: ...
+
+    @classmethod
+    @abstractmethod
+    def from_dict(cls, data: dict[str, Any]) -> "Target": ...
+
+    @abstractmethod
+    def to_dict(self) -> dict[str, Any]: ...
+
+    @abstractmethod
+    def to_dataframe(self) -> pd.DataFrame: ...
+
+    @abstractmethod
+    def reset_index(self) -> "Target": ...
+
+
+class ClassificationTarget(Target):
     label: pd.Series
     value: pd.Series
     encoding: pd.Series
 
-    def __getitem__(self, indices: Any):
+    def __getitem__(self, indices: Any) -> "ClassificationTarget":
         label = self.label.iloc[indices]
         value = self.value.iloc[indices]
         return ClassificationTarget(label=label, value=value, encoding=self.encoding)
@@ -43,12 +66,11 @@ class ClassificationTarget(BaseModel):
         )
 
 
-class RegressionTarget(BaseModel):
-    model_config = ConfigDict(arbitrary_types_allowed=True)
+class RegressionTarget(Target):
     value: pd.Series
     name: str
 
-    def __getitem__(self, indices: Any):
+    def __getitem__(self, indices: Any) -> "RegressionTarget":
         value = self.value.iloc[indices]
         return RegressionTarget(value=value, name=self.name)
 
@@ -79,9 +101,9 @@ class TabularDatasetData(BaseModel):
     pixels: pd.DataFrame
     signals: pd.DataFrame
     metadata: pd.DataFrame
-    target: ClassificationTarget | RegressionTarget | None = None
+    target: Target | None = None
 
-    def __getitem__(self, indices: Any):
+    def __getitem__(self, indices: Any) -> "TabularDatasetData":
         pixels = self.pixels.iloc[indices]
         signals = self.signals.iloc[indices]
         metadata = self.metadata.iloc[indices]
@@ -99,9 +121,7 @@ class TabularDatasetData(BaseModel):
         return cls(pixels=pixels, signals=signals, metadata=metadata, target=target)
 
     @staticmethod
-    def target_from_dict(
-        data: dict[str, Any] | None,
-    ) -> ClassificationTarget | RegressionTarget | None:
+    def target_from_dict(data: dict[str, Any] | None) -> Target | None:
         if data is None:
             return None
 

@@ -105,9 +105,9 @@ Spell check is performed with [CSpell](https://cspell.org/). The CSpell command 
 
 ## Maintainers
 
-- **The default branch is `develop`.**
-- **PRs should be merged into `develop`.**
-- **The only merges to `main` should be fast-forward merges from `develop`.**
+- **The default branch is `main`.**
+- **PRs from feature branches should be merged into `develop`.**
+- **The only merges to `main` should be PRs from `develop`.**
 - **Branch protection is enabled on `develop` and `main`.**
   - `develop`:
     - Require signed commits

@@ -99,7 +99,7 @@ def test_signatures_create():
 
     assert signatures.pixels == pixels
     assert signatures.signals == signals
-    assert signatures.df().equals(pd.concat([pixels_df, signals_df], axis=1))
+    assert signatures.to_dataframe().equals(pd.concat([pixels_df, signals_df], axis=1))
     assert np.array_equal(
         signatures.to_numpy(), pd.concat([pixels_df, signals_df], axis=1).to_numpy()
     )

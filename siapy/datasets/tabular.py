@@ -77,7 +77,7 @@ class TabularDataset:
         signals_dfs = []
         metadata_dfs = []
         for entity in self.data_entities:
-            signatures_df = entity.signatures.df().dropna()
+            signatures_df = entity.signatures.to_dataframe().dropna()
             if mean_signatures:
                 signatures_df = signatures_df.mean().to_frame().T
 

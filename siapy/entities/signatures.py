@@ -92,11 +92,11 @@ class Signatures:
     def signals(self) -> Signals:
         return self._signals
 
-    def df(self) -> pd.DataFrame:
+    def to_dataframe(self) -> pd.DataFrame:
         return pd.concat([self.pixels.df, self.signals.df], axis=1)
 
     def to_numpy(self) -> np.ndarray:
-        return self.df().to_numpy()
+        return self.to_dataframe().to_numpy()
 
     def filter(self) -> SignaturesFilter:
         return SignaturesFilter(self.pixels, self.signals)
