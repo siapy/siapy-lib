@@ -7,6 +7,7 @@ from pydantic import BaseModel, ConfigDict
 
 class Target(BaseModel, ABC):
     model_config = ConfigDict(arbitrary_types_allowed=True)
+    value: pd.Series
 
     @abstractmethod
     def __getitem__(self, indices: Any) -> "Target": ...
