@@ -7,6 +7,11 @@ from siapy.core import logger
 from siapy.core.types import ArrayLike1dType, ArrayLike2dType
 from siapy.datasets.schemas import TabularDatasetData
 from siapy.optimizers.configs import TabularOptimizerConfig
+from siapy.optimizers.trial_parameters import (
+    CategoricalParameter,
+    FloatParameter,
+    IntParameter,
+)
 
 
 class TabularOptimizer:
@@ -45,7 +50,8 @@ class TabularOptimizer:
             raise ValueError("Target data is required for optimization.")
         if signals_val is not None and target_val is None:
             raise ValueError(
-                "If validation data (data_val) is provided, validation targets (data_val.target) must also be provided."
+                "If validation data (data_val) is provided, "
+                "validation targets (data_val.target) must also be provided."
             )
         return cls(
             model=model,
@@ -100,6 +106,7 @@ class TabularOptimizer:
             )
 
         params: dict[str, Any] = {}
+        p: IntParameter | FloatParameter | CategoricalParameter
         for p in self.configs.trial_parameters.int_parameters:
             params[p.name] = trial.suggest_int(
                 name=p.name,

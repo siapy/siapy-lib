@@ -44,7 +44,7 @@ class TrialParameters:
         self._categorical_parameters = categorical_parameters or []
 
     @classmethod
-    def from_dict(cls, parameters: ParametersDictType):
+    def from_dict(cls, parameters: ParametersDictType) -> "TrialParameters":
         float_params = [
             FloatParameter(**fp) for fp in parameters.get("float_parameters", [])
         ]
@@ -60,13 +60,13 @@ class TrialParameters:
         )
 
     @property
-    def float_parameters(self):
+    def float_parameters(self) -> list[FloatParameter]:
         return self._float_parameters
 
     @property
-    def int_parameters(self):
+    def int_parameters(self) -> list[IntParameter]:
         return self._int_parameters
 
     @property
-    def categorical_parameters(self):
+    def categorical_parameters(self) -> list[CategoricalParameter]:
         return self._categorical_parameters
