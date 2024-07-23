@@ -1,4 +1,4 @@
-from typing import Any, Callable, Iterable, Literal, Protocol
+from typing import Annotated, Any, Callable, Iterable, Literal, Protocol
 
 import numpy as np
 from sklearn.base import BaseEstimator as BaseEstimatorSklearn
@@ -9,6 +9,7 @@ from sklearn.model_selection import (
     train_test_split,
 )
 
+from siapy.core import logger
 from siapy.core.types import ArrayLike1dType, ArrayLike2dType
 
 
@@ -33,6 +34,8 @@ def cross_validation(
     model: BaseEstimator,
     X: ArrayLike2dType,
     y: ArrayLike1dType,
+    X_val: Annotated[ArrayLike2dType | None, "Not used, only for compatibility"] = None,
+    y_val: Annotated[ArrayLike1dType | None, "Not used, only for compatibility"] = None,
     *,
     groups: ArrayLike1dType | None = None,
     scoring: str | ScorerFuncType | None = None,
@@ -42,8 +45,14 @@ def cross_validation(
     fit_params: dict[str, Any] | None = None,
     pre_dispatch: int | str = 1,
     error_score: Literal["raise"] | int = 0,
-) -> np.ndarray:
-    return cross_val_score(
+) -> float:
+    if X_val is not None or y_val is not None:
+        logger.info(
+            "Specification of X_val and y_val is redundant for cross_validation."
+            "These parameters are ignored."
+        )
+
+    score = cross_val_score(
         estimator=model,
         X=X,  # type: ignore
         y=y,
@@ -56,6 +65,7 @@ def cross_validation(
         pre_dispatch=pre_dispatch,
         error_score=error_score,
     )
+    return score.mean()
 
 
 def hold_out_validation(
@@ -64,8 +74,9 @@ def hold_out_validation(
     y: ArrayLike1dType,
     X_val: ArrayLike2dType | None = None,
     y_val: ArrayLike1dType | None = None,
+    *,
     scoring: str | ScorerFuncType | None = None,
-    test_size: float = 0.2,
+    test_size: float | None = 0.2,
     random_state: int | None = None,
     shuffle: bool = True,
     stratify: np.ndarray | None = None,
@@ -85,9 +96,7 @@ def hold_out_validation(
             shuffle=shuffle,
             stratify=stratify,
         )
-
     model.fit(x_train, y_train)
-
     if scoring:
         if isinstance(scoring, str):
             scoring_func = get_scorer(scoring)
@@ -96,5 +105,4 @@ def hold_out_validation(
         score = scoring_func(model, x_test, y_test)
     else:
         score = model.score(x_test, y_test)
-
     return score
