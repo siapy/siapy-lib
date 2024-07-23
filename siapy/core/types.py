@@ -1,6 +1,8 @@
 import numpy as np
 import spectral as sp
 from PIL.Image import Image
+import pandas as pd
+from typing import Sequence, Any
 
 from siapy.entities import SpectralImage, SpectralImageSet
 
@@ -21,3 +23,5 @@ ImageDataType = (
     | np.uint64
 )
 ImageContainerType = SpectralImage | SpectralImageSet
+ArrayLike1dType = np.ndarray | pd.Series | Sequence[Any]
+ArrayLike2dType = np.ndarray | pd.DataFrame | Sequence[Any]
