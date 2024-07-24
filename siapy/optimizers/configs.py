@@ -4,7 +4,7 @@ import optuna
 from pydantic import BaseModel, ConfigDict
 
 from siapy.optimizers.scorers import Scorer
-from siapy.optimizers.trial_parameters import TrialParameters
+from siapy.optimizers.parameters import TrialParameters
 
 
 class CreateStudyConfig(BaseModel):

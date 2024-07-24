@@ -7,7 +7,7 @@ from siapy.optimizers.configs import (
     TabularOptimizerConfig,
 )
 from siapy.optimizers.scorers import Scorer
-from siapy.optimizers.trial_parameters import TrialParameters
+from siapy.optimizers.parameters import TrialParameters
 
 
 def test_create_study_config_defaults():

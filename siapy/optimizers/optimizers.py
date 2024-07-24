@@ -7,7 +7,7 @@ from siapy.core import logger
 from siapy.core.types import ArrayLike1dType, ArrayLike2dType
 from siapy.datasets.schemas import TabularDatasetData
 from siapy.optimizers.configs import TabularOptimizerConfig
-from siapy.optimizers.trial_parameters import (
+from siapy.optimizers.parameters import (
     CategoricalParameter,
     FloatParameter,
     IntParameter,
