@@ -6,8 +6,8 @@ from siapy.optimizers.configs import (
     OptimizeStudyConfig,
     TabularOptimizerConfig,
 )
-from siapy.optimizers.scorers import Scorer
 from siapy.optimizers.parameters import TrialParameters
+from siapy.optimizers.scorers import Scorer
 
 
 def test_create_study_config_defaults():
@@ -16,7 +16,7 @@ def test_create_study_config_defaults():
     assert config.sampler is None
     assert config.pruner is None
     assert config.study_name is None
-    assert config.direction is None
+    assert config.direction == "minimize"
     assert config.load_if_exists is False
 
 
