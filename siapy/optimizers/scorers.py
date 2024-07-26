@@ -30,6 +30,7 @@ class Scorer:
         scoring: str | ScorerFuncType | None = None,
         cv: int
         | model_selection.BaseCrossValidator
+        | model_selection._split._RepeatedSplits
         | Iterable
         | Literal["RepeatedKFold", "RepeatedStratifiedKFold"]
         | None = None,
@@ -45,7 +46,7 @@ class Scorer:
         scorer = partial(
             cross_validation,
             scoring=scoring,
-            cv=cv,
+            cv=cv,  # type: ignore
             groups=None,
             n_jobs=1,
             verbose=0,

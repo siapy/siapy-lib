@@ -1,7 +1,7 @@
-from typing import Annotated, Any, Callable, Iterable, Literal, Protocol
+from typing import Annotated, Any, Callable, Iterable, Literal
 
 import numpy as np
-from sklearn.base import BaseEstimator as BaseEstimatorSklearn
+from sklearn.base import BaseEstimator
 from sklearn.metrics import get_scorer
 from sklearn.model_selection import (
     BaseCrossValidator,
@@ -12,22 +12,18 @@ from sklearn.model_selection import (
 from siapy.core import logger
 from siapy.core.types import ArrayLike1dType, ArrayLike2dType
 
-
-class EstimatorProtocol(Protocol):
-    def fit(
-        self, X: ArrayLike2dType, y: ArrayLike1dType, **fit_params: Any
-    ) -> "EstimatorProtocol": ...
-
-    def predict(self, X: ArrayLike2dType) -> np.ndarray: ...
-
-    def score(self, X: ArrayLike2dType, y: ArrayLike1dType) -> float: ...
-
-
-class BaseEstimator(BaseEstimatorSklearn, EstimatorProtocol):
-    pass
-
-
 ScorerFuncType = Callable[[BaseEstimator, ArrayLike2dType, ArrayLike1dType], float]
+
+
+def _check_model_methods(model: BaseEstimator):
+    if (
+        not hasattr(model, "fit")
+        or not hasattr(model, "score")
+        or not hasattr(model, "predict")
+    ):
+        raise AttributeError(
+            "The model must have methods: 'fit', 'predict', and 'score'."
+        )
 
 
 def cross_validation(
@@ -51,7 +47,7 @@ def cross_validation(
             "Specification of X_val and y_val is redundant for cross_validation."
             "These parameters are ignored."
         )
-
+    _check_model_methods(model)
     score = cross_val_score(
         estimator=model,
         X=X,  # type: ignore
@@ -96,7 +92,9 @@ def hold_out_validation(
             shuffle=shuffle,
             stratify=stratify,
         )
-    model.fit(x_train, y_train)
+    _check_model_methods(model)
+    model.fit(x_train, y_train)  # type: ignore
+
     if scoring:
         if isinstance(scoring, str):
             scoring_func = get_scorer(scoring)
@@ -104,5 +102,5 @@ def hold_out_validation(
             scoring_func = scoring
         score = scoring_func(model, x_test, y_test)
     else:
-        score = model.score(x_test, y_test)
+        score = model.score(x_test, y_test)  # type: ignore
     return score

@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Any, Literal, Sequence
+from typing import Annotated, Any, Sequence
 
 from pydantic import BaseModel
 
@@ -26,8 +26,16 @@ class CategoricalParameter(BaseModel):
 
 
 ParametersDictType = dict[
-    Literal["float_parameters", "int_parameters", "categorical_parameters"],
-    list[dict[str, Any]],
+    Annotated[
+        str,
+        "Can be one of: 'float_parameters', 'int_parameters', 'categorical_parameters'.",
+    ],
+    list[
+        Annotated[
+            dict[str, Any],
+            "Dictionary of parameters, belonging to specific type of parameter.",
+        ]
+    ],
 ]
 
 

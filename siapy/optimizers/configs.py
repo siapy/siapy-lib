@@ -3,8 +3,8 @@ from typing import Callable, Iterable, Literal
 import optuna
 from pydantic import BaseModel, ConfigDict
 
+from siapy.optimizers.parameters import TrialParameters
 from siapy.optimizers.scorers import Scorer
-from siapy.optimizers.trial_parameters import TrialParameters
 
 
 class CreateStudyConfig(BaseModel):
@@ -14,7 +14,7 @@ class CreateStudyConfig(BaseModel):
     pruner: optuna.pruners.BasePruner | None = None
     study_name: str | None = None
     direction: Literal["maximize", "minimize"] | optuna.study.StudyDirection | None = (
-        None
+        "minimize"
     )
     load_if_exists: bool = False
 

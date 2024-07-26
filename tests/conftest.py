@@ -2,6 +2,7 @@ from types import SimpleNamespace
 
 import numpy as np
 import pytest
+from sklearn.datasets import make_classification
 
 from siapy.core.configs import TEST_DATA_DIR
 from siapy.datasets.tabular import TabularDataset, TabularDatasetData
@@ -115,3 +116,11 @@ def spectral_tabular_dataset(spectral_images_set):
     dataset.process_image_data()
     dataset_data = dataset.generate_dataset_data()
     return TabularDatasetReturn(dataset=dataset, dataset_data=dataset_data)
+
+
+@pytest.fixture(scope="module")
+def mock_sklearn_dataset():
+    X, y = make_classification(
+        n_samples=100, n_features=10, n_classes=2, random_state=0
+    )
+    return X, y
