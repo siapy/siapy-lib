@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.3.4](https://github.com/siapy/siapy-lib/compare/v0.3.3...v0.3.4) (2024-07-26)
+
+
+### Bug Fixes
+
+* Create Target base class ([cf7194d](https://github.com/siapy/siapy-lib/commit/cf7194d64f26a9a4ee8fbad5c0b0a3978da2b936))
+* set default direction for optimization to 'minimize' ([5a402fd](https://github.com/siapy/siapy-lib/commit/5a402fdb52a8001243f910115801150ed80ba30d))
+* Update evaluators.py with type annotations and error handling ([b1a4010](https://github.com/siapy/siapy-lib/commit/b1a40104eb23e094b86d434ca481b190a1772ced))
+* Update study config defaults to set direction to 'minimize' ([347a2bb](https://github.com/siapy/siapy-lib/commit/347a2bb6af5807162bccb970a722746b193dbe3f))
+
+
+### Dependencies
+
+* Update pyproject.toml with optuna&gt;=3.6.1 dependency ([1faac14](https://github.com/siapy/siapy-lib/commit/1faac145ffab5b304f6ca2c23b7a6959d40e11b4))
+
+
+### Documentation
+
+* Update default branch name to 'main' and adjust merge instructions ([42b0e29](https://github.com/siapy/siapy-lib/commit/42b0e29c7e7ec0b37eba0cb69b3a84831f4614ee))
+
 ## [0.3.3](https://github.com/siapy/siapy-lib/compare/v0.3.2...v0.3.3) (2024-07-16)
 
 
