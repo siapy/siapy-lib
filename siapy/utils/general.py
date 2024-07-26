@@ -1,3 +1,4 @@
+import inspect
 import multiprocessing
 import random
 import types
@@ -83,3 +84,11 @@ def get_increasing_seq_indices(values_list: list[int]) -> list[int]:
 def set_random_seed(seed: int):
     random.seed(seed)
     np.random.seed(seed)
+
+
+def get_classmethods(class_obj: Any) -> list[str]:
+    return [
+        member[0]
+        for member in inspect.getmembers(class_obj, predicate=inspect.ismethod)
+        if member[1].__self__ == class_obj
+    ]

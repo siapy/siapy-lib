@@ -4,6 +4,8 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
+from siapy.utils.general import get_classmethods
+
 from .pixels import Pixels
 
 
@@ -51,7 +53,7 @@ class Signatures:
 
     def __init__(self, *args: Any, **kwargs: Any):
         raise RuntimeError(
-            "Use Signatures.from_array_and_pixels() to create a new instance."
+            f"Use any of the @classmethod to create a new instance: {get_classmethods(Signatures)}"
         )
 
     @classmethod
@@ -69,6 +71,19 @@ class Signatures:
         signals = Signals(pd.DataFrame(signals_list))
         return cls._create(pixels, signals)
 
+    @classmethod
+    def from_dataframe(cls, dataframe: pd.DataFrame) -> "Signatures":
+        if not all(
+            coord in dataframe.columns for coord in [Pixels.coords.U, Pixels.coords.V]
+        ):
+            raise ValueError(
+                f"DataFrame must include columns for both '{Pixels.coords.U}'"
+                f" and '{Pixels.coords.V}' coordinates."
+            )
+        pixels = Pixels(dataframe[[Pixels.coords.U, Pixels.coords.V]])
+        signals = Signals(dataframe.drop(columns=[Pixels.coords.U, Pixels.coords.V]))
+        return cls._create(pixels, signals)
+
     @property
     def pixels(self) -> Pixels:
         return self._pixels
@@ -77,11 +92,11 @@ class Signatures:
     def signals(self) -> Signals:
         return self._signals
 
-    def df(self) -> pd.DataFrame:
+    def to_dataframe(self) -> pd.DataFrame:
         return pd.concat([self.pixels.df, self.signals.df], axis=1)
 
     def to_numpy(self) -> np.ndarray:
-        return self.df().to_numpy()
+        return self.to_dataframe().to_numpy()
 
     def filter(self) -> SignaturesFilter:
         return SignaturesFilter(self.pixels, self.signals)
