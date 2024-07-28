@@ -1,8 +1,10 @@
 from abc import ABC, abstractmethod
-from typing import Any
+from typing import Any, Iterable
 
 import pandas as pd
 from pydantic import BaseModel, ConfigDict
+
+from .helpers import generate_classification_target, generate_regression_target
 
 
 class Target(BaseModel, ABC):
@@ -18,6 +20,10 @@ class Target(BaseModel, ABC):
     @classmethod
     @abstractmethod
     def from_dict(cls, data: dict[str, Any]) -> "Target": ...
+
+    @classmethod
+    @abstractmethod
+    def from_iterable(cls, data: Iterable) -> "Target": ...
 
     @abstractmethod
     def to_dict(self) -> dict[str, Any]: ...
@@ -41,6 +47,11 @@ class ClassificationTarget(Target):
 
     def __len__(self) -> int:
         return len(self.label)
+
+    @classmethod
+    def from_iterable(cls, data: Iterable) -> "ClassificationTarget":
+        label = pd.DataFrame(data, columns=["label"])
+        return generate_classification_target(label, "label")
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "ClassificationTarget":
@@ -79,6 +90,11 @@ class RegressionTarget(Target):
         return len(self.value)
 
     @classmethod
+    def from_iterable(cls, data: Iterable) -> "RegressionTarget":
+        value = pd.DataFrame(data, columns=["value"])
+        return generate_regression_target(value, "value")
+
+    @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "RegressionTarget":
         value = pd.Series(data["value"], name="value")
         name = data["name"]
@@ -104,6 +120,15 @@ class TabularDatasetData(BaseModel):
     metadata: pd.DataFrame
     target: Target | None = None
 
+    def __init__(self, *args: Any, **kwargs: Any):
+        super().__init__(*args, **kwargs)
+        self._validate_lengths()
+
+    def __setattr__(self, name: str, value: Any) -> None:
+        super().__setattr__(name, value)
+        if name in self.model_fields.keys():
+            self._validate_lengths()
+
     def __getitem__(self, indices: Any) -> "TabularDatasetData":
         pixels = self.pixels.iloc[indices]
         signals = self.signals.iloc[indices]
@@ -112,6 +137,9 @@ class TabularDatasetData(BaseModel):
         return TabularDatasetData(
             pixels=pixels, signals=signals, metadata=metadata, target=target
         )
+
+    def __len__(self) -> int:
+        return len(self.pixels)
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "TabularDatasetData":
@@ -136,6 +164,14 @@ class TabularDatasetData(BaseModel):
             return ClassificationTarget.from_dict(data)
         else:
             raise ValueError("Invalid target dict.")
+
+    def _validate_lengths(self) -> None:
+        if not (len(self.pixels) == len(self.signals) == len(self.metadata)):
+            raise ValueError("Lengths of pixels, signals, and metadata must be equal")
+        if self.target is not None and len(self.target) != len(self):
+            raise ValueError(
+                "Target length must be equal to the length of the dataset."
+            )
 
     def to_dict(self) -> dict[str, Any]:
         return {

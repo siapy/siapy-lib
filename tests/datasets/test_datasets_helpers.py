@@ -37,15 +37,14 @@ def test_dataframe_generate_classification_target_single_column(sample_dataframe
     )
     assert isinstance(classification_target, ClassificationTarget)
     assert all(
-        classification_target.label
-        == pd.Series([("rectangle",), ("circle",)], name="label")
+        classification_target.label == pd.Series(["rectangle", "circle"], name="label")
     )
     assert classification_target.value.name == "encoded"
     assert classification_target.encoding.name == "encoding"
     assert list(classification_target.value) == [0, 1]
     assert classification_target.encoding.to_dict() == {
-        0: ("rectangle",),
-        1: ("circle",),
+        0: "rectangle",
+        1: "circle",
     }
 
 
@@ -56,12 +55,12 @@ def test_dataframe_generate_classification_target_multiple_columns(sample_datafr
     assert isinstance(classification_target, ClassificationTarget)
     assert all(
         classification_target.label
-        == pd.Series([("rectangle", "c"), ("circle", "d")], name="label")
+        == pd.Series(["rectangle__c", "circle__d"], name="label")
     )
     assert list(classification_target.value) == [0, 1]
     assert classification_target.encoding.to_dict() == {
-        0: ("rectangle", "c"),
-        1: ("circle", "d"),
+        0: "rectangle__c",
+        1: "circle__d",
     }
 
 

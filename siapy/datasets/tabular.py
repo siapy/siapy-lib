@@ -24,7 +24,7 @@ class TabularDataEntity(MetaDataEntity):
     signatures: Signatures
 
 
-@dataclass()
+@dataclass
 class TabularDataset:
     def __init__(self, container: ImageContainerType):
         self._image_set = (
