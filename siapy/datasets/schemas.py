@@ -1,8 +1,10 @@
 from abc import ABC, abstractmethod
-from typing import Any
+from typing import Any, Iterable
 
 import pandas as pd
 from pydantic import BaseModel, ConfigDict
+
+from .helpers import generate_classification_target, generate_regression_target
 
 
 class Target(BaseModel, ABC):
@@ -19,8 +21,9 @@ class Target(BaseModel, ABC):
     @abstractmethod
     def from_dict(cls, data: dict[str, Any]) -> "Target": ...
 
-    # @classmethod
-    # def from_iterable(cls, data: Iterable)
+    @classmethod
+    @abstractmethod
+    def from_iterable(cls, data: Iterable) -> "Target": ...
 
     @abstractmethod
     def to_dict(self) -> dict[str, Any]: ...
@@ -44,6 +47,11 @@ class ClassificationTarget(Target):
 
     def __len__(self) -> int:
         return len(self.label)
+
+    @classmethod
+    def from_iterable(cls, data: Iterable) -> "ClassificationTarget":
+        label = pd.DataFrame(data, columns=["label"])
+        return generate_classification_target(label, "label")
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "ClassificationTarget":
@@ -80,6 +88,11 @@ class RegressionTarget(Target):
 
     def __len__(self) -> int:
         return len(self.value)
+
+    @classmethod
+    def from_iterable(cls, data: Iterable) -> "RegressionTarget":
+        value = pd.DataFrame(data, columns=["value"])
+        return generate_regression_target(value, "value")
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "RegressionTarget":

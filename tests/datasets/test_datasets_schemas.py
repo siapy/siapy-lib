@@ -8,6 +8,15 @@ from siapy.datasets.schemas import (
 )
 
 
+def test_classification_target_from_iterable():
+    data = ["a", "b", "c"]
+    classification_target = ClassificationTarget.from_iterable(data)
+    assert isinstance(classification_target, ClassificationTarget)
+    pd.testing.assert_series_equal(
+        classification_target.label, pd.Series(["a", "b", "c"])
+    )
+
+
 def test_classification_target_from_dict():
     data = {"label": ["a", "b", "c"], "value": [1, 2, 3], "encoding": ["x", "y", "z"]}
     classification_target = ClassificationTarget.from_dict(data)
@@ -59,6 +68,15 @@ def test_classification_target_reset_index():
     assert all(reset_target.label == classification_target.label)
     assert all(reset_target.value == classification_target.value)
     assert all(reset_target.encoding == classification_target.encoding)
+
+
+def test_regression_target_from_iterable():
+    data = [1.0, 2.5, 3.3]
+    regression_target = RegressionTarget.from_iterable(data)
+    assert isinstance(regression_target, RegressionTarget)
+    pd.testing.assert_series_equal(
+        regression_target.value, pd.Series([1.0, 2.5, 3.3], name="value")
+    )
 
 
 def test_regression_target_from_dict():
