@@ -109,9 +109,9 @@ def test_regression_target_reset_index():
 
 def test_tabular_dataset_data_from_dict():
     data = {
-        "pixels": {"0": [255, 255, 255], "1": [0, 0, 0]},
+        "pixels": {"0": [255, 255], "1": [0, 0]},
         "signals": {"0": [1.0, 2.0], "1": [3.0, 4.0]},
-        "metadata": {"0": ["meta1"], "1": ["meta2"]},
+        "metadata": {"0": ["meta1", "meta1"], "1": ["meta2", "meta2"]},
     }
     tabular_dataset_data = TabularDatasetData.from_dict(data)
     assert isinstance(tabular_dataset_data, TabularDatasetData)
@@ -128,9 +128,9 @@ def test_tabular_dataset_data_from_dict():
 
 def test_tabular_dataset_data_to_dict():
     data = {
-        "pixels": {"0": [255, 255, 255], "1": [0, 0, 0]},
+        "pixels": {"0": [255, 255], "1": [0, 0]},
         "signals": {"0": [1.0, 2.0], "1": [3.0, 4.0]},
-        "metadata": {"0": ["meta1"], "1": ["meta2"]},
+        "metadata": {"0": ["meta1", "meta1"], "1": ["meta2", "meta2"]},
         "target": {"label": ["a", "b"], "value": [1, 2], "encoding": ["x", "y"]},
     }
     tabular_dataset_data = TabularDatasetData.from_dict(data)
@@ -145,9 +145,9 @@ def test_tabular_dataset_data_to_dict():
 
 def test_tabular_dataset_data_to_dataframe():
     data = {
-        "pixels": {"0": [255, 255, 255], "1": [0, 0, 0]},
+        "pixels": {"0": [255, 255], "1": [0, 0]},
         "signals": {"0": [1.0, 2.0], "1": [3.0, 4.0]},
-        "metadata": {"0": ["meta1"], "1": ["meta2"]},
+        "metadata": {"0": ["meta1", "meta1"], "1": ["meta2", "meta2"]},
         "target": {"label": ["a", "b"], "value": [1, 2], "encoding": ["x", "y"]},
     }
     tabular_dataset_data = TabularDatasetData.from_dict(data)
@@ -166,13 +166,17 @@ def test_tabular_dataset_data_to_dataframe():
 
 def test_tabular_dataset_data_getitem():
     data = {
-        "pixels": {"0": [255, 255, 255], "1": [0, 0, 0], "2": [128, 128, 128]},
+        "pixels": {"0": [255, 255], "1": [0, 0], "2": [128, 128]},
         "signals": {"0": [1.0, 2.0], "1": [3.0, 4.0], "2": [5.0, 6.0]},
-        "metadata": {"0": ["meta1"], "1": ["meta2"], "2": ["meta3"]},
+        "metadata": {
+            "0": ["meta1", "meta1"],
+            "1": ["meta2", "meta2"],
+            "2": ["meta3", "meta3"],
+        },
         "target": {
-            "label": ["a", "b", "c"],
-            "value": [1, 2, 3],
-            "encoding": ["x", "y", "z"],
+            "label": ["a", "b"],
+            "value": [1, 2],
+            "encoding": ["x", "y"],
         },
     }
     tabular_dataset_data = TabularDatasetData.from_dict(data)
@@ -187,9 +191,7 @@ def test_tabular_dataset_data_getitem():
     pd.testing.assert_frame_equal(
         sliced_data.metadata, pd.DataFrame(data["metadata"]).iloc[1:3]
     )
-    assert all(
-        sliced_data.target.label == pd.Series(["b", "c"], index=[1, 2], name="label")
-    )
+    assert all(sliced_data.target.label == pd.Series(["b"], index=[1], name="label"))
 
 
 def test_tabular_dataset_data_reset_index():
@@ -252,3 +254,104 @@ def test_tabular_dataset_data_target_from_dict_invalid():
     data = {"unknown_key": "some_value"}
     with pytest.raises(ValueError):
         TabularDatasetData.target_from_dict(data)
+
+
+def test_tabular_dataset_data_init():
+    data = {
+        "pixels": pd.DataFrame({"a": [1, 2, 3]}),
+        "signals": pd.DataFrame({"b": [4, 5, 6]}),
+        "metadata": pd.DataFrame({"c": [7, 8, 9]}),
+        "target": {
+            "label": ["a", "b", "c"],
+            "value": [1, 2, 3],
+            "encoding": ["x", "y", "z"],
+        },
+    }
+    target = ClassificationTarget.from_dict(data["target"])
+
+    # Valid setattr
+    dataset = TabularDatasetData(
+        pixels=data["pixels"],
+        signals=data["signals"],
+        metadata=data["metadata"],
+        target=target,
+    )
+    assert isinstance(dataset, TabularDatasetData)
+
+    # Invalid setattr -> signals
+    data = {
+        "pixels": pd.DataFrame({"a": [1, 2, 3]}),
+        "signals": pd.DataFrame({"b": [4, 5]}),
+        "metadata": pd.DataFrame({"c": [7, 8, 9]}),
+    }
+
+    with pytest.raises(
+        ValueError, match="Lengths of pixels, signals, and metadata must be equal"
+    ):
+        TabularDatasetData(
+            pixels=data["pixels"],
+            signals=data["signals"],
+            metadata=data["metadata"],
+        )
+
+
+def test_tabular_dataset_data_setattr():
+    data = {
+        "pixels": pd.DataFrame({"a": [1, 2, 3]}),
+        "signals": pd.DataFrame({"b": [4, 5, 6]}),
+        "metadata": pd.DataFrame({"c": [7, 8, 9]}),
+        "target": {
+            "label": ["a", "b", "c"],
+            "value": [1, 2, 3],
+            "encoding": ["x", "y", "z"],
+        },
+    }
+    target = ClassificationTarget.from_dict(data["target"])
+    dataset_ = TabularDatasetData(
+        pixels=data["pixels"],
+        signals=data["signals"],
+        metadata=data["metadata"],
+        target=target,
+    )
+
+    # Valid setattr
+    new_pixels = pd.DataFrame({"a": [10, 11, 12]})
+    dataset = dataset_.model_copy()
+    dataset.pixels = new_pixels
+    assert dataset.pixels.equals(new_pixels)
+
+    # Invalid setattr -> signals
+    invalid_signals = pd.DataFrame({"b": [4, 5]})
+    with pytest.raises(
+        ValueError, match="Lengths of pixels, signals, and metadata must be equal"
+    ):
+        dataset.signals = invalid_signals
+
+    # Invalid setattr -> target
+    dataset = dataset_.model_copy()
+    invalid_target = target[:2]
+    with pytest.raises(
+        ValueError, match="Target length must be equal to the length of the dataset."
+    ):
+        dataset.target = invalid_target
+
+
+def test_tabular_dataset_data_len():
+    data = {
+        "pixels": pd.DataFrame({"a": [1, 2, 3]}),
+        "signals": pd.DataFrame({"b": [4, 5, 6]}),
+        "metadata": pd.DataFrame({"c": [7, 8, 9]}),
+        "target": {
+            "label": ["a", "b", "c"],
+            "value": [1, 2, 3],
+            "encoding": ["x", "y", "z"],
+        },
+    }
+    target = ClassificationTarget.from_dict(data["target"])
+    dataset = TabularDatasetData(
+        pixels=data["pixels"],
+        signals=data["signals"],
+        metadata=data["metadata"],
+        target=target,
+    )
+    assert len(dataset) == len(data["pixels"])

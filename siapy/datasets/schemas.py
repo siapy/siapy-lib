@@ -19,6 +19,9 @@ class Target(BaseModel, ABC):
     @abstractmethod
     def from_dict(cls, data: dict[str, Any]) -> "Target": ...
 
+    # @classmethod
+    # def from_iterable(cls, data: Iterable)
+
     @abstractmethod
     def to_dict(self) -> dict[str, Any]: ...
 
@@ -104,6 +107,15 @@ class TabularDatasetData(BaseModel):
     metadata: pd.DataFrame
     target: Target | None = None
 
+    def __init__(self, *args: Any, **kwargs: Any):
+        super().__init__(*args, **kwargs)
+        self._validate_lengths()
+
+    def __setattr__(self, name: str, value: Any) -> None:
+        super().__setattr__(name, value)
+        if name in self.model_fields.keys():
+            self._validate_lengths()
+
     def __getitem__(self, indices: Any) -> "TabularDatasetData":
         pixels = self.pixels.iloc[indices]
         signals = self.signals.iloc[indices]
@@ -112,6 +124,9 @@ class TabularDatasetData(BaseModel):
         return TabularDatasetData(
             pixels=pixels, signals=signals, metadata=metadata, target=target
         )
+
+    def __len__(self) -> int:
+        return len(self.pixels)
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "TabularDatasetData":
@@ -136,6 +151,14 @@ class TabularDatasetData(BaseModel):
             return ClassificationTarget.from_dict(data)
         else:
             raise ValueError("Invalid target dict.")
+
+    def _validate_lengths(self) -> None:
+        if not (len(self.pixels) == len(self.signals) == len(self.metadata)):
+            raise ValueError("Lengths of pixels, signals, and metadata must be equal")
+        if self.target is not None and len(self.target) != len(self):
+            raise ValueError(
+                "Target length must be equal to the length of the dataset."
+            )
 
     def to_dict(self) -> dict[str, Any]:
         return {
