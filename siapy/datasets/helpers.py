@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 import pandas as pd
 
 if TYPE_CHECKING:
-    from .schemas import ClassificationTarget, RegressionTarget
+    from .schemas import ClassificationTarget, RegressionTarget, TabularDatasetData
 
 
 def generate_classification_target(
@@ -34,3 +34,7 @@ def generate_regression_target(
     from .schemas import RegressionTarget  # Local import to avoid circular dependency
 
     return RegressionTarget(name=column_name, value=dataframe[column_name])
+
+
+def merge_signals_from_multiple_cameras(data: "TabularDatasetData"):
+    data.signals.copy()
