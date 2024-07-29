@@ -10,7 +10,7 @@ from siapy.entities.shapes import (
     Point,
     Rectangle,
 )
-from siapy.utils.plots import display_selected_areas
+from siapy.utils.plots import display_image_with_selected_areas
 
 
 @pytest.mark.manual
@@ -20,7 +20,7 @@ def test_freedraw_convex_hull_manual():
     pixels = Pixels.from_iterable(pixels_input)
     freedraw = FreeDraw(pixels=pixels)
     convex_hull_output = freedraw.convex_hull()
-    display_selected_areas(image_mock, convex_hull_output, color="red")
+    display_image_with_selected_areas(image_mock, convex_hull_output, color="red")
 
 
 def test_from_shape_type():

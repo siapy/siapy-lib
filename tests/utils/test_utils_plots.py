@@ -1,7 +1,7 @@
 import pytest
 
 from siapy.utils.plots import (
-    display_selected_areas,
+    display_image_with_selected_areas,
     pixels_select_click,
     pixels_select_lasso,
 )
@@ -17,4 +17,4 @@ def test_pixels_select_click_manual(spectral_images):
 def test_pixels_select_lasso_manual(spectral_images):
     image_vnir = spectral_images.vnir
     selected_areas = pixels_select_lasso(image_vnir)
-    display_selected_areas(image_vnir, selected_areas, color="blue")
+    display_image_with_selected_areas(image_vnir, selected_areas, color="blue")
