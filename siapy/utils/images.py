@@ -222,3 +222,12 @@ def blockfy_image(
                 image_slices.append(block)
 
     return image_slices
+
+
+def calculate_image_background_percentage(image: ImageType):
+    image_np = validate_image_to_numpy(image)
+    # Check where any of bands include nan values (axis=2) to get positions of background
+    mask_nan = np.any(np.isnan(image_np), axis=2)
+    # Calculate percentage of background
+    percentage = np.sum(mask_nan) / mask_nan.size * 100
+    return percentage
