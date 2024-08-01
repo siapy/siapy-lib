@@ -3,11 +3,12 @@ import sys
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.path import Path
-from matplotlib.widgets import LassoSelector
+from matplotlib.widgets import Button, LassoSelector
 
 from siapy.core.logger import logger
 from siapy.core.types import ImageType
 from siapy.entities import Pixels
+from siapy.utils.enums import InteractiveButtonsEnum
 from siapy.utils.validators import validate_image_to_numpy_3channels
 
 
@@ -112,20 +113,20 @@ def pixels_select_lasso(image: ImageType) -> list[Pixels]:
     return selected_areas
 
 
-def display_selected_areas(
+def display_image_with_areas(
     image: ImageType,
-    selected_areas: Pixels | list[Pixels],
+    areas: Pixels | list[Pixels],
     *,
     color: str = "red",
 ):
-    if not isinstance(selected_areas, list):
-        selected_areas = [selected_areas]
+    if not isinstance(areas, list):
+        areas = [areas]
 
     image_display = validate_image_to_numpy_3channels(image)
     fig, ax = plt.subplots()
     ax.imshow(image_display)
 
-    for pixels in selected_areas:
+    for pixels in areas:
         ax.scatter(
             pixels.u(),
             pixels.v(),
@@ -136,3 +137,73 @@ def display_selected_areas(
         )
 
     plt.show()
+
+
+def display_multiple_images_with_areas(
+    images_with_areas: list[tuple[ImageType, Pixels | list[Pixels]]],
+    *,
+    color: str = "red",
+    plot_interactive_buttons: bool = True,
+) -> InteractiveButtonsEnum | None:
+    num_images = len(images_with_areas)
+    fig, axes = plt.subplots(1, num_images, figsize=(num_images * 5, 5))
+
+    if num_images == 1:
+        axes = [axes]
+
+    for ax, (image, selected_areas) in zip(axes, images_with_areas):
+        if not isinstance(selected_areas, list):
+            selected_areas = [selected_areas]
+
+        image_display = validate_image_to_numpy_3channels(image)
+        ax.imshow(image_display)
+
+        for pixels in selected_areas:
+            ax.scatter(
+                pixels.u(),
+                pixels.v(),
+                lw=0,
+                marker="o",
+                c=color,
+                s=(72.0 / fig.dpi) ** 2,
+            )
+    if plot_interactive_buttons:
+        return interactive_buttons()
+
+    plt.show()
+    return None
+
+
+def interactive_buttons():
+    flag = InteractiveButtonsEnum.REPEAT
+
+    def repeat(event):
+        nonlocal flag
+        logger.info("Pressed repeat button.")
+        plt.close()
+        flag = InteractiveButtonsEnum.REPEAT
+
+    def save(event):
+        nonlocal flag
+        logger.info("Pressed save button.")
+        plt.close()
+        flag = InteractiveButtonsEnum.SAVE
+
+    def skip(event):
+        nonlocal flag
+        logger.info("Pressed skip button.")
+        plt.close()
+        flag = InteractiveButtonsEnum.SKIP
+
+    axcolor = "lightgoldenrodyellow"
+    position = plt.axes((0.9, 0.1, 0.1, 0.04))
+    button_save = Button(position, "Save", color=axcolor, hovercolor="0.975")
+    button_save.on_clicked(save)
+    position = plt.axes((0.9, 0.15, 0.1, 0.04))
+    button_repeat = Button(position, "Repeat", color=axcolor, hovercolor="0.975")
+    button_repeat.on_clicked(repeat)
+    position = plt.axes((0.9, 0.2, 0.1, 0.04))
+    button_skip = Button(position, "Skip", color=axcolor, hovercolor="0.975")
+    button_skip.on_clicked(skip)
+    plt.show()
+    return flag

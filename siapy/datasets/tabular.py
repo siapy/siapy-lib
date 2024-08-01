@@ -57,6 +57,7 @@ class TabularDataset:
         return self._data_entities
 
     def process_image_data(self):
+        self.data_entities.clear()
         for image_idx, image in enumerate(self.image_set):
             for shape_idx, shape in enumerate(image.geometric_shapes.shapes):
                 signatures = image.to_signatures(shape.convex_hull())
