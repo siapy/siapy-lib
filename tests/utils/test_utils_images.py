@@ -11,7 +11,9 @@ from siapy.entities import SpectralImage
 from siapy.entities.pixels import Pixels
 from siapy.entities.shapes import Shape
 from siapy.utils.images import (
+    blockfy_image,
     calculate_correction_factor_from_panel,
+    calculate_image_background_percentage,
     convert_radiance_image_to_reflectance,
     create_image,
     merge_images_by_specter,
@@ -192,3 +194,49 @@ def test_convert_radiance_image_to_reflectance_with_saving(spectral_images, tmp_
             result.to_numpy(),
             np.array(image_vnir.to_numpy() * panel_correction).astype("float32"),
         )
+
+
+def test_calculate_image_background_percentage_mixed_background():
+    image = np.random.default_rng(0).random((100, 100, 3))
+    image[0:25, 0:25, :] = np.nan
+    image[75:100, 75:100, :] = np.nan
+    image[55, 50, 1] = np.nan
+    percentage = calculate_image_background_percentage(image)
+    assert percentage == pytest.approx(12.5099999)
+
+    image = np.full((100, 100, 3), np.nan)
+    percentage = calculate_image_background_percentage(image)
+    assert percentage == 100
+
+
+def test_blockfy_image():
+    image = np.random.default_rng(0).random((100, 100, 3))
+
+    p, q = 25, 25
+
+    blocks = blockfy_image(image, p, q)
+
+    expected_blocks_per_row = (image.shape[0] - 1) // p + 1
+    expected_blocks_per_column = (image.shape[1] - 1) // q + 1
+    expected_num_blocks = expected_blocks_per_row * expected_blocks_per_column
+
+    assert len(blocks) == expected_num_blocks
+
+    for block in blocks:
+        assert block.shape == (p, q, image.shape[2])
+
+    # Concatenate image blocks back to original image
+    reconstructed_image = np.block(
+        [
+            [
+                # col_idx * i + j -> position in a list
+                # , where i is the row index and j is the column index of the block, sliced from original image
+                [blocks[expected_blocks_per_column * i + j]]
+                for j in range(expected_blocks_per_column)
+            ]
+            for i in range(expected_blocks_per_row)
+        ]
+    )
+    np.testing.assert_array_almost_equal(
+        reconstructed_image[: image.shape[0], : image.shape[1]], image
+    )
