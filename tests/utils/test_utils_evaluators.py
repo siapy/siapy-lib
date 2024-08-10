@@ -1,47 +1,15 @@
 import logging
 
 import pytest
-from sklearn.base import BaseEstimator
 from sklearn.dummy import DummyClassifier
 from sklearn.metrics import accuracy_score, make_scorer
 from sklearn.model_selection import KFold, train_test_split
 from sklearn.svm import SVC
 
 from siapy.utils.evaluators import (
-    _check_model_methods,
     cross_validation,
     hold_out_validation,
 )
-
-
-class MockModelValid(BaseEstimator):
-    def fit(self, X, y):
-        pass
-
-    def predict(self, X):
-        pass
-
-    def score(self, X, y):
-        pass
-
-
-class MockModelInvalid(BaseEstimator):
-    def fit(self, X, y):
-        pass
-
-
-def test_check_model_methods_valid():
-    model = MockModelValid()
-    _check_model_methods(model)
-
-
-def test_check_model_methods_invalid():
-    model = MockModelInvalid()
-    with pytest.raises(
-        AttributeError,
-        match="The model must have methods: 'fit', 'predict', and 'score'.",
-    ):
-        _check_model_methods(model)
 
 
 def test_cross_validation(mock_sklearn_dataset):

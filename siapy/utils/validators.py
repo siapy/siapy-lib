@@ -1,5 +1,6 @@
 import numpy as np
 from PIL.Image import Image
+from sklearn.base import BaseEstimator
 
 from siapy.core.types import ImageSizeType, ImageType
 from siapy.entities import SpectralImage
@@ -43,3 +44,14 @@ def validate_image_size(output_size: ImageSizeType) -> tuple[int, int]:
             "Argument output_size tuple must have 2 elements and contain only integers."
         )
     return output_size
+
+
+def check_model_prediction_methods(model: BaseEstimator):
+    if (
+        not hasattr(model, "fit")
+        or not hasattr(model, "score")
+        or not hasattr(model, "predict")
+    ):
+        raise AttributeError(
+            "The model must have methods: 'fit', 'predict', and 'score'."
+        )
