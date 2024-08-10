@@ -1,8 +1,10 @@
 import numpy as np
 import pytest
 from PIL import Image as PILImage
+from sklearn.base import BaseEstimator
 
 from siapy.utils.validators import (
+    check_model_prediction_methods,
     validate_image_size,
     validate_image_to_numpy,
     validate_image_to_numpy_3channels,
@@ -77,3 +79,33 @@ def test_validate_image_size():
 
     with pytest.raises(ValueError):
         validate_image_size((100, "150"))
+
+
+class MockModelValid(BaseEstimator):
+    def fit(self, X, y):
+        pass
+
+    def predict(self, X):
+        pass
+
+    def score(self, X, y):
+        pass
+
+
+class MockModelInvalid(BaseEstimator):
+    def fit(self, X, y):
+        pass
+
+
+def test_check_model_prediction_methods_valid():
+    model = MockModelValid()
+    check_model_prediction_methods(model)
+
+
+def test_check_model_prediction_methods_invalid():
+    model = MockModelInvalid()
+    with pytest.raises(
+        AttributeError,
+        match="The model must have methods: 'fit', 'predict', and 'score'.",
+    ):
+        check_model_prediction_methods(model)
