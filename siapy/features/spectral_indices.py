@@ -10,7 +10,7 @@ with warnings.catch_warnings():
         category=DeprecationWarning,
         message="pkg_resources is deprecated as an API",
     )
-    import spyndex
+    import spyndex  # type: ignore
 
 
 def _convert_str_to_list(bands_acronym: Any) -> Any:

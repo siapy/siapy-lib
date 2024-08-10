@@ -2,7 +2,7 @@ from typing import Iterable, Literal
 
 import numpy as np
 import pandas as pd
-from autofeat import AutoFeatClassifier, AutoFeatRegressor
+from autofeat import AutoFeatClassifier, AutoFeatRegressor  # type: ignore
 from sklearn.base import BaseEstimator, TransformerMixin
 
 from siapy.features.helpers import FeatureSelectorConfig, feature_selector_factory

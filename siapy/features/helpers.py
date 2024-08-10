@@ -1,6 +1,6 @@
 from typing import Annotated, Literal
 
-from mlxtend.feature_selection import SequentialFeatureSelector
+from mlxtend.feature_selection import SequentialFeatureSelector  # type: ignore
 from pydantic import BaseModel, ConfigDict
 from sklearn.linear_model import Ridge, RidgeClassifier
 from sklearn.pipeline import Pipeline, make_pipeline
