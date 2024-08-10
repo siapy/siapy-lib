@@ -6,6 +6,7 @@ import pytest
 from siapy.datasets.helpers import (
     generate_classification_target,
     generate_regression_target,
+    merge_signals_from_multiple_cameras,
 )
 from siapy.datasets.schemas import ClassificationTarget, RegressionTarget
 from siapy.entities import Pixels
@@ -37,15 +38,14 @@ def test_dataframe_generate_classification_target_single_column(sample_dataframe
     )
     assert isinstance(classification_target, ClassificationTarget)
     assert all(
-        classification_target.label
-        == pd.Series([("rectangle",), ("circle",)], name="label")
+        classification_target.label == pd.Series(["rectangle", "circle"], name="label")
     )
     assert classification_target.value.name == "encoded"
     assert classification_target.encoding.name == "encoding"
     assert list(classification_target.value) == [0, 1]
     assert classification_target.encoding.to_dict() == {
-        0: ("rectangle",),
-        1: ("circle",),
+        0: "rectangle",
+        1: "circle",
     }
 
 
@@ -56,12 +56,12 @@ def test_dataframe_generate_classification_target_multiple_columns(sample_datafr
     assert isinstance(classification_target, ClassificationTarget)
     assert all(
         classification_target.label
-        == pd.Series([("rectangle", "c"), ("circle", "d")], name="label")
+        == pd.Series(["rectangle__c", "circle__d"], name="label")
     )
     assert list(classification_target.value) == [0, 1]
     assert classification_target.encoding.to_dict() == {
-        0: ("rectangle", "c"),
-        1: ("circle", "d"),
+        0: "rectangle__c",
+        1: "circle__d",
     }
 
 
@@ -70,3 +70,7 @@ def test_dataframe_generate_regression_target(sample_dataframe):
     assert isinstance(regression_target, RegressionTarget)
     assert regression_target.name == "0"
     assert all(regression_target.value == sample_dataframe["0"])
+
+
+def test_merge_signals_from_multiple_cameras(spectral_tabular_dataset):
+    merge_signals_from_multiple_cameras(spectral_tabular_dataset.dataset_data)

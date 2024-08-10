@@ -12,18 +12,9 @@ from sklearn.model_selection import (
 from siapy.core import logger
 from siapy.core.types import ArrayLike1dType, ArrayLike2dType
 
+from .validators import check_model_prediction_methods
+
 ScorerFuncType = Callable[[BaseEstimator, ArrayLike2dType, ArrayLike1dType], float]
-
-
-def _check_model_methods(model: BaseEstimator):
-    if (
-        not hasattr(model, "fit")
-        or not hasattr(model, "score")
-        or not hasattr(model, "predict")
-    ):
-        raise AttributeError(
-            "The model must have methods: 'fit', 'predict', and 'score'."
-        )
 
 
 def cross_validation(
@@ -47,7 +38,7 @@ def cross_validation(
             "Specification of X_val and y_val is redundant for cross_validation."
             "These parameters are ignored."
         )
-    _check_model_methods(model)
+    check_model_prediction_methods(model)
     score = cross_val_score(
         estimator=model,
         X=X,  # type: ignore
@@ -92,7 +83,7 @@ def hold_out_validation(
             shuffle=shuffle,
             stratify=stratify,
         )
-    _check_model_methods(model)
+    check_model_prediction_methods(model)
     model.fit(x_train, y_train)  # type: ignore
 
     if scoring:

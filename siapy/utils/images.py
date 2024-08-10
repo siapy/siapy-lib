@@ -6,9 +6,10 @@ import numpy as np
 import spectral as sp
 
 from siapy.core import logger
-from siapy.core.types import ImageDataType
+from siapy.core.types import ImageDataType, ImageType
 from siapy.entities import SpectralImage
 from siapy.transformations.image import rescale
+from siapy.utils.validators import validate_image_to_numpy
 
 
 def save_image(
@@ -187,3 +188,46 @@ def calculate_correction_factor_from_panel(
     panel_reflectance_mean = np.full(image.bands, panel_reference_reflectance)
     panel_correction = panel_reflectance_mean / panel_radiance_mean
     return panel_correction
+
+
+def blockfy_image(
+    image: ImageType,
+    p: Annotated[int, "block row size"],
+    q: Annotated[int, "block column size"],
+) -> list[np.ndarray]:
+    image_np = validate_image_to_numpy(image)
+    # Calculate how many blocks can cover the entire image
+    bpr = (image_np.shape[0] - 1) // p + 1  # blocks per row
+    bpc = (image_np.shape[1] - 1) // q + 1  # blocks per column
+
+    # Pad array with NaNs so it can be divided by p row-wise and by q column-wise
+    image_pad = np.nan * np.ones([p * bpr, q * bpc, image_np.shape[2]])
+    image_pad[: image_np.shape[0], : image_np.shape[1], : image_np.shape[2]] = image_np
+
+    image_slices = []
+    row_prev = 0
+
+    for row_block in range(bpc):
+        row_prev = row_block * p
+        column_prev = 0
+
+        for column_block in range(bpr):
+            column_prev = column_block * q
+            block = image_pad[
+                row_prev : row_prev + p,
+                column_prev : column_prev + q,
+            ]
+
+            if block.shape == (p, q, image_np.shape[2]):
+                image_slices.append(block)
+
+    return image_slices
+
+
+def calculate_image_background_percentage(image: ImageType):
+    image_np = validate_image_to_numpy(image)
+    # Check where any of bands include nan values (axis=2) to get positions of background
+    mask_nan = np.any(np.isnan(image_np), axis=2)
+    # Calculate percentage of background
+    percentage = np.sum(mask_nan) / mask_nan.size * 100
+    return percentage

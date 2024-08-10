@@ -14,6 +14,7 @@ from siapy.utils.general import (
     get_number_cpus,
     initialize_function,
     initialize_object,
+    match_iterable_items_by_regex,
 )
 
 
@@ -114,3 +115,32 @@ def test_get_class_methods():
     expected_methods = ["class_method1", "class_method2"]
     actual_methods = get_classmethods(SampleClass)
     assert sorted(actual_methods) == sorted(expected_methods)
+
+
+def test_match_iterable_items_by_regex():
+    iterable1 = [
+        "KK-K-03_KS-K-01_KK-S-05__ana-krompir-3-22_20000_us_2x_HSNR02_2022-05-25T101949_corr_rad_f32.hdr",
+        "KK-K-04_KK-K-10_KK-K-13__ana-krompir-3-22_20000_us_2x_HSNR02_2022-05-25T101527_corr_rad_f32.hdr",
+    ]
+    iterable2 = [
+        "KK-K-04_KK-K-10_KK-K-13__ana-krompir-3-22_20000_us_2x_HSNR02_2022-05-25T101949_corr2_rad_f32.hdr",
+        "KK-K-03_KS-K-01_KK-S-05__ana-krompir-3-22_20000_us_2x_HSNR02_2022-05-25T101949_corr2_rad_f32.hdr",
+    ]
+    # Regex: Define the regex pattern r"^[^_]+_[^_]+_[^_]+__" to match the labels until __.
+    regex = r"^[^_]+_[^_]+_[^_]+__"
+
+    expected_matches = [
+        (
+            "KK-K-03_KS-K-01_KK-S-05__ana-krompir-3-22_20000_us_2x_HSNR02_2022-05-25T101949_corr_rad_f32.hdr",
+            "KK-K-03_KS-K-01_KK-S-05__ana-krompir-3-22_20000_us_2x_HSNR02_2022-05-25T101949_corr2_rad_f32.hdr",
+        ),
+        (
+            "KK-K-04_KK-K-10_KK-K-13__ana-krompir-3-22_20000_us_2x_HSNR02_2022-05-25T101527_corr_rad_f32.hdr",
+            "KK-K-04_KK-K-10_KK-K-13__ana-krompir-3-22_20000_us_2x_HSNR02_2022-05-25T101949_corr2_rad_f32.hdr",
+        ),
+    ]
+    expected_indices = [(0, 1), (1, 0)]
+
+    matches, indices = match_iterable_items_by_regex(iterable1, iterable2, regex)
+    assert matches == expected_matches
+    assert indices == expected_indices
