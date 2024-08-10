@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.4.0](https://github.com/siapy/siapy-lib/compare/v0.3.4...v0.4.0) (2024-08-10)
+
+
+### Features
+
+* Add spectral indices computation and calculation functions ([3ef8c63](https://github.com/siapy/siapy-lib/commit/3ef8c636f1ec513819e14e85b3a72741516f5106))
+* Features generation implemented - automatic and spectral indices ([16365e0](https://github.com/siapy/siapy-lib/commit/16365e0dd6661520242b32df9b9572960b850ade))
+
+
+### Bug Fixes
+
+* include ([6d7e9e5](https://github.com/siapy/siapy-lib/commit/6d7e9e5841abe51c413fbf1e7584e94c9dd9ccdc))
+* Remove unnecessary dataclass decorator brackets ([28143f3](https://github.com/siapy/siapy-lib/commit/28143f3588670a767ed97e8312f98255cb2f7c72))
+* stubs for spyndex, mlxtend, and autofeat ([f89a22a](https://github.com/siapy/siapy-lib/commit/f89a22a9a592cde4072b25ae179c3ce9b3210866))
+
+
+### Dependencies
+
+* Update dependencies to include spyndex, mlxtend, and autofeat ([edd4978](https://github.com/siapy/siapy-lib/commit/edd4978903cd49b7d2a095778170c5863767538e))
+
 ## [0.3.4](https://github.com/siapy/siapy-lib/compare/v0.3.3...v0.3.4) (2024-07-26)
 
 
