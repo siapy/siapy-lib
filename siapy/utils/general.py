@@ -84,7 +84,7 @@ def get_increasing_seq_indices(values_list: list[int]) -> list[int]:
     return indices
 
 
-def set_random_seed(seed: int):
+def set_random_seed(seed: int | None):
     random.seed(seed)
     np.random.seed(seed)
 
