@@ -2,6 +2,7 @@ import sys
 
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib.axes import Axes
 from matplotlib.lines import Line2D
 from matplotlib.path import Path
 from matplotlib.widgets import Button, LassoSelector
@@ -150,8 +151,8 @@ def display_multiple_images_with_areas(
     num_images = len(images_with_areas)
     fig, axes = plt.subplots(1, num_images, figsize=(num_images * 5, 5))
 
-    if num_images == 1:
-        axes = [axes]
+    if isinstance(axes, Axes):
+        axes = np.array([axes])
 
     for ax, (image, selected_areas) in zip(axes, images_with_areas):
         if not isinstance(selected_areas, list):
