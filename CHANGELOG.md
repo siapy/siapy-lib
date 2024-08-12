@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.4.1](https://github.com/siapy/siapy-lib/compare/v0.4.0...v0.4.1) (2024-08-12)
+
+
+### Bug Fixes
+
+* mypy fix ([0b421fe](https://github.com/siapy/siapy-lib/commit/0b421fe7f91fc5f5dc7c0fc873e2ab2b1fd0f0d9))
+
+
+### Dependencies
+
+* pdm update ([a49ef58](https://github.com/siapy/siapy-lib/commit/a49ef585c1b2fee97594d2249ae022aa16154dc1))
+
+
+### Documentation
+
+* Update copyright year to 2024 ([672274f](https://github.com/siapy/siapy-lib/commit/672274fb132be46fde15696587f8485d7c625a07))
+
 ## [0.4.0](https://github.com/siapy/siapy-lib/compare/v0.3.4...v0.4.0) (2024-08-10)
 
 
