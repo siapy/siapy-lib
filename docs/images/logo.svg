@@ -2,13 +2,13 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="94.360939mm"
-   height="94.360954mm"
-   viewBox="0 0 94.360939 94.360954"
+   width="89.609344mm"
+   height="90.239952mm"
+   viewBox="0 0 89.609344 90.239952"
    version="1.1"
    id="svg9866"
-   inkscape:version="1.2.1 (9c6d41e410, 2022-07-14)"
-   sodipodi:docname="siapy-logo.svg"
+   inkscape:version="1.3.1 (91b66b0783, 2023-11-16)"
+   sodipodi:docname="siapy.svg"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -26,10 +26,10 @@
      inkscape:document-units="mm"
      showgrid="false"
      inkscape:zoom="1.2938725"
-     inkscape:cx="448.65318"
-     inkscape:cy="557.24193"
+     inkscape:cx="309.14947"
+     inkscape:cy="260.07199"
      inkscape:window-width="2560"
-     inkscape:window-height="1377"
+     inkscape:window-height="1369"
      inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
@@ -312,35 +312,22 @@
      inkscape:label="Plast 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-81.803148,-158.48289)">
+     transform="translate(-198.22985,-164.68975)">
     <rect
-       style="fill:#ffffff;stroke:#ffffff;stroke-width:0.225408;stroke-linecap:butt;stroke-linejoin:round"
-       id="rect3040-1"
-       width="59.711128"
-       height="3.0082314"
-       x="34.985718"
-       y="197.52242"
-       rx="3.867063"
-       ry="2.2794998"
-       inkscape:export-filename="C:\Users\janezla\OneDrive\seminarSV\latex\fig\labels\Figure 4.png"
-       inkscape:export-xdpi="300"
-       inkscape:export-ydpi="300" />
-    <rect
-       style="fill:#ffffff;stroke:#ffffff;stroke-width:0.225408;stroke-linecap:butt;stroke-linejoin:round"
-       id="rect3040-3"
-       width="60.328674"
-       height="3.2140853"
-       x="35.891453"
-       y="196.77553"
-       rx="0"
-       ry="0"
-       inkscape:export-filename="C:\Users\janezla\OneDrive\seminarSV\latex\fig\labels\Figure 4.png"
+       style="fill:#ffffff;stroke:#ffffff;stroke-width:0.698255"
+       id="rect1"
+       width="88.911087"
+       height="89.541702"
+       x="198.57898"
+       y="165.03888"
+       ry="14.681928"
+       inkscape:export-filename="rect1.png"
        inkscape:export-xdpi="300"
        inkscape:export-ydpi="300" />
     <g
        id="g14527"
        clip-path="url(#clipPath15141)"
-       transform="translate(-5.7929996,25.645849)"
+       transform="matrix(0.84396889,0,0,0.84396889,129.54598,58.23295)"
        style="stroke-linecap:butt;stroke-linejoin:round">
       <rect
          style="fill:#ffffff;stroke:#ffffff;stroke-width:0.633;stroke-linecap:butt;stroke-linejoin:round;stroke-dasharray:none"
@@ -554,19 +541,5 @@
            y="208.06129" />
       </g>
     </g>
-    <rect
-       style="fill:#ffffff;stroke-width:0.264583;stroke-linecap:butt;stroke-linejoin:round"
-       id="rect1811"
-       width="5.4660172"
-       height="4.2317553"
-       x="76.518127"
-       y="251.09528" />
-    <rect
-       style="fill:none;stroke-width:0.264583;stroke-linecap:butt;stroke-linejoin:round"
-       id="rect1899"
-       width="114.45557"
-       height="93.260101"
-       x="53.679016"
-       y="169.02702" />
   </g>
 </svg>
