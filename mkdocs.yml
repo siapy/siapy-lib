@@ -49,18 +49,24 @@ theme:
 
 repo_name: siapy/siapy
 repo_url: https://github.com/siapy/siapy-lib
+
 extra:
   version:
     provider: mike
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/janezlapajne
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com/in/janez-lapajne-b2270a139/
 
 nav:
   - Get Started:
       - Welcome to Siapy: index.md
       - Installation: install.md
-      - Contributing: https://github.com/siapy/siapy-lib/blob/main/CONTRIBUTING.md
-      - Changelog: https://github.com/siapy/siapy-lib/blob/main/CHANGELOG.md
   - API Documentation:
       - Entity: api/entity.md
+  - Contributing: https://github.com/siapy/siapy-lib/blob/main/CONTRIBUTING.md
+  - Release Notes: https://github.com/siapy/siapy-lib/blob/main/CHANGELOG.md
 
 markdown_extensions:
   # Python Markdown
@@ -71,6 +77,8 @@ markdown_extensions:
   tables:
   toc:
     permalink: true
+  pymdownx.details:
+  pymdownx.extra:
 
   # Python Markdown Extensions
   pymdownx.betterem:
@@ -83,29 +91,32 @@ markdown_extensions:
   pymdownx.mark:
   pymdownx.superfences:
     custom_fences:
-    - name: mermaid
-      class: mermaid
-      format: !!python/name:pymdownx.superfences.fence_code_format
+      - name: mermaid
+        class: mermaid
+        format: !!python/name:pymdownx.superfences.fence_code_format
   pymdownx.tilde:
+  pymdownx.emoji:
+    emoji_index: !!python/name:material.extensions.emoji.twemoji
+    emoji_generator:
+      !!python/name:material.extensions.emoji.to_svg # pymdownx blocks
 
-  # pymdownx blocks
+
   pymdownx.blocks.admonition:
     types:
-    - note
-    - attention
-    - caution
-    - danger
-    - error
-    - tip
-    - hint
-    - warning
-    # Custom types
-    - info
-    - check
+      - note
+      - attention
+      - caution
+      - danger
+      - error
+      - tip
+      - hint
+      - warning
+      # Custom types
+      - info
+      - check
   pymdownx.blocks.details:
   pymdownx.blocks.tab:
     alternate_style: True
-
 
 watch:
   - siapy
@@ -140,13 +151,8 @@ plugins:
             docstring_section_style: spacy
             show_symbol_type_heading: true
             show_symbol_type_toc: true
+            # extensions:
+            #   - docs/plugins/griffe_doclinks.py
           # import:
           #   - https://docs.python.org/3/objects.inv
   - external-markdown:
-
-extra:
-  social:
-  - icon: fontawesome/brands/github
-    link: https://github.com/janezlapajne
-  - icon: fontawesome/brands/linkedin
-    link: https://www.linkedin.com/in/janez-lapajne-b2270a139/
