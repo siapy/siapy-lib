@@ -78,6 +78,7 @@ docs = [
     "mkdocs-embed-external-markdown>=3.0.2",
     "mkdocs-redirects>=1.2.1",
     "mike @ git+https://github.com/jimporter/mike.git@master",
+    "griffe-typingdoc>=0.2.6",
 ]
 
 [tool.pytest.ini_options]

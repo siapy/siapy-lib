@@ -5,7 +5,7 @@
 groups = ["default", "dev", "docs", "lint", "test"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:fab139704173bcbaa2aad08ee5538dfab4dbc636cfca1acca7f19f6b3542354e"
+content_hash = "sha256:afa0ea63a13b6eb007598d1a2aa74bc9f47eaaa62c32a57a749b752f0da82b73"
 
 [[metadata.targets]]
 requires_python = ">=3.10"
@@ -945,6 +945,21 @@ dependencies = [
 files = [
     {file = "griffe-1.1.0-py3-none-any.whl", hash = "sha256:38ccc5721571c95ae427123074cf0dc0d36bce7c9701ab2ada9fe0566ff50c10"},
     {file = "griffe-1.1.0.tar.gz", hash = "sha256:c6328cbdec0d449549c1cc332f59227cd5603f903479d73e4425d828b782ffc3"},
+]
+
+[[package]]
+name = "griffe-typingdoc"
+version = "0.2.6"
+requires_python = ">=3.8"
+summary = "Griffe extension for PEP 727 – Documentation Metadata in Typing."
+groups = ["docs"]
+dependencies = [
+    "griffe>=0.49",
+    "typing-extensions>=4.7",
+]
+files = [
+    {file = "griffe_typingdoc-0.2.6-py3-none-any.whl", hash = "sha256:2726e6cf1e986f42fe9cab4a95cef103a745327f035a32055816849ca47893e4"},
+    {file = "griffe_typingdoc-0.2.6.tar.gz", hash = "sha256:852a17c1e2d29bbbf14a287e7cc5982669343cf60a4ea1618e486eb57aba3248"},
 ]
 
 [[package]]
@@ -2793,7 +2808,7 @@ name = "typing-extensions"
 version = "4.12.2"
 requires_python = ">=3.8"
 summary = "Backported and Experimental Type Hints for Python 3.8+"
-groups = ["default", "lint"]
+groups = ["default", "docs", "lint"]
 files = [
     {file = "typing_extensions-4.12.2-py3-none-any.whl", hash = "sha256:04e5ca0351e0f3f85c6853954072df659d0d13fac324d0072316b67d7794700d"},
     {file = "typing_extensions-4.12.2.tar.gz", hash = "sha256:1a7ead55c7e559dd4dee8856e3a88b41225abfe1ce8df57b7c13915fe121ffb8"},

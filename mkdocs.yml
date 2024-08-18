@@ -134,8 +134,8 @@ plugins:
         python:
           paths: [.]
           options:
-            # extensions:
-            #   - griffe_typingdoc
+            extensions:
+              - griffe_typingdoc
             members_order: source
             separate_signature: true
             filters: ["!^_"]
@@ -151,8 +151,6 @@ plugins:
             docstring_section_style: spacy
             show_symbol_type_heading: true
             show_symbol_type_toc: true
-            # extensions:
-            #   - docs/plugins/griffe_doclinks.py
-          # import:
-          #   - https://docs.python.org/3/objects.inv
+          import:
+            - https://docs.python.org/3/objects.inv
   - external-markdown:
