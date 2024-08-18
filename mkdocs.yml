@@ -1,0 +1,156 @@
+site_name: SiaPy
+site_description: A tool for efficient processing of spectral images with Python.
+strict: true
+site_url: https://github.com/siapy/siapy-lib/tree/main/docs
+
+theme:
+  name: "material"
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: green
+      accent: green
+      toggle:
+        icon: material/lightbulb-outline
+        name: "Switch to dark mode"
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: green
+      accent: green
+      toggle:
+        icon: material/lightbulb
+        name: "Switch to light mode"
+  features:
+    - content.tabs.link
+    - content.code.annotate
+    - content.code.copy
+    - content.tabs.link
+    - content.tooltips
+    - content.footnote.tooltips
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.instant
+    - navigation.instant.prefetch
+    - navigation.instant.preview
+    - navigation.instant.progress
+    - navigation.path
+    - navigation.sections
+    - navigation.top
+    - navigation.tracking
+    - navigation.indexes
+    - navigation.footer
+    - search.highlight
+    - search.suggest
+    - search.share
+    - toc.follow
+  logo: "images/logo.svg"
+  favicon: "images/logo.png"
+  language: en
+
+repo_name: siapy/siapy
+repo_url: https://github.com/siapy/siapy-lib
+
+extra:
+  version:
+    provider: mike
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/janezlapajne
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com/in/janez-lapajne-b2270a139/
+
+nav:
+  - Get Started:
+      - Welcome to Siapy: index.md
+      - Installation: install.md
+  - API Documentation:
+      - Entity: api/entity.md
+  - Contributing: contributing.md
+  - Release Notes: changelog.md
+
+markdown_extensions:
+  # Python Markdown
+  abbr:
+  attr_list:
+  footnotes:
+  md_in_html:
+  tables:
+  toc:
+    permalink: true
+  pymdownx.details:
+  pymdownx.extra:
+
+  # Python Markdown Extensions
+  pymdownx.betterem:
+    smart_enable: all
+  pymdownx.caret:
+  pymdownx.highlight:
+    line_spans: __span
+  pymdownx.inlinehilite:
+  pymdownx.keys:
+  pymdownx.mark:
+  pymdownx.superfences:
+    custom_fences:
+      - name: mermaid
+        class: mermaid
+        format: !!python/name:pymdownx.superfences.fence_code_format
+  pymdownx.tilde:
+  pymdownx.emoji:
+    emoji_index: !!python/name:material.extensions.emoji.twemoji
+    emoji_generator:
+      !!python/name:material.extensions.emoji.to_svg # pymdownx blocks
+
+
+  pymdownx.blocks.admonition:
+    types:
+      - note
+      - attention
+      - caution
+      - danger
+      - error
+      - tip
+      - hint
+      - warning
+      # Custom types
+      - info
+      - check
+  pymdownx.blocks.details:
+  pymdownx.blocks.tab:
+    alternate_style: True
+
+watch:
+  - siapy
+
+plugins:
+  - mike:
+      alias_type: symlink
+      canonical_version: latest
+  - search
+  - exclude:
+      glob:
+        - __pycache__/*
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [.]
+          options:
+            extensions:
+              - griffe_typingdoc
+            members_order: source
+            separate_signature: true
+            filters: ["!^_"]
+            docstring_options:
+              ignore_init_summary: true
+            merge_init_into_class: true
+            show_if_no_docstring: true
+            show_signature_annotations: true
+            show_root_heading: true
+            inherited_members: true
+            signature_crossrefs: true
+            unwrap_annotated: true
+            docstring_section_style: spacy
+            show_symbol_type_heading: true
+            show_symbol_type_toc: true
+          import:
+            - https://docs.python.org/3/objects.inv
+  - external-markdown:

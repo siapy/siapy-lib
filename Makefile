@@ -66,9 +66,13 @@ clean:
 	rm -rf docs/_build
 	rm -rf coverage.xml
 
-.PHONY: docs  ## Generate the docs
-docs:
+.PHONY: generate-docs  ## Generate the docs
+generate-docs:
 	pdm run mkdocs build --strict
+
+.PHONY: serve-docs  ## Serve the docs
+serve-docs:
+	pdm run mkdocs serve
 
 .PHONY: help  ## Display this message
 help:
