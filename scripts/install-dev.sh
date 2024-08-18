@@ -10,4 +10,5 @@ curl -sSL https://pdm-project.org/install-pdm.py | python3 -
 pdm install
 
 # Install pre-commit
+pdm run pre-commit uninstall
 pdm run pre-commit install --hook-type commit-msg
