@@ -65,8 +65,8 @@ nav:
       - Installation: install.md
   - API Documentation:
       - Entity: api/entity.md
-  - Contributing: https://github.com/siapy/siapy-lib/blob/main/CONTRIBUTING.md
-  - Release Notes: https://github.com/siapy/siapy-lib/blob/main/CHANGELOG.md
+  - Contributing: contributing.md
+  - Release Notes: changelog.md
 
 markdown_extensions:
   # Python Markdown

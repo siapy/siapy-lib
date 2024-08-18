@@ -75,7 +75,6 @@ docs = [
     "mkdocs-material>=9.5.31",
     "mkdocs-simple-hooks>=0.1.5",
     "mkdocstrings-python>=1.10.8",
-    "mkdocs-embed-external-markdown>=3.0.2",
     "mkdocs-redirects>=1.2.1",
     "mike @ git+https://github.com/jimporter/mike.git@master",
     "griffe-typingdoc>=0.2.6",
