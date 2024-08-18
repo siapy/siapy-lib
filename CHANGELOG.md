@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.2](https://github.com/siapy/siapy-lib/compare/v0.4.1...v0.4.2) (2024-08-18)
+
+
+### Documentation
+
+* logo image path changed ([76d8850](https://github.com/siapy/siapy-lib/commit/76d885020b73674db6f1b9df08bf969248d63293))
+
 ## [0.4.1](https://github.com/siapy/siapy-lib/compare/v0.4.0...v0.4.1) (2024-08-12)
 
 
