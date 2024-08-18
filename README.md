@@ -1,6 +1,5 @@
-
 <p align="center">
-  <img src="https://github.com/siapy/siapy-lib/blob/main/docs/logo.png?raw=true" alt="Sublime's custom image" width="300"/>
+  <img src="https://github.com/siapy/siapy-lib/blob/main/docs/images/logo.png?raw=true" alt="Sublime's custom image" width="300"/>
 </p>
 
 <p align="center">
@@ -24,13 +23,13 @@
 
 ---
 
-**Source Code**: <a href="https://github.com/siapy/siapy-lib" target="_blank">https://github.com/siapy/siapy-lib</a>
+__Source Code__: https://github.com/siapy/siapy-lib
 
-**Bug Report / Feature Request**: <a href="https://github.com/siapy/siapy-lib/issues/new/choose" target="_blank">https://github.com/siapy/siapy-lib/issues/new/choose</a>
+__Bug Report / Feature Request__: https://github.com/siapy/siapy-lib/issues/new/choose
 
 <!-- **Tutorials**: <a href="https://github.com/Agricultural-institute/SiaPy/tree/master/tutorials" target="_blank">https://github.com/Agricultural-institute/SiaPy/tree/master/tutorials</a> -->
 
-**Documentation**: <a href="https://github.com/siapy/siapy-lib/tree/main/docs" target="_blank">https://github.com/siapy/siapy-lib/tree/main/docs</a>
+__Documentation__: https://github.com/siapy/siapy-lib/tree/main/docs
 
 ---
 
