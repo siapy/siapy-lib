@@ -54,3 +54,5 @@ repos:
 ci:
   autofix_commit_msg: "chore: [pre-commit.ci] Auto format from pre-commit.com hooks"
   autoupdate_commit_msg: "chore: [pre-commit.ci] pre-commit autoupdate"
+  autoupdate_branch: "develop"
+  skip: [codespell]
