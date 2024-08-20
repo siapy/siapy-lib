@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.5](https://github.com/siapy/siapy-lib/compare/v0.4.4...v0.4.5) (2024-08-20)
+
+
+### Bug Fixes
+
+* deploying MkDocs action fail fix ([35e5a7b](https://github.com/siapy/siapy-lib/commit/35e5a7b532c6e31ef2b4864716c6993d4c438abc))
+
 ## [0.4.4](https://github.com/siapy/siapy-lib/compare/v0.4.3...v0.4.4) (2024-08-20)
 
 
