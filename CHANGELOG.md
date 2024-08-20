@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.4.4](https://github.com/siapy/siapy-lib/compare/v0.4.3...v0.4.4) (2024-08-20)
+
+
+### Documentation
+
+* Add new API documentation files ([19fe2cc](https://github.com/siapy/siapy-lib/commit/19fe2ccaddd3974b254f59fcc709aba0178c9338))
+* index docs page update with default readme file ([eb6703b](https://github.com/siapy/siapy-lib/commit/eb6703b95f015bd18bd66ea506f5504d97a5489d))
+
 ## [0.4.3](https://github.com/siapy/siapy-lib/compare/v0.4.2...v0.4.3) (2024-08-20)
 
 
