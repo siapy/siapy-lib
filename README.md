@@ -29,7 +29,7 @@ __Bug Report / Feature Request__: <https://github.com/siapy/siapy-lib/issues/new
 
 <!-- **Tutorials**: <a href="https://github.com/Agricultural-institute/SiaPy/tree/master/tutorials" target="_blank">https://github.com/Agricultural-institute/SiaPy/tree/master/tutorials</a> -->
 
-__Documentation__: <https://github.com/siapy/siapy-lib/tree/main/docs>
+__Documentation__: <https://siapy.github.io/siapy-lib/>
 
 ---
 
