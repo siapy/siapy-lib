@@ -1,3 +1,4 @@
+
 <p align="center">
   <img src="https://github.com/siapy/siapy-lib/blob/main/docs/images/logo.png?raw=true" alt="Sublime's custom image" width="300"/>
 </p>
@@ -29,40 +30,6 @@ __Bug Report / Feature Request__: <https://github.com/siapy/siapy-lib/issues/new
 
 <!-- **Tutorials**: <a href="https://github.com/Agricultural-institute/SiaPy/tree/master/tutorials" target="_blank">https://github.com/Agricultural-institute/SiaPy/tree/master/tutorials</a> -->
 
-__Documentation__: <https://siapy.github.io/siapy-lib/>
+__Documentation__: <https://github.com/siapy/siapy-lib/tree/main/docs>
 
----
-
-__Note:__ The library is currently under development!
-
-## Installation
-
-``` bash
-pip install siapy
-```
-
-## Contribution guidelines
-
-We always welcome small improvements or fixes. If you’re considering making more significant contributions to the source code, please contact us via email.
-
-Contributing to SiaPy isn’t limited to coding. You can also:
-
-* Help us manage and resolve issues, both new and existing.
-* Create tutorials, presentations, and other educational resources.
-* Propose new features.
-
-Not sure where to start or how your skills might fit in? Don’t hesitate to reach out! You can contact us via email, or connect with us directly on GitHub by opening a new issue or commenting on an existing one.
-
-If you’re new to open-source contributions, check out our [guide](CONTRIBUTING.md) for helpful tips on getting started.
-
-## Issues and new features
-
-Encountered a problem with the library? Please report it by creating an issue on GitHub.
-
-Interested in fixing an issue or enhancing the library’s functionality? Fork the repository, make your changes, and submit a pull request on GitHub.
-
-Have a question? First, ensure that the setup process was completed successfully and resolve any related issues. If you’ve pulled in newer code, you might need to delete and recreate your SiaPy environment to ensure all the necessary packages are correctly installed.
-
-## License
-
-This project is licensed under the MIT License. See [LICENSE](LICENSE) for more details.
+{{ version }}.
