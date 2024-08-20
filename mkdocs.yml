@@ -64,9 +64,38 @@ nav:
       - Welcome to Siapy: index.md
       - Installation: install.md
   - API Documentation:
-      # - Entities:
-      #     - Shapes: api/entities/shapes.md
-      #     - Pixels: api/entities/pixels.md
+      - Core:
+          - Configs: api/core/configs.md
+          - Logger: api/core/logger.md
+          - Types: api/core/types.md
+      - Datasets:
+          - Helpers: api/datasets/helpers.md
+          - Schemas: api/datasets/schemas.md
+          - Tabular: api/datasets/tabular.md
+      - Entities:
+          - Images: api/entities/images.md
+          - Image Sets: api/entities/imagesets.md
+          - Pixels: api/entities/pixels.md
+          - Shapes: api/entities/shapes.md
+          - Signatures: api/entities/signatures.md
+      - Features:
+          - Features: api/features/features.md
+          - Helpers: api/features/helpers.md
+          - Spectral Indices: api/features/spectral_indices.md
+      - Models:
+          - Metrics: api/models/metrics.md
+      - Optimizers:
+          - Configs: api/optimizers/configs.md
+          - Optimizers: api/optimizers/optimizers.md
+          - Parameters: api/optimizers/parameters.md
+          - Scorers: api/optimizers/scorers.md
+      - Transformations:
+          - Corregistrator: api/transformations/corregistrator.md
+          - Image: api/transformations/image.md
+      - Utils:
+          - Evaluators: api/utils/evaluators.md
+          - Images: api/utils/images.md
+          - Plots: api/utils/plots.md
   - Contributing: contributing.md
   - Release Notes: changelog.md
 
