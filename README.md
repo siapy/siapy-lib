@@ -53,7 +53,7 @@ Contributing to SiaPy isn’t limited to coding. You can also:
 
 Not sure where to start or how your skills might fit in? Don’t hesitate to reach out! You can contact us via email, or connect with us directly on GitHub by opening a new issue or commenting on an existing one.
 
-If you’re new to open-source contributions, check out our [guide](CONTRIBUTING.md) for helpful tips on getting started.
+If you’re new to open-source contributions, check out our [guide](https://siapy.github.io/siapy-lib/contributing/) for helpful tips on getting started.
 
 ## Issues and new features
 
@@ -65,4 +65,4 @@ Have a question? First, ensure that the setup process was completed successfully
 
 ## License
 
-This project is licensed under the MIT License. See [LICENSE](LICENSE) for more details.
+This project is licensed under the MIT License. See [LICENSE](https://siapy.github.io/siapy-lib/license/) for more details.

@@ -98,6 +98,7 @@ nav:
           - Plots: api/utils/plots.md
   - Contributing: contributing.md
   - Release Notes: changelog.md
+  - License: license.md
 
 markdown_extensions:
   # Python Markdown
