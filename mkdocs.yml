@@ -88,7 +88,7 @@ nav:
           - Configs: api/optimizers/configs.md
           - Optimizers: api/optimizers/optimizers.md
           - Parameters: api/optimizers/parameters.md
-          - Scores: api/optimizers/scores.md
+          - Scorers: api/optimizers/scorers.md
       - Transformations:
           - Corregistrator: api/transformations/corregistrator.md
           - Image: api/transformations/image.md
