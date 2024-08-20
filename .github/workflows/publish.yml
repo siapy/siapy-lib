@@ -22,6 +22,7 @@ jobs:
             echo "is_chore_main_release=true" >> $GITHUB_OUTPUT
           else
             echo "is_chore_main_release=false" >> $GITHUB_OUTPUT
+          fi
 
   pypi-publish:
     needs: check-pr-title
