@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.7](https://github.com/siapy/siapy-lib/compare/v0.4.6...v0.4.7) (2024-08-20)
+
+
+### Bug Fixes
+
+* Update license to MIT License in docs directly ([4ee1772](https://github.com/siapy/siapy-lib/commit/4ee1772b0820e74f43e6a3d18539244eddf4ff8b))
+
 ## [0.4.6](https://github.com/siapy/siapy-lib/compare/v0.4.5...v0.4.6) (2024-08-20)
 
 
