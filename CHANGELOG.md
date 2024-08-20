@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.4.3](https://github.com/siapy/siapy-lib/compare/v0.4.2...v0.4.3) (2024-08-20)
+
+
+### Dependencies
+
+* Update dependencies for documentation improvements ([8d98dc1](https://github.com/siapy/siapy-lib/commit/8d98dc13eda13ef8251d6606c2c72688294a7100))
+
+
+### Documentation
+
+* Make docs for dev ([#111](https://github.com/siapy/siapy-lib/issues/111)) ([8fc65f1](https://github.com/siapy/siapy-lib/commit/8fc65f1f252ef52109f1bfa0a0036fe82d1c9c2a))
+* Update site_url in mkdocs.yml ([1fcb70d](https://github.com/siapy/siapy-lib/commit/1fcb70d380bafbf5dd605cc13968f88743c247cb))
+
 ## [0.4.2](https://github.com/siapy/siapy-lib/compare/v0.4.1...v0.4.2) (2024-08-18)
 
 
