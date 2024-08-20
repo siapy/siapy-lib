@@ -19,10 +19,9 @@ jobs:
         id: check_title
         run: |
           if [[ "${{ github.event.pull_request.title }}" == "chore(main): release"* ]]; then
-            echo "::set-output name=is_chore_main_release::true"
+            echo "is_chore_main_release=true" >> $GITHUB_OUTPUT
           else
-            echo "::set-output name=is_chore_main_release::false"
-          fi
+            echo "is_chore_main_release=false" >> $GITHUB_OUTPUT
 
   pypi-publish:
     needs: check-pr-title
