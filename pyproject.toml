@@ -76,8 +76,8 @@ docs = [
     "mkdocs-simple-hooks>=0.1.5",
     "mkdocstrings-python>=1.10.8",
     "mkdocs-redirects>=1.2.1",
-    "mike @ git+https://github.com/jimporter/mike.git@master",
     "griffe-typingdoc>=0.2.6",
+    "mike>=2.1.3",
 ]
 
 [tool.pytest.ini_options]

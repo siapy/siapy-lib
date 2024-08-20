@@ -1,7 +1,7 @@
 site_name: SiaPy
 site_description: A tool for efficient processing of spectral images with Python.
 strict: true
-site_url: https://github.com/siapy/siapy-lib/tree/main/docs
+site_url: https://siapy.github.io/siapy-lib/
 
 theme:
   name: "material"
@@ -64,7 +64,9 @@ nav:
       - Welcome to Siapy: index.md
       - Installation: install.md
   - API Documentation:
-      - Entity: api/entity.md
+      # - Entities:
+      #     - Shapes: api/entities/shapes.md
+      #     - Pixels: api/entities/pixels.md
   - Contributing: contributing.md
   - Release Notes: changelog.md
 
