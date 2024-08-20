@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.6](https://github.com/siapy/siapy-lib/compare/v0.4.5...v0.4.6) (2024-08-20)
+
+
+### Documentation
+
+* Update links in README and mkdocs.yml ([dead861](https://github.com/siapy/siapy-lib/commit/dead8618578a66185418fba087640782800b59ff))
+
 ## [0.4.5](https://github.com/siapy/siapy-lib/compare/v0.4.4...v0.4.5) (2024-08-20)
 
 
