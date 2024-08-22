@@ -74,6 +74,10 @@ generate-docs:
 serve-docs:
 	pdm run mkdocs serve
 
+.PHONY: version  ## Check project version
+version:
+	python -c "import siapy; print(siapy.__version__)"
+
 .PHONY: help  ## Display this message
 help:
 	@grep -E \
