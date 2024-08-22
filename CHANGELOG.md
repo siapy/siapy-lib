@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.4.8](https://github.com/siapy/siapy-lib/compare/v0.4.7...v0.4.8) (2024-08-22)
+
+
+### Reverts
+
+* fix codespell config ([fd2854e](https://github.com/siapy/siapy-lib/commit/fd2854e4390722809ada866b4fbd442d96c97c8c))
+
+
+### Documentation
+
+* change path to logo image ([b316fc0](https://github.com/siapy/siapy-lib/commit/b316fc01e8d2c3df3a7a18706dbc10b25fd6e192))
+* Update page title in mkdocs.yml ([aa1b221](https://github.com/siapy/siapy-lib/commit/aa1b221a0677c80fd2bde5e44106ca6a0433380a))
+
 ## [0.4.7](https://github.com/siapy/siapy-lib/compare/v0.4.6...v0.4.7) (2024-08-20)
 
 
