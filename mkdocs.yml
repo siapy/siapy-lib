@@ -61,7 +61,7 @@ extra:
 
 nav:
   - Get Started:
-      - Welcome to Siapy: index.md
+      - Welcome to SiaPy: index.md
       - Installation: install.md
   - API Documentation:
       - Core:

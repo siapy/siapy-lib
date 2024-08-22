@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/siapy/siapy-lib/blob/main/docs/images/logo.png?raw=true" alt="Sublime's custom image" width="300"/>
+  <img src="https://github.com/siapy/siapy-lib/blob/main/docs/images/logo-text.svg?raw=true" alt="Sublime's custom image" width="500"/>
 </p>
 
 <p align="center">
