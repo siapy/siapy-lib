@@ -35,13 +35,17 @@ __Documentation__: <https://siapy.github.io/siapy-lib/>
 
 __Note:__ The library is currently under development!
 
-## Installation
+## 💡 Installation
+
+To install the siapy library, use the following command:
 
 ``` bash
 pip install siapy
 ```
 
-## Contribution guidelines
+For detailed information and additional options, please refer to the [guide](https://siapy.github.io/siapy-lib/install/).
+
+## 🔍 Contribution guidelines
 
 We always welcome small improvements or fixes. If you’re considering making more significant contributions to the source code, please contact us via email.
 
@@ -55,7 +59,7 @@ Not sure where to start or how your skills might fit in? Don’t hesitate to rea
 
 If you’re new to open-source contributions, check out our [guide](https://siapy.github.io/siapy-lib/contributing/) for helpful tips on getting started.
 
-## Issues and new features
+## 🕐 Issues and new features
 
 Encountered a problem with the library? Please report it by creating an issue on GitHub.
 
@@ -63,6 +67,6 @@ Interested in fixing an issue or enhancing the library’s functionality? Fork t
 
 Have a question? First, ensure that the setup process was completed successfully and resolve any related issues. If you’ve pulled in newer code, you might need to delete and recreate your SiaPy environment to ensure all the necessary packages are correctly installed.
 
-## License
+## 🤝 License
 
 This project is licensed under the MIT License. See [LICENSE](https://siapy.github.io/siapy-lib/license/) for more details.
