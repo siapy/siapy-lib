@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.9](https://github.com/siapy/siapy-lib/compare/v0.4.8...v0.4.9) (2024-08-22)
+
+
+### Documentation
+
+* Update installation instructions and troubleshooting section ([f5378c1](https://github.com/siapy/siapy-lib/commit/f5378c14cdc83e6f5d96ef32656bb47718733301))
+
 ## [0.4.8](https://github.com/siapy/siapy-lib/compare/v0.4.7...v0.4.8) (2024-08-22)
 
 
