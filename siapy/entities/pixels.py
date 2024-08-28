@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Annotated, ClassVar, Iterable, NamedTuple
 
 import numpy as np
@@ -28,8 +29,13 @@ class Pixels:
                 Annotated[int, "v coordinate on the image"],
             ]
         ],
-    ):
+    ) -> "Pixels":
         df = pd.DataFrame(iterable, columns=[Pixels.coords.U, Pixels.coords.V])
+        return cls(df)
+
+    @classmethod
+    def load_from_parquet(cls, filepath: str | Path) -> "Pixels":
+        df = pd.read_parquet(filepath)
         return cls(df)
 
     @property
@@ -49,3 +55,6 @@ class Pixels:
 
     def to_numpy(self) -> np.ndarray:
         return self.df.to_numpy()
+
+    def save_to_parquet(self, filepath: str | Path) -> None:
+        self.df.to_parquet(filepath, index=False)
