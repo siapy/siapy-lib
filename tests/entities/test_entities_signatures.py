@@ -1,3 +1,7 @@
+import os
+from pathlib import Path
+from tempfile import TemporaryDirectory
+
 import numpy as np
 import pandas as pd
 import pytest
@@ -20,6 +24,18 @@ def test_signals_mean():
     signals_mean = signals.mean()
     assert np.array_equal(signals_mean, [2.0, 3.0, 3.5, 5.5])
     assert signals_mean.shape == (4,)
+
+
+def test_signals_save_and_load_to_parquet():
+    signals_df = pd.DataFrame([[1, 2, 4, 6], [3, 4, 3, 5]])
+    signals = Signals(signals_df)
+    with TemporaryDirectory() as tmpdir:
+        parquet_file = Path(tmpdir, "test_signals.parquet")
+        signals.save_to_parquet(parquet_file)
+        assert os.path.exists(parquet_file)
+        loaded_signals = Signals.load_from_parquet(parquet_file)
+        assert isinstance(loaded_signals, Signals)
+        assert loaded_signals.df.equals(signals.df)
 
 
 def test_signatures_filter_create():
