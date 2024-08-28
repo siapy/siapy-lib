@@ -15,12 +15,26 @@ pip install siapy
 
 ### Alternative Installation Methods
 
-__Using Conda__
+__Python package and dependency managers__
 
-You can also install siapy using conda:
+You can also install siapy using other popular Python package and dependency managers:
+
+- PDM:
 
 ```bash
-conda install -c conda-forge siapy
+pdm add siapy
+```
+
+- Poetry:
+
+```bash
+poetry add siapy
+```
+
+- uv:
+
+```bash
+uv add siapy
 ```
 
 __Manually__
