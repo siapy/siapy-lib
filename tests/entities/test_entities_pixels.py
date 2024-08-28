@@ -1,3 +1,7 @@
+import os
+from pathlib import Path
+from tempfile import TemporaryDirectory
+
 import numpy as np
 import pandas as pd
 
@@ -51,3 +55,14 @@ def test_to_numpy():
     pixels = Pixels(df)
     expected_array = df.to_numpy()
     assert np.array_equal(pixels.to_numpy(), expected_array)
+
+
+def test_save_and_load_to_parquet():
+    pixels = Pixels.from_iterable(iterable)
+    with TemporaryDirectory() as tmpdir:
+        parquet_file = Path(tmpdir, "test_pixels.parquet")
+        pixels.save_to_parquet(parquet_file)
+        assert os.path.exists(parquet_file)
+        loaded_pixels = Pixels.load_from_parquet(parquet_file)
+        assert isinstance(loaded_pixels, Pixels)
+        assert loaded_pixels.df.equals(pixels.df)

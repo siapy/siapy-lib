@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Iterator
+from typing import Any, Iterator, Sequence
 
 import numpy as np
 from rich.progress import track
@@ -31,8 +31,8 @@ class SpectralImageSet:
     def from_paths(
         cls,
         *,
-        header_paths: list[str | Path],
-        image_paths: list[str | Path] | None = None,
+        header_paths: Sequence[str | Path],
+        image_paths: Sequence[str | Path] | None = None,
     ):
         if image_paths is not None and len(header_paths) != len(image_paths):
             raise ValueError("The length of hdr_paths and img_path must be equal.")
