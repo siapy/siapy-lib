@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.5.0](https://github.com/siapy/siapy-lib/compare/v0.4.9...v0.5.0) (2024-08-28)
+
+
+### Features
+
+* Add load_from_parquet and save_to_parquet methods to Pixels class ([9d106cb](https://github.com/siapy/siapy-lib/commit/9d106cb1065568b7ec833ff564b7c2b43e11490d))
+* Add load_from_parquet and save_to_parquet methods to Signals class ([47ccb2c](https://github.com/siapy/siapy-lib/commit/47ccb2cc6ba582c6affeb4f5c06582a5666eca81))
+* Add load_from_parquet and save_to_parquet methods to Signatures class ([ce30e67](https://github.com/siapy/siapy-lib/commit/ce30e676c05b3232c7603f88482d7d306c46c17b))
+
+
+### Bug Fixes
+
+* Update save_to_parquet method to include index in the saved file ([36981a5](https://github.com/siapy/siapy-lib/commit/36981a51a7e584938ad51593b219584d0a221ccf))
+* Update typing annotations in from_paths ([c827862](https://github.com/siapy/siapy-lib/commit/c827862f39f1b704c873273ad56c61f7ebf3aa56))
+
+
+### Documentation
+
+* Update installation instructions with additional package managers ([bf238a3](https://github.com/siapy/siapy-lib/commit/bf238a390ceb80a02aae969eb1fdaa956092d685))
+
 ## [0.4.9](https://github.com/siapy/siapy-lib/compare/v0.4.8...v0.4.9) (2024-08-22)
 
 
