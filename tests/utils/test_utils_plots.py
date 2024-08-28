@@ -23,7 +23,7 @@ def test_pixels_select_click_manual(spectral_images):
 @pytest.mark.manual
 def test_pixels_select_lasso_manual(spectral_images):
     image_vnir = spectral_images.vnir
-    selected_areas = pixels_select_lasso(image_vnir)
+    selected_areas = pixels_select_lasso(image_vnir, selector_props={"color": "blue"})
     display_image_with_areas(image_vnir, selected_areas, color="blue")
 
 

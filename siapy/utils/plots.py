@@ -1,4 +1,5 @@
 import sys
+from typing import Any
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -60,7 +61,9 @@ def pixels_select_click(image: ImageType) -> Pixels:
     return Pixels.from_iterable(coordinates)
 
 
-def pixels_select_lasso(image: ImageType) -> list[Pixels]:
+def pixels_select_lasso(
+    image: ImageType, selector_props: dict[str, Any] | None = None
+) -> list[Pixels]:
     image_display = validate_image_to_numpy_3channels(image)
 
     x, y = np.meshgrid(
@@ -100,7 +103,12 @@ def pixels_select_lasso(image: ImageType) -> list[Pixels]:
             enter_clicked = 1
             plt.close()
 
-    lasso = LassoSelector(ax, onselect)  # noqa: F841
+    props = (
+        selector_props
+        if selector_props is not None
+        else {"color": "red", "linewidth": 2, "linestyle": "-"}
+    )
+    lasso = LassoSelector(ax, onselect, props=props)  # noqa: F841
     fig.canvas.mpl_connect("button_release_event", onrelease)
     fig.canvas.mpl_connect("close_event", onexit)
     fig.canvas.mpl_connect("key_press_event", accept)
