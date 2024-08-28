@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.5.1](https://github.com/siapy/siapy-lib/compare/v0.5.0...v0.5.1) (2024-08-28)
+
+
+### Bug Fixes
+
+* Comment out cache-related code in docs.yml workflow --temporary fix ([51a8e11](https://github.com/siapy/siapy-lib/commit/51a8e1129964d07c2817ef9c297c665e0fd81d22))
+* Remove unused siapy version file and update installation instructions ([8e966e3](https://github.com/siapy/siapy-lib/commit/8e966e3eda31eabbfc7bae96d9ef5a662b99a01b))
+
 ## [0.5.0](https://github.com/siapy/siapy-lib/compare/v0.4.9...v0.5.0) (2024-08-28)
 
 
