@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any
 
 import numpy as np
@@ -13,6 +14,11 @@ from .pixels import Pixels
 class Signals:
     _data: pd.DataFrame
 
+    @classmethod
+    def load_from_parquet(cls, filepath: str | Path) -> "Signals":
+        df = pd.read_parquet(filepath)
+        return cls(df)
+
     @property
     def df(self) -> pd.DataFrame:
         return self._data
@@ -22,6 +28,9 @@ class Signals:
 
     def mean(self) -> np.ndarray:
         return np.nanmean(self.to_numpy(), axis=0)
+
+    def save_to_parquet(self, filepath: str | Path) -> None:
+        self.df.to_parquet(filepath, index=True)
 
 
 @dataclass
@@ -84,6 +93,11 @@ class Signatures:
         signals = Signals(dataframe.drop(columns=[Pixels.coords.U, Pixels.coords.V]))
         return cls._create(pixels, signals)
 
+    @classmethod
+    def load_from_parquet(cls, filepath: str | Path) -> "Signatures":
+        df = pd.read_parquet(filepath)
+        return cls.from_dataframe(df)
+
     @property
     def pixels(self) -> Pixels:
         return self._pixels
@@ -100,3 +114,6 @@ class Signatures:
 
     def filter(self) -> SignaturesFilter:
         return SignaturesFilter(self.pixels, self.signals)
+
+    def save_to_parquet(self, filepath: str | Path) -> None:
+        self.to_dataframe().to_parquet(filepath, index=True)
