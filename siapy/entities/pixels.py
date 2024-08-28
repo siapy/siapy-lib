@@ -57,4 +57,4 @@ class Pixels:
         return self.df.to_numpy()
 
     def save_to_parquet(self, filepath: str | Path) -> None:
-        self.df.to_parquet(filepath, index=False)
+        self.df.to_parquet(filepath, index=True)
