@@ -93,6 +93,11 @@ class Signatures:
         signals = Signals(dataframe.drop(columns=[Pixels.coords.U, Pixels.coords.V]))
         return cls._create(pixels, signals)
 
+    @classmethod
+    def load_from_parquet(cls, filepath: str | Path) -> "Signatures":
+        df = pd.read_parquet(filepath)
+        return cls.from_dataframe(df)
+
     @property
     def pixels(self) -> Pixels:
         return self._pixels
@@ -109,3 +114,6 @@ class Signatures:
 
     def filter(self) -> SignaturesFilter:
         return SignaturesFilter(self.pixels, self.signals)
+
+    def save_to_parquet(self, filepath: str | Path) -> None:
+        self.to_dataframe().to_parquet(filepath, index=True)

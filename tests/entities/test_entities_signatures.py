@@ -156,3 +156,15 @@ def test_signatures_from_dataframe():
 
     with pytest.raises(ValueError):
         Signatures.from_dataframe(df_missing_v)
+
+
+def test_signatures_save_and_load_to_parquet():
+    df = pd.DataFrame({"u": [0, 1], "v": [0, 1], "0": [1, 2], "1": [3, 4]})
+    signatures = Signatures.from_dataframe(df)
+    with TemporaryDirectory() as tmpdir:
+        parquet_file = Path(tmpdir, "test_signatures.parquet")
+        signatures.save_to_parquet(parquet_file)
+        assert os.path.exists(parquet_file)
+        loaded_signatures = Signatures.load_from_parquet(parquet_file)
+        assert isinstance(loaded_signatures, Signatures)
+        assert loaded_signatures.to_dataframe().equals(signatures.to_dataframe())
