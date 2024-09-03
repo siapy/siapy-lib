@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.5.2](https://github.com/siapy/siapy-lib/compare/v0.5.1...v0.5.2) (2024-09-03)
+
+
+### Performance Improvements
+
+* Refactor code to improve performance in test_to_signatures_perf ([39cf7a2](https://github.com/siapy/siapy-lib/commit/39cf7a243171557c3d0c449420d8a2ce4797a88a))
+
+
+### Documentation
+
+* funding update ([bfdbc65](https://github.com/siapy/siapy-lib/commit/bfdbc65157fbafb4825a5347480d1c48b2a454e7))
+* Update funding configuration file ([bfdbc65](https://github.com/siapy/siapy-lib/commit/bfdbc65157fbafb4825a5347480d1c48b2a454e7))
+
 ## [0.5.1](https://github.com/siapy/siapy-lib/compare/v0.5.0...v0.5.1) (2024-08-28)
 
 
