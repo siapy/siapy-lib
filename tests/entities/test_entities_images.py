@@ -189,6 +189,21 @@ def test_to_signatures_perf(spectral_images):
     pass
 
 
+def test_to_subarray(spectral_images):
+    spectral_image_vnir = spectral_images.vnir
+    iterable = [(1, 2), (3, 4), (2, 4)]
+    pixels = Pixels.from_iterable(iterable)
+    subarray = spectral_image_vnir.to_subarray(pixels)
+    expected_subarray = np.full((3, 3, spectral_image_vnir.bands), np.nan)
+    image_array = spectral_image_vnir.to_numpy()
+    expected_subarray[0, 0, :] = image_array[2, 1, :]
+    expected_subarray[2, 2, :] = image_array[4, 3, :]
+    expected_subarray[2, 1, :] = image_array[4, 2, :]
+
+    assert expected_subarray.shape == (3, 3, spectral_image_vnir.bands)
+    assert np.array_equal(subarray, expected_subarray, equal_nan=True)
+
+
 def test_mean(spectral_images):
     spectral_image_vnir = spectral_images.vnir
 
