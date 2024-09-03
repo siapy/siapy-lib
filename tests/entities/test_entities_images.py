@@ -7,6 +7,7 @@ from PIL import Image
 
 from siapy.entities import Pixels, Shape, SpectralImage
 from siapy.entities.images import GeometricShapes, _parse_description
+from siapy.utils.plots import pixels_select_lasso
 
 
 def test_envi_open(configs):
@@ -178,6 +179,29 @@ def test_to_signatures(spectral_images):
     assert np.array_equal(signatures.pixels.df.iloc[0].to_numpy(), iterable[0])
     assert np.array_equal(signatures.pixels.df.iloc[1].to_numpy(), iterable[1])
     assert np.array_equal(signatures.pixels.df.iloc[2].to_numpy(), iterable[2])
+
+
+@pytest.mark.manual
+def test_to_signatures_perf(spectral_images):
+    spectral_image_vnir = spectral_images.vnir
+    selected_areas_vnir = pixels_select_lasso(spectral_image_vnir)
+    spectral_image_vnir.to_signatures(selected_areas_vnir[0]).signals.to_numpy()
+    pass
+
+
+def test_to_subarray(spectral_images):
+    spectral_image_vnir = spectral_images.vnir
+    iterable = [(1, 2), (3, 4), (2, 4)]
+    pixels = Pixels.from_iterable(iterable)
+    subarray = spectral_image_vnir.to_subarray(pixels)
+    expected_subarray = np.full((3, 3, spectral_image_vnir.bands), np.nan)
+    image_array = spectral_image_vnir.to_numpy()
+    expected_subarray[0, 0, :] = image_array[2, 1, :]
+    expected_subarray[2, 2, :] = image_array[4, 3, :]
+    expected_subarray[2, 1, :] = image_array[4, 2, :]
+
+    assert expected_subarray.shape == (3, 3, spectral_image_vnir.bands)
+    assert np.array_equal(subarray, expected_subarray, equal_nan=True)
 
 
 def test_mean(spectral_images):
