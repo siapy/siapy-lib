@@ -220,6 +220,23 @@ class SpectralImage:
         signatures = Signatures.from_array_and_pixels(image_arr, pixels)
         return signatures
 
+    def to_subarray(self, pixels: "Pixels") -> np.ndarray:
+        image_arr = self.to_numpy()
+        u_max = pixels.u().max()
+        u_min = pixels.u().min()
+        v_max = pixels.v().max()
+        v_min = pixels.v().min()
+        # create new image
+        image_arr_area = np.nan * np.ones(
+            (v_max - v_min + 1, u_max - u_min + 1, self.bands)
+        )
+        # convert original coordinates to coordinates for new image
+        v_norm = pixels.v() - v_min
+        u_norm = pixels.u() - u_min
+        # write values from original image to new image
+        image_arr_area[v_norm, u_norm, :] = image_arr[pixels.v(), pixels.u(), :]
+        return image_arr_area
+
     def mean(self, axis: int | tuple[int] | None = None) -> float | np.ndarray:
         image_arr = self.to_numpy()
         return np.nanmean(image_arr, axis=axis)
