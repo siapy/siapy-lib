@@ -7,6 +7,7 @@ from PIL import Image
 
 from siapy.entities import Pixels, Shape, SpectralImage
 from siapy.entities.images import GeometricShapes, _parse_description
+from siapy.utils.plots import pixels_select_lasso
 
 
 def test_envi_open(configs):
@@ -178,6 +179,14 @@ def test_to_signatures(spectral_images):
     assert np.array_equal(signatures.pixels.df.iloc[0].to_numpy(), iterable[0])
     assert np.array_equal(signatures.pixels.df.iloc[1].to_numpy(), iterable[1])
     assert np.array_equal(signatures.pixels.df.iloc[2].to_numpy(), iterable[2])
+
+
+@pytest.mark.manual
+def test_to_signatures_perf(spectral_images):
+    spectral_image_vnir = spectral_images.vnir
+    selected_areas_vnir = pixels_select_lasso(spectral_image_vnir)
+    spectral_image_vnir.to_signatures(selected_areas_vnir[0]).signals.to_numpy()
+    pass
 
 
 def test_mean(spectral_images):

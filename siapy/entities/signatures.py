@@ -76,7 +76,7 @@ class Signatures:
     def from_array_and_pixels(cls, image: np.ndarray, pixels: Pixels) -> "Signatures":
         u = pixels.u()
         v = pixels.v()
-        signals_list = list(image[v, u, :])
+        signals_list = image[v, u, :]
         signals = Signals(pd.DataFrame(signals_list))
         return cls._create(pixels, signals)
 
