@@ -185,8 +185,8 @@ def test_to_signatures(spectral_images):
 def test_to_signatures_perf(spectral_images):
     spectral_image_vnir = spectral_images.vnir
     selected_areas_vnir = pixels_select_lasso(spectral_image_vnir)
-    spectral_image_vnir.to_signatures(selected_areas_vnir[0]).signals.to_numpy()
-    pass
+    out = spectral_image_vnir.to_signatures(selected_areas_vnir[0]).signals.to_numpy()
+    assert isinstance(out, np.ndarray)
 
 
 def test_to_subarray(spectral_images):
