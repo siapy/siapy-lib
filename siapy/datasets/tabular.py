@@ -5,6 +5,7 @@ from typing import Iterator
 import pandas as pd
 from pydantic import BaseModel, ConfigDict
 
+from siapy.core.exceptions import InvalidInputError
 from siapy.core.types import ImageContainerType
 from siapy.datasets.schemas import TabularDatasetData
 from siapy.entities import Signatures, SpectralImage, SpectralImageSet
@@ -112,7 +113,10 @@ class TabularDataset:
 
     def _check_data_entities(self):
         if not self.data_entities:
-            raise ValueError(
-                f"No data_entities! You need to process image set first."
-                f"by running {self.process_image_data.__name__}() function."
+            raise InvalidInputError(
+                {
+                    "data_entities": self.data_entities,
+                    "required_action": f"Run {self.process_image_data.__name__}() to process image set.",
+                },
+                "No data_entities! You need to process the image set first.",
             )

@@ -5,6 +5,7 @@ import pytest
 import spectral as sp
 from PIL import Image
 
+from siapy.core.exceptions import InvalidFilepathError, InvalidInputError
 from siapy.entities import Pixels, Shape, SpectralImage
 from siapy.entities.images import GeometricShapes, _parse_description
 from siapy.utils.plots import pixels_select_lasso
@@ -22,6 +23,11 @@ def test_envi_open(configs):
         image_path=configs.image_swir_img_path,
     )
     assert isinstance(spectral_image_swir, SpectralImage)
+
+
+def test_envi_open_invalid():
+    with pytest.raises(InvalidFilepathError):
+        SpectralImage.envi_open(header_path="invalid_header_path")
 
 
 def test_fixture_spectral_images(spectral_images):
@@ -269,7 +275,7 @@ def test_geometric_shapes_setter_invalid(spectral_images):
     invalid_shape = "not a shape"
     shapes = [invalid_shape]
 
-    with pytest.raises(ValueError):
+    with pytest.raises(InvalidInputError):
         spectral_images.vnir.geometric_shapes.shapes = shapes
 
 
@@ -305,7 +311,7 @@ def test_geometric_shapes_setitem_valid(spectral_images, corresponding_pixels):
 def test_geometric_shapes_setitem_invalid(spectral_images):
     invalid_shape = "not a shape"
     spectral_images.vnir.geometric_shapes.shapes = []
-    with pytest.raises(ValueError):
+    with pytest.raises(InvalidInputError):
         spectral_images.vnir.geometric_shapes[0] = invalid_shape
 
 
@@ -342,7 +348,7 @@ def test_geometric_shapes_append_valid(spectral_images, corresponding_pixels):
 
 def test_geometric_shapes_append_invalid(spectral_images):
     invalid_shape = "not a shape"
-    with pytest.raises(ValueError):
+    with pytest.raises(InvalidInputError):
         spectral_images.vnir.geometric_shapes.append(invalid_shape)
 
 
@@ -357,7 +363,7 @@ def test_geometric_shapes_extend_valid(spectral_images, corresponding_pixels):
 
 def test_geometric_shapes_extend_invalid(spectral_images):
     invalid_shape = "not a shape"
-    with pytest.raises(ValueError):
+    with pytest.raises(InvalidInputError):
         spectral_images.vnir.geometric_shapes.extend([invalid_shape])
 
 
@@ -371,7 +377,7 @@ def test_geometric_shapes_insert_valid(spectral_images, corresponding_pixels):
 
 def test_geometric_shapes_insert_invalid(spectral_images):
     invalid_shape = "not a shape"
-    with pytest.raises(ValueError):
+    with pytest.raises(InvalidInputError):
         spectral_images.vnir.geometric_shapes.insert(0, invalid_shape)
 
 
@@ -387,7 +393,7 @@ def test_geometric_shapes_remove_valid(spectral_images, corresponding_pixels):
 
 def test_geometric_shapes_remove_invalid(spectral_images):
     invalid_shape = "not a shape"
-    with pytest.raises(ValueError):
+    with pytest.raises(InvalidInputError):
         spectral_images.vnir.geometric_shapes.remove(invalid_shape)
 
 
@@ -426,7 +432,7 @@ def test_geometric_shapes_index_invalid(spectral_images, corresponding_pixels):
     )
     invalid_shape = "not a shape"
     spectral_images.vnir.geometric_shapes.append(rect)
-    with pytest.raises(ValueError):
+    with pytest.raises(InvalidInputError):
         spectral_images.vnir.geometric_shapes.index(invalid_shape)
 
 
@@ -519,5 +525,5 @@ def test_parse_description_empty_value():
 
 def test_parse_description_invalid_format_raises_value_error():
     description = "This is not a valid format"
-    with pytest.raises(ValueError):
+    with pytest.raises(InvalidInputError):
         _parse_description(description)

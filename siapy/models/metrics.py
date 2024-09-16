@@ -14,6 +14,8 @@ from sklearn.metrics import (
     recall_score,
 )
 
+from siapy.core.exceptions import InvalidInputError
+
 
 def normalized_RMSE(
     y_true: np.ndarray,
@@ -26,7 +28,10 @@ def normalized_RMSE(
     elif normalize_by == "mean":
         normalizer = np.mean(y_true)
     else:
-        raise ValueError(f"Unknown normalizer {normalize_by}")
+        raise InvalidInputError(
+            input_value=normalize_by,
+            message="Unknown normalizer. Possible values are: 'range' or 'mean'.",
+        )
     return rmse / normalizer
 
 

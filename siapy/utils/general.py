@@ -10,6 +10,7 @@ from typing import Any, Callable, Generator, Iterable, Optional
 import numpy as np
 
 from siapy.core import logger
+from siapy.core.exceptions import InvalidInputError
 
 
 def initialize_object(
@@ -58,7 +59,9 @@ def get_number_cpus(parallelize: int = -1) -> int:
     elif parallelize > num_cpus:
         parallelize = num_cpus
     else:
-        raise ValueError("Define accurate number of cpus")
+        raise InvalidInputError(
+            input_value=parallelize, message="Define accurate number of CPUs."
+        )
     return parallelize
 
 
@@ -68,7 +71,9 @@ def dict_zip(*dicts: dict[str, Any]) -> Generator[tuple[str, Any, Any], None, No
 
     n = len(dicts[0])
     if any(len(d) != n for d in dicts):
-        raise ValueError("arguments must have the same length")
+        raise InvalidInputError(
+            input_value=dicts, message="Arguments must have the same length."
+        )
 
     for key, first_val in dicts[0].items():
         yield key, first_val, *(other[key] for other in dicts[1:])

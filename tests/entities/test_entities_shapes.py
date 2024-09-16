@@ -1,6 +1,7 @@
 import numpy as np
 import pytest
 
+from siapy.core.exceptions import InvalidInputError
 from siapy.entities import Pixels, Shape
 from siapy.entities.shapes import (
     SHAPE_TYPE_FREEDRAW,
@@ -34,7 +35,7 @@ def test_from_shape_type():
     freedraw = Shape.from_shape_type(shape_type="freedraw", pixels=pixels)
     assert isinstance(freedraw, FreeDraw)
 
-    with pytest.raises(ValueError):
+    with pytest.raises(InvalidInputError):
         Shape.from_shape_type(shape_type="shape", pixels=pixels)
 
 
