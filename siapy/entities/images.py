@@ -18,6 +18,12 @@ if TYPE_CHECKING:
     from .pixels import Pixels
 
 
+__all__ = [
+    "GeometricShapes",
+    "SpectralImage",
+]
+
+
 @dataclass
 class GeometricShapes:
     def __init__(

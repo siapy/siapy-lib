@@ -9,6 +9,13 @@ from siapy.core.exceptions import InvalidInputError, MethodNotImplementedError
 
 from .pixels import Pixels
 
+__all__ = [
+    "Shape",
+    "Rectangle",
+    "Point",
+    "FreeDraw",
+]
+
 SHAPE_TYPE_RECTANGLE = "rectangle"
 SHAPE_TYPE_POINT = "point"
 SHAPE_TYPE_FREEDRAW = "freedraw"

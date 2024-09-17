@@ -3,6 +3,13 @@ import numpy as np
 
 from siapy.entities.pixels import Pixels
 
+__all__ = [
+    "map_affine_approx_2d",
+    "affine_matx_2d",
+    "align",
+    "transform",
+]
+
 
 def map_affine_approx_2d(points_ref: np.ndarray, points_mov: np.ndarray) -> np.ndarray:
     """Affine transformation"""

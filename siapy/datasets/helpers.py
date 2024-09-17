@@ -5,6 +5,12 @@ import pandas as pd
 if TYPE_CHECKING:
     from .schemas import ClassificationTarget, RegressionTarget, TabularDatasetData
 
+__all__ = [
+    "generate_classification_target",
+    "generate_regression_target",
+    "merge_signals_from_multiple_cameras",
+]
+
 
 def generate_classification_target(
     dataframe: pd.DataFrame,

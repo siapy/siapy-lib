@@ -1,5 +1,16 @@
 from typing import Any
 
+__all__ = [
+    "SiapyError",
+    "InvalidFilepathError",
+    "InvalidInputError",
+    "InvalidTypeError",
+    "ProcessingError",
+    "ConfigurationError",
+    "MethodNotImplementedError",
+    "DirectInitializationError",
+]
+
 
 class SiapyError(Exception):
     """Base exception for SiaPy library."""

@@ -14,6 +14,10 @@ from siapy.optimizers.parameters import (
     IntParameter,
 )
 
+__all__ = [
+    "TabularOptimizer",
+]
+
 
 class TabularOptimizer:
     def __init__(

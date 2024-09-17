@@ -10,6 +10,10 @@ from siapy.core.types import ImageContainerType
 from siapy.datasets.schemas import TabularDatasetData
 from siapy.entities import Signatures, SpectralImage, SpectralImageSet
 
+__all__ = [
+    "TabularDataset",
+]
+
 
 class MetaDataEntity(BaseModel):
     image_idx: int

@@ -8,6 +8,11 @@ from sklearn.preprocessing import RobustScaler
 
 from siapy.core.exceptions import InvalidInputError
 
+__all__ = [
+    "FeatureSelectorConfig",
+    "feature_selector_factory",
+]
+
 
 class FeatureSelectorConfig(BaseModel):
     k_features: Annotated[

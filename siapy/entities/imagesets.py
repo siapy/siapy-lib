@@ -10,6 +10,10 @@ from siapy.core.exceptions import InvalidInputError
 
 from .images import SpectralImage
 
+__all__ = [
+    "SpectralImageSet",
+]
+
 
 @dataclass
 class SpectralImageSet:

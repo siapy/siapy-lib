@@ -16,6 +16,14 @@ from siapy.entities import Pixels
 from siapy.utils.enums import InteractiveButtonsEnum
 from siapy.utils.validators import validate_image_to_numpy_3channels
 
+__all__ = [
+    "pixels_select_click",
+    "pixels_select_lasso",
+    "display_image_with_areas",
+    "display_multiple_images_with_areas",
+    "display_signals",
+]
+
 
 def pixels_select_click(image: ImageType) -> Pixels:
     image_display = validate_image_to_numpy_3channels(image)
