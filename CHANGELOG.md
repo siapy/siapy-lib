@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.5.3](https://github.com/siapy/siapy-lib/compare/v0.5.2...v0.5.3) (2024-09-17)
+
+
+### Dependencies
+
+* pdm update ([5fcea60](https://github.com/siapy/siapy-lib/commit/5fcea604a0311c23af5a18a17d852a19d83d1909))
+* To indicate that your library supports type checking ([72425aa](https://github.com/siapy/siapy-lib/commit/72425aaa828a53ed35ca9de10672680a21868678))
+
 ## [0.5.2](https://github.com/siapy/siapy-lib/compare/v0.5.1...v0.5.2) (2024-09-03)
 
 
