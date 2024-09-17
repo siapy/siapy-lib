@@ -10,6 +10,13 @@ from siapy.features.helpers import FeatureSelectorConfig, feature_selector_facto
 from siapy.features.spectral_indices import compute_spectral_indices
 from siapy.utils.general import set_random_seed
 
+__all__ = [
+    "AutoFeatClassification",
+    "AutoFeatRegression",
+    "AutoSpectralIndicesClassification",
+    "AutoSpectralIndicesRegression",
+]
+
 
 class AutoFeatClassification(AutoFeatClassifier):
     def __init__(

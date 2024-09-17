@@ -14,6 +14,11 @@ with warnings.catch_warnings():
     )
     import spyndex  # type: ignore
 
+__all__ = [
+    "get_spectral_indices",
+    "compute_spectral_indices",
+]
+
 
 def _convert_str_to_list(bands_acronym: Any) -> Any:
     if isinstance(bands_acronym, str):

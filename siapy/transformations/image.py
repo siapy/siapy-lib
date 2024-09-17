@@ -7,6 +7,15 @@ from skimage import transform
 from siapy.core.types import ImageSizeType, ImageType
 from siapy.utils.validators import validate_image_size, validate_image_to_numpy
 
+__all__ = [
+    "add_gaussian_noise",
+    "random_crop",
+    "random_mirror",
+    "random_rotation",
+    "rescale",
+    "area_normalization",
+]
+
 
 def add_gaussian_noise(
     image: ImageType,

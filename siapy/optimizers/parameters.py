@@ -3,6 +3,13 @@ from typing import Annotated, Any, Sequence
 
 from pydantic import BaseModel
 
+__all__ = [
+    "FloatParameter",
+    "IntParameter",
+    "CategoricalParameter",
+    "TrialParameters",
+]
+
 
 class FloatParameter(BaseModel):
     name: str

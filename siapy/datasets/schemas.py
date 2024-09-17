@@ -8,6 +8,12 @@ from siapy.core.exceptions import InvalidInputError
 
 from .helpers import generate_classification_target, generate_regression_target
 
+__all__ = [
+    "ClassificationTarget",
+    "RegressionTarget",
+    "TabularDatasetData",
+]
+
 
 class Target(BaseModel, ABC):
     model_config = ConfigDict(arbitrary_types_allowed=True)

@@ -5,6 +5,10 @@ from typing import Annotated, ClassVar, Iterable, NamedTuple
 import numpy as np
 import pandas as pd
 
+__all__ = [
+    "Pixels",
+]
+
 
 class Coordinates(NamedTuple):
     U: Annotated[str, "u - x coordinate on the image"] = "u"

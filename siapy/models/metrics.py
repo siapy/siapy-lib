@@ -16,6 +16,11 @@ from sklearn.metrics import (
 
 from siapy.core.exceptions import InvalidInputError
 
+__all__ = [
+    "calculate_classification_metrics",
+    "calculate_regression_metrics",
+]
+
 
 def normalized_RMSE(
     y_true: np.ndarray,

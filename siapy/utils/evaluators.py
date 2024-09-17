@@ -15,6 +15,11 @@ from siapy.core.types import ArrayLike1dType, ArrayLike2dType
 
 from .validators import check_model_prediction_methods
 
+__all__ = [
+    "cross_validation",
+    "hold_out_validation",
+]
+
 ScorerFuncType = Callable[[BaseEstimator, ArrayLike2dType, ArrayLike1dType], float]
 
 
