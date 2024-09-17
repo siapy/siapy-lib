@@ -9,6 +9,10 @@ from siapy.core.types import ArrayLike1dType, ArrayLike2dType
 from siapy.utils.evaluators import ScorerFuncType, cross_validation, hold_out_validation
 from siapy.utils.general import initialize_object
 
+__all__ = [
+    "Scorer",
+]
+
 
 class Scorer:
     def __init__(self, scorer):

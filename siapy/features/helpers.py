@@ -6,6 +6,13 @@ from sklearn.linear_model import Ridge, RidgeClassifier
 from sklearn.pipeline import Pipeline, make_pipeline
 from sklearn.preprocessing import RobustScaler
 
+from siapy.core.exceptions import InvalidInputError
+
+__all__ = [
+    "FeatureSelectorConfig",
+    "feature_selector_factory",
+]
+
 
 class FeatureSelectorConfig(BaseModel):
     k_features: Annotated[
@@ -63,8 +70,9 @@ def feature_selector_factory(
         algo = RidgeClassifier()
         scoring = "f1_weighted"
     else:
-        raise ValueError(
-            f"Invalid problem type: '{problem_type}', possible values are: 'regression' or 'classification'"
+        raise InvalidInputError(
+            problem_type,
+            "Invalid problem type, possible values are: 'regression' or 'classification'",
         )
     sfs = SequentialFeatureSelector(
         estimator=algo,

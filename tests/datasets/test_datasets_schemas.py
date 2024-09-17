@@ -1,6 +1,7 @@
 import pandas as pd
 import pytest
 
+from siapy.core.exceptions import InvalidInputError
 from siapy.datasets.schemas import (
     ClassificationTarget,
     RegressionTarget,
@@ -270,7 +271,7 @@ def test_tabular_dataset_data_target_from_dict_classification():
 
 def test_tabular_dataset_data_target_from_dict_invalid():
     data = {"unknown_key": "some_value"}
-    with pytest.raises(ValueError):
+    with pytest.raises(InvalidInputError):
         TabularDatasetData.target_from_dict(data)
 
 
@@ -304,7 +305,8 @@ def test_tabular_dataset_data_init():
     }
 
     with pytest.raises(
-        ValueError, match="Lengths of pixels, signals, and metadata must be equal"
+        InvalidInputError,
+        match="Lengths of pixels, signals, and metadata must be equal",
     ):
         TabularDatasetData(
             pixels=data["pixels"],
@@ -341,7 +343,8 @@ def test_tabular_dataset_data_setattr():
     # Invalid setattr -> signals
     invalid_signals = pd.DataFrame({"b": [4, 5]})
     with pytest.raises(
-        ValueError, match="Lengths of pixels, signals, and metadata must be equal"
+        InvalidInputError,
+        match="Lengths of pixels, signals, and metadata must be equal",
     ):
         dataset.signals = invalid_signals
 
@@ -349,7 +352,8 @@ def test_tabular_dataset_data_setattr():
     dataset = dataset_.model_copy()
     invalid_target = target[:2]
     with pytest.raises(
-        ValueError, match="Target length must be equal to the length of the dataset."
+        InvalidInputError,
+        match="Target length must be equal to the length of the dataset.",
     ):
         dataset.target = invalid_target
 

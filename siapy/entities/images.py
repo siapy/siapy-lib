@@ -8,12 +8,20 @@ import numpy as np
 import spectral as sp
 from PIL import Image, ImageOps
 
+from siapy.core.exceptions import InvalidFilepathError, InvalidInputError
+
 from .shapes import Shape
 from .signatures import Signatures
 
 if TYPE_CHECKING:
     from ..core.types import SpectralType
     from .pixels import Pixels
+
+
+__all__ = [
+    "GeometricShapes",
+    "SpectralImage",
+]
 
 
 @dataclass
@@ -101,12 +109,25 @@ class GeometricShapes:
     def _check_shape_type(self, shapes: Shape | Iterable[Shape]):
         if isinstance(shapes, Shape):
             return
+
         if not isinstance(shapes, Iterable):
-            raise ValueError(
-                "Shapes must be an instance of Shape or an iterable of Shape instances."
+            raise InvalidInputError(
+                {
+                    "shapes_type": type(shapes).__name__,
+                },
+                "Shapes must be an instance of Shape or an iterable of Shape instances.",
             )
         if not all(isinstance(shape, Shape) for shape in shapes):
-            raise ValueError("All items must be instances of Shape subclass.")
+            raise InvalidInputError(
+                {
+                    "invalid_items": [
+                        type(shape).__name__
+                        for shape in shapes
+                        if not isinstance(shape, Shape)
+                    ],
+                },
+                "All items must be instances of Shape subclass.",
+            )
 
 
 @dataclass
@@ -138,9 +159,16 @@ class SpectralImage:
     def envi_open(
         cls, *, header_path: str | Path, image_path: str | Path | None = None
     ) -> "SpectralImage":
+        if not Path(header_path).exists():
+            raise InvalidFilepathError(str(header_path))
         sp_file = sp.envi.open(file=header_path, image=image_path)
         if isinstance(sp_file, sp.io.envi.SpectralLibrary):
-            raise ValueError("Opened file of type SpectralLibrary")
+            raise InvalidInputError(
+                {
+                    "file_type": type(sp_file).__name__,
+                },
+                "Opened file of type SpectralLibrary",
+            )
         return cls(sp_file)
 
     @property
@@ -268,9 +296,28 @@ def _parse_description(description: str) -> dict[str, Any]:
 
     try:
         return _parse()
+
     except ValueError as e:
-        raise ValueError(f"Error parsing description: {e}") from e
+        raise InvalidInputError(
+            {
+                "description": description,
+                "error": str(e),
+            },
+            f"Error parsing description: {e}",
+        ) from e
     except KeyError as e:
-        raise KeyError(f"Missing key in description: {e}") from e
+        raise InvalidInputError(
+            {
+                "description": description,
+                "error": str(e),
+            },
+            f"Missing key in description: {e}",
+        ) from e
     except Exception as e:
-        raise Exception(f"Unexpected error parsing description: {e}") from e
+        raise InvalidInputError(
+            {
+                "description": description,
+                "error": str(e),
+            },
+            f"Unexpected error parsing description: {e}",
+        ) from e

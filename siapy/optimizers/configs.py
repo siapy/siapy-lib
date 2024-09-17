@@ -6,6 +6,12 @@ from pydantic import BaseModel, ConfigDict
 from siapy.optimizers.parameters import TrialParameters
 from siapy.optimizers.scorers import Scorer
 
+__all__ = [
+    "CreateStudyConfig",
+    "OptimizeStudyConfig",
+    "TabularOptimizerConfig",
+]
+
 
 class CreateStudyConfig(BaseModel):
     model_config = ConfigDict(arbitrary_types_allowed=True)

@@ -5,7 +5,16 @@ from typing import Any, Literal
 import numpy as np
 from matplotlib.path import Path
 
+from siapy.core.exceptions import InvalidInputError, MethodNotImplementedError
+
 from .pixels import Pixels
+
+__all__ = [
+    "Shape",
+    "Rectangle",
+    "Point",
+    "FreeDraw",
+]
 
 SHAPE_TYPE_RECTANGLE = "rectangle"
 SHAPE_TYPE_POINT = "point"
@@ -44,7 +53,12 @@ class Shape(ABC):
                 label=label,
             )
         else:
-            raise ValueError(f"Unsupported shape type: {shape_type}")
+            raise InvalidInputError(
+                {
+                    "shape_type": shape_type,
+                },
+                f"Unsupported shape type: {shape_type}",
+            )
 
     @property
     def shape_type(self) -> str:
@@ -60,9 +74,7 @@ class Shape(ABC):
 
     @abstractmethod
     def convex_hull(self):
-        raise NotImplementedError(
-            "convex_hull() method is not implemented for the base Shape class."
-        )
+        raise MethodNotImplementedError(self.__class__.__name__, "convex_hull")
 
 
 class Rectangle(Shape):

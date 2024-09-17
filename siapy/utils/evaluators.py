@@ -10,9 +10,15 @@ from sklearn.model_selection import (
 )
 
 from siapy.core import logger
+from siapy.core.exceptions import InvalidInputError
 from siapy.core.types import ArrayLike1dType, ArrayLike2dType
 
 from .validators import check_model_prediction_methods
+
+__all__ = [
+    "cross_validation",
+    "hold_out_validation",
+]
 
 ScorerFuncType = Callable[[BaseEstimator, ArrayLike2dType, ArrayLike1dType], float]
 
@@ -71,8 +77,9 @@ def hold_out_validation(
     if X_val is not None and y_val is not None:
         x_train, x_test, y_train, y_test = X, X_val, y, y_val
     elif X_val is not None or y_val is not None:
-        raise ValueError(
-            "To manually define validation set, both X_val and y_val must be specified."
+        raise InvalidInputError(
+            input_value={"X_val": X_val, "y_val": y_val},
+            message="To manually define validation set, both X_val and y_val must be specified.",
         )
     else:
         x_train, x_test, y_train, y_test = train_test_split(

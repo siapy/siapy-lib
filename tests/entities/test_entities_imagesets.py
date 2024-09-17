@@ -2,6 +2,7 @@ from pathlib import Path
 
 import pytest
 
+from siapy.core.exceptions import InvalidInputError
 from siapy.entities import SpectralImage, SpectralImageSet
 
 
@@ -26,7 +27,7 @@ def test_from_paths_invalid(configs):
         configs.image_swir_hdr_path,
     ]
     image_paths: list[str | Path] = [configs.image_vnir_img_path]
-    with pytest.raises(ValueError):
+    with pytest.raises(InvalidInputError):
         SpectralImageSet.from_paths(header_paths=header_paths, image_paths=image_paths)
 
 

@@ -6,6 +6,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
+from siapy.core.exceptions import InvalidInputError
 from siapy.utils.general import (
     dict_zip,
     ensure_dir,
@@ -72,7 +73,7 @@ def test_get_number_cpus():
     assert (
         get_number_cpus(multiprocessing.cpu_count() + 10) == multiprocessing.cpu_count()
     )
-    with pytest.raises(ValueError):
+    with pytest.raises(InvalidInputError):
         get_number_cpus(0)
 
 
@@ -83,7 +84,7 @@ def test_dict_zip():
     assert zipped == [("a", 1, 3), ("b", 2, 4)]
     dict1 = {"a": 1, "b": 2}
     dict2 = {"a": 3}
-    with pytest.raises(ValueError):
+    with pytest.raises(InvalidInputError):
         list(dict_zip(dict1, dict2))
     assert list(dict_zip()) == []
 

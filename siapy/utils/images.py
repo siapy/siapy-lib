@@ -11,6 +11,16 @@ from siapy.entities import SpectralImage
 from siapy.transformations.image import rescale
 from siapy.utils.validators import validate_image_to_numpy
 
+__all__ = [
+    "save_image",
+    "create_image",
+    "merge_images_by_specter",
+    "convert_radiance_image_to_reflectance",
+    "calculate_correction_factor_from_panel",
+    "blockfy_image",
+    "calculate_image_background_percentage",
+]
+
 
 def save_image(
     image: Annotated[np.ndarray, "The image to save."],

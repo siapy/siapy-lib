@@ -4,7 +4,15 @@ from typing import Any, Iterable
 import pandas as pd
 from pydantic import BaseModel, ConfigDict
 
+from siapy.core.exceptions import InvalidInputError
+
 from .helpers import generate_classification_target, generate_regression_target
+
+__all__ = [
+    "ClassificationTarget",
+    "RegressionTarget",
+    "TabularDatasetData",
+]
 
 
 class Target(BaseModel, ABC):
@@ -163,14 +171,25 @@ class TabularDatasetData(BaseModel):
         elif data_keys.issubset(classification_keys):
             return ClassificationTarget.from_dict(data)
         else:
-            raise ValueError("Invalid target dict.")
+            raise InvalidInputError(data, "Invalid target dict.")
 
     def _validate_lengths(self) -> None:
         if not (len(self.pixels) == len(self.signals) == len(self.metadata)):
-            raise ValueError("Lengths of pixels, signals, and metadata must be equal")
+            raise InvalidInputError(
+                {
+                    "pixels_length": len(self.pixels),
+                    "signals_length": len(self.signals),
+                    "metadata_length": len(self.metadata),
+                },
+                "Lengths of pixels, signals, and metadata must be equal",
+            )
         if self.target is not None and len(self.target) != len(self):
-            raise ValueError(
-                "Target length must be equal to the length of the dataset."
+            raise InvalidInputError(
+                {
+                    "target_length": len(self.target),
+                    "dataset_length": len(self),
+                },
+                "Target length must be equal to the length of the dataset.",
             )
 
     def to_dict(self) -> dict[str, Any]:

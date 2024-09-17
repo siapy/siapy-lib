@@ -6,6 +6,7 @@ from sklearn.metrics import accuracy_score, make_scorer
 from sklearn.model_selection import KFold, train_test_split
 from sklearn.svm import SVC
 
+from siapy.core.exceptions import InvalidInputError
 from siapy.utils.evaluators import (
     cross_validation,
     hold_out_validation,
@@ -72,7 +73,7 @@ def test_hold_out_validation_with_incomplete_manual_validation_set(
     X, y = mock_sklearn_dataset
     X_train, X_val, y_train, _ = train_test_split(X, y, test_size=0.2, random_state=0)
     with pytest.raises(
-        ValueError,
+        InvalidInputError,
         match="To manually define validation set, both X_val and y_val must be specified.",
     ):
         hold_out_validation(

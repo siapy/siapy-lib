@@ -8,12 +8,21 @@ from matplotlib.lines import Line2D
 from matplotlib.path import Path
 from matplotlib.widgets import Button, LassoSelector
 
+from siapy.core.exceptions import InvalidInputError
 from siapy.core.logger import logger
 from siapy.core.types import ImageType
 from siapy.datasets.schemas import ClassificationTarget, TabularDatasetData
 from siapy.entities import Pixels
 from siapy.utils.enums import InteractiveButtonsEnum
 from siapy.utils.validators import validate_image_to_numpy_3channels
+
+__all__ = [
+    "pixels_select_click",
+    "pixels_select_lasso",
+    "display_image_with_areas",
+    "display_multiple_images_with_areas",
+    "display_signals",
+]
 
 
 def pixels_select_click(image: ImageType) -> Pixels:
@@ -234,7 +243,10 @@ def display_signals(
     legend_frameon: bool = True,
 ):
     if not isinstance(data.target, ClassificationTarget):
-        raise ValueError("The target must be an instance of ClassificationTarget.")
+        raise InvalidInputError(
+            input_value=data.target,
+            message="The target must be an instance of ClassificationTarget.",
+        )
 
     signals = data.signals.copy()
     target = data.target.model_copy()

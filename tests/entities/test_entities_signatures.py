@@ -6,6 +6,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
+from siapy.core.exceptions import DirectInitializationError, InvalidInputError
 from siapy.entities import Pixels, Signatures
 from siapy.entities.signatures import Signals, SignaturesFilter
 
@@ -122,7 +123,7 @@ def test_signatures_create():
 
 
 def test_signatures_raise_error():
-    with pytest.raises(RuntimeError):
+    with pytest.raises(DirectInitializationError):
         Signatures()
 
 
@@ -149,12 +150,12 @@ def test_signatures_from_dataframe():
 
     df_missing_u = pd.DataFrame({"V": [0, 1], "0": [1, 2], "1": [3, 4]})
 
-    with pytest.raises(ValueError):
+    with pytest.raises(InvalidInputError):
         Signatures.from_dataframe(df_missing_u)
 
     df_missing_v = pd.DataFrame({"U": [0, 1], "0": [1, 2], "1": [3, 4]})
 
-    with pytest.raises(ValueError):
+    with pytest.raises(InvalidInputError):
         Signatures.from_dataframe(df_missing_v)
 
 

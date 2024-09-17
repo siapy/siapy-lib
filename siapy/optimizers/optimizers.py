@@ -4,6 +4,7 @@ import optuna
 from sklearn.base import BaseEstimator, clone
 
 from siapy.core import logger
+from siapy.core.exceptions import InvalidInputError
 from siapy.core.types import ArrayLike1dType, ArrayLike2dType
 from siapy.datasets.schemas import TabularDatasetData
 from siapy.optimizers.configs import TabularOptimizerConfig
@@ -12,6 +13,10 @@ from siapy.optimizers.parameters import (
     FloatParameter,
     IntParameter,
 )
+
+__all__ = [
+    "TabularOptimizer",
+]
 
 
 class TabularOptimizer:
@@ -47,11 +52,16 @@ class TabularOptimizer:
         target_val = data_val.target if data_val else None
 
         if target is None:
-            raise ValueError("Target data is required for optimization.")
+            raise InvalidInputError(
+                input_value=target, message="Target data is required for optimization."
+            )
         if signals_val is not None and target_val is None:
-            raise ValueError(
-                "If validation data (data_val) is provided, "
-                "validation targets (data_val.target) must also be provided."
+            raise InvalidInputError(
+                input_value={"signals_val": signals_val, "target_val": target_val},
+                message=(
+                    "If validation data (data_val) is provided, "
+                    "validation targets (data_val.target) must also be provided."
+                ),
             )
         return cls(
             model=model,
@@ -84,7 +94,10 @@ class TabularOptimizer:
 
     def get_best_model(self) -> BaseEstimator:
         if self.best_trial is None:
-            raise ValueError("Study is not available for model refitting.")
+            raise InvalidInputError(
+                input_value="None",
+                message="Study is not available for model refitting.",
+            )
 
         best_model = clone(self.model)
         best_model.set_params(**self.best_trial.params)
@@ -100,9 +113,10 @@ class TabularOptimizer:
 
     def _trial_params(self, trial: optuna.trial.Trial) -> dict[str, Any]:
         if self.configs.trial_parameters is None:
-            raise ValueError(
-                "Trial parameters are not defined. "
-                "Add trial_parameters to configs or implement your custom objective function."
+            raise InvalidInputError(
+                input_value="None",
+                message="Trial parameters are not defined. "
+                "Add trial_parameters to configs or implement your custom objective function.",
             )
 
         params: dict[str, Any] = {}
@@ -132,8 +146,9 @@ class TabularOptimizer:
 
     def scorer(self) -> float:
         if self.configs.scorer is None:
-            raise ValueError(
-                "Scorer is not defined. Add scorer to configs or implement your custom scorer."
+            raise InvalidInputError(
+                input_value=self.configs.scorer,
+                message="Scorer is not defined. Add scorer to configs or implement your custom scorer.",
             )
         return self.configs.scorer(
             model=self.model,

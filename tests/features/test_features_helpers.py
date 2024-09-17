@@ -1,6 +1,7 @@
 import pytest
 from sklearn.pipeline import Pipeline
 
+from siapy.core.exceptions import InvalidInputError
 from siapy.features.helpers import FeatureSelectorConfig, feature_selector_factory
 from tests.utils import assert_pipelines_parameters_equal
 
@@ -29,7 +30,7 @@ def test_feature_selector_factory_classification_pipeline():
 
 
 def test_feature_selector_factory_invalid_problem_type():
-    with pytest.raises(ValueError):
+    with pytest.raises(InvalidInputError):
         feature_selector_factory(problem_type="invalid")
 
 

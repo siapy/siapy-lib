@@ -1,5 +1,6 @@
 import pytest
 
+from siapy.core.exceptions import InvalidInputError
 from siapy.datasets.schemas import (
     RegressionTarget,
     TabularDatasetData,
@@ -93,5 +94,5 @@ def test_display_signals():
     dataset.target = RegressionTarget.from_iterable(
         [0, 0, 0, 0, 0, 1, 1, 1, 1, 1],
     )
-    with pytest.raises(ValueError):
+    with pytest.raises(InvalidInputError):
         display_signals(dataset)
