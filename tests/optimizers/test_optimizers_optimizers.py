@@ -3,6 +3,7 @@ import pytest
 from sklearn.base import BaseEstimator
 from sklearn.svm import SVR
 
+from siapy.core.exceptions import InvalidInputError
 from siapy.datasets.schemas import RegressionTarget
 from siapy.optimizers.configs import OptimizeStudyConfig, TabularOptimizerConfig
 from siapy.optimizers.optimizers import TabularOptimizer
@@ -29,7 +30,9 @@ def test_tabular_optimizer_from_tabular_dataset_data_invalid(spectral_tabular_da
     data = spectral_tabular_dataset.dataset_data
     model = SVR()
     configs = TabularOptimizerConfig()
-    with pytest.raises(ValueError, match="Target data is required for optimization"):
+    with pytest.raises(
+        InvalidInputError, match="Target data is required for optimization"
+    ):
         TabularOptimizer.from_tabular_dataset_data(
             model=model, configs=configs, data=data
         )
@@ -44,7 +47,7 @@ def test_tabular_optimizer_with_validation_data_without_targets(
     data.target = target
     model = SVR()
     configs = TabularOptimizerConfig()
-    with pytest.raises(ValueError, match="validation targets"):
+    with pytest.raises(InvalidInputError, match="validation targets"):
         TabularOptimizer.from_tabular_dataset_data(
             model=model, configs=configs, data=data, data_val=data_val
         )
@@ -104,7 +107,9 @@ def test_tabular_optimizer_get_best_model_no_best_trial(spectral_tabular_dataset
     optimizer = TabularOptimizer.from_tabular_dataset_data(
         model=model, configs=configs, data=data
     )
-    with pytest.raises(ValueError, match="Study is not available for model refitting."):
+    with pytest.raises(
+        InvalidInputError, match="Study is not available for model refitting."
+    ):
         optimizer.get_best_model()
 
 
@@ -117,7 +122,7 @@ def test_tabular_optimizer_trial_params_no_trial_parameters(spectral_tabular_dat
         model=model, configs=configs, data=data
     )
     trial = optuna.trial.FixedTrial({})
-    with pytest.raises(ValueError, match="Trial parameters are not defined."):
+    with pytest.raises(InvalidInputError, match="Trial parameters are not defined."):
         optimizer._trial_params(trial)
 
 
@@ -129,5 +134,5 @@ def test_tabular_optimizer_scorer_no_scorer_defined(spectral_tabular_dataset):
     optimizer = TabularOptimizer.from_tabular_dataset_data(
         model=model, configs=configs, data=data
     )
-    with pytest.raises(ValueError, match="Scorer is not defined."):
+    with pytest.raises(InvalidInputError, match="Scorer is not defined."):
         optimizer.scorer()

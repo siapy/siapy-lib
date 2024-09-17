@@ -5,7 +5,7 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
-from siapy.utils.general import get_classmethods
+from siapy.core.exceptions import DirectInitializationError, InvalidInputError
 
 from .pixels import Pixels
 
@@ -61,9 +61,7 @@ class Signatures:
     _signals: Signals
 
     def __init__(self, *args: Any, **kwargs: Any):
-        raise RuntimeError(
-            f"Use any of the @classmethod to create a new instance: {get_classmethods(Signatures)}"
-        )
+        raise DirectInitializationError(Signatures)
 
     @classmethod
     def _create(cls, pixels: Pixels, signals: Signals) -> "Signatures":
@@ -85,9 +83,9 @@ class Signatures:
         if not all(
             coord in dataframe.columns for coord in [Pixels.coords.U, Pixels.coords.V]
         ):
-            raise ValueError(
-                f"DataFrame must include columns for both '{Pixels.coords.U}'"
-                f" and '{Pixels.coords.V}' coordinates."
+            raise InvalidInputError(
+                dataframe.columns.tolist(),
+                f"DataFrame must include columns for both '{Pixels.coords.U}' and '{Pixels.coords.V}' coordinates.",
             )
         pixels = Pixels(dataframe[[Pixels.coords.U, Pixels.coords.V]])
         signals = Signals(dataframe.drop(columns=[Pixels.coords.U, Pixels.coords.V]))

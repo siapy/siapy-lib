@@ -2,6 +2,11 @@ import numpy as np
 from PIL.Image import Image
 from sklearn.base import BaseEstimator
 
+from siapy.core.exceptions import (
+    InvalidInputError,
+    InvalidTypeError,
+    MethodNotImplementedError,
+)
 from siapy.core.types import ImageSizeType, ImageType
 from siapy.entities import SpectralImage
 
@@ -16,8 +21,9 @@ def validate_image_to_numpy_3channels(image: ImageType) -> np.ndarray:
     ):
         image_display = image.copy()
     else:
-        raise ValueError(
-            "Argument image must be convertible to numpy array with 3 channels."
+        raise InvalidInputError(
+            input_value=image,
+            message="Argument image must be convertible to numpy array with 3 channels.",
         )
     return image_display
 
@@ -30,28 +36,32 @@ def validate_image_to_numpy(image: ImageType) -> np.ndarray:
     elif isinstance(image, np.ndarray):
         image_np = image.copy()
     else:
-        raise ValueError("Argument image must be convertible to a numpy array.")
+        raise InvalidInputError(
+            input_value=image,
+            message="Argument image must be convertible to a numpy array.",
+        )
     return image_np
 
 
 def validate_image_size(output_size: ImageSizeType) -> tuple[int, int]:
     if not isinstance(output_size, (int, tuple)):
-        raise TypeError("Argument output_size must be an int or a tuple.")
+        raise InvalidTypeError(
+            input_value=output_size,
+            allowed_types=ImageSizeType,
+            message="Argument output_size must be an int or a tuple.",
+        )
     if isinstance(output_size, int):
         output_size = (output_size, output_size)
     elif len(output_size) != 2 or not all([isinstance(el, int) for el in output_size]):
-        raise ValueError(
-            "Argument output_size tuple must have 2 elements and contain only integers."
+        raise InvalidInputError(
+            input_value=output_size,
+            message="Argument output_size tuple must have 2 elements and contain only integers.",
         )
     return output_size
 
 
 def check_model_prediction_methods(model: BaseEstimator):
-    if (
-        not hasattr(model, "fit")
-        or not hasattr(model, "score")
-        or not hasattr(model, "predict")
-    ):
-        raise AttributeError(
-            "The model must have methods: 'fit', 'predict', and 'score'."
-        )
+    required_methods = ["fit", "predict", "score"]
+    for method in required_methods:
+        if not hasattr(model, method):
+            raise MethodNotImplementedError(model.__class__.__name__, method)

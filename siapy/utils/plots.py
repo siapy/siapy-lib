@@ -8,6 +8,7 @@ from matplotlib.lines import Line2D
 from matplotlib.path import Path
 from matplotlib.widgets import Button, LassoSelector
 
+from siapy.core.exceptions import InvalidInputError
 from siapy.core.logger import logger
 from siapy.core.types import ImageType
 from siapy.datasets.schemas import ClassificationTarget, TabularDatasetData
@@ -234,7 +235,10 @@ def display_signals(
     legend_frameon: bool = True,
 ):
     if not isinstance(data.target, ClassificationTarget):
-        raise ValueError("The target must be an instance of ClassificationTarget.")
+        raise InvalidInputError(
+            input_value=data.target,
+            message="The target must be an instance of ClassificationTarget.",
+        )
 
     signals = data.signals.copy()
     target = data.target.model_copy()

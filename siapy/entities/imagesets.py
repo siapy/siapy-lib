@@ -6,6 +6,7 @@ import numpy as np
 from rich.progress import track
 
 from siapy.core import logger
+from siapy.core.exceptions import InvalidInputError
 
 from .images import SpectralImage
 
@@ -35,7 +36,13 @@ class SpectralImageSet:
         image_paths: Sequence[str | Path] | None = None,
     ):
         if image_paths is not None and len(header_paths) != len(image_paths):
-            raise ValueError("The length of hdr_paths and img_path must be equal.")
+            raise InvalidInputError(
+                {
+                    "header_paths_length": len(header_paths),
+                    "image_paths_length": len(image_paths),
+                },
+                "The length of hdr_paths and img_path must be equal.",
+            )
 
         if image_paths is None:
             spectral_images = [
