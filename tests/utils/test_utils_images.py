@@ -142,7 +142,7 @@ def test_merge_images_by_specter():
         assert save_path.exists()
 
 
-def test_calculate_correction_factor_from_panel(spectral_images):
+def test_calculate_correction_factor_from_panel_with_label(spectral_images):
     pixels = Pixels.from_iterable([(900, 1150), (1050, 1300)])
     rect = Shape.from_shape_type(
         shape_type="rectangle", pixels=pixels, label="reference_panel"
@@ -156,7 +156,6 @@ def test_calculate_correction_factor_from_panel(spectral_images):
         panel_shape_label="reference_panel",
     )
 
-    assert panel_correction is not None
     assert isinstance(panel_correction, np.ndarray)
     assert panel_correction.shape == (image_vnir.bands,)
 
@@ -166,6 +165,18 @@ def test_calculate_correction_factor_from_panel(spectral_images):
     assert np.array_equal(
         np.full(image_vnir.bands, 0.2), np.round(c.mean(axis=0) * panel_correction, 2)
     )
+
+
+def test_calculate_correction_factor_from_panel_without_label(spectral_images):
+    image_vnir = spectral_images.vnir
+    panel_correction = calculate_correction_factor_from_panel(
+        image=image_vnir,
+        panel_reference_reflectance=0.3,
+    )
+    direct_panel_calculation = np.full(image_vnir.bands, 0.3) / image_vnir.mean(
+        axis=(0, 1)
+    )
+    assert np.array_equal(direct_panel_calculation, panel_correction)
 
 
 def test_convert_radiance_image_to_reflectance_without_saving(spectral_images):

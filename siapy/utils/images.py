@@ -6,6 +6,7 @@ import numpy as np
 import spectral as sp
 
 from siapy.core import logger
+from siapy.core.exceptions import InvalidInputError
 from siapy.core.types import ImageDataType, ImageType
 from siapy.entities import SpectralImage
 from siapy.transformations.image import rescale
@@ -187,14 +188,27 @@ def convert_radiance_image_to_reflectance(
 def calculate_correction_factor_from_panel(
     image: SpectralImage,
     panel_reference_reflectance: float,
-    panel_shape_label: str = "reference_panel",
-) -> np.ndarray | None:
-    panel_shape = image.geometric_shapes.get_by_name(panel_shape_label)
-    if panel_shape is None:
-        return None
+    panel_shape_label: str | None = None,
+) -> np.ndarray:
+    if panel_shape_label:
+        panel_shape = image.geometric_shapes.get_by_name(panel_shape_label)
+        if not panel_shape:
+            raise InvalidInputError(
+                input_value={"panel_shape_label": panel_shape_label},
+                message="Panel shape label not found.",
+            )
+        panel_signatures = image.to_signatures(panel_shape.convex_hull())
+        panel_radiance_mean = panel_signatures.signals.mean()
 
-    panel_signatures = image.to_signatures(panel_shape.convex_hull())
-    panel_radiance_mean = panel_signatures.signals.mean()
+    else:
+        temp_mean = image.mean(axis=(0, 1))
+        if not isinstance(temp_mean, np.ndarray):
+            raise InvalidInputError(
+                input_value={"image": image},
+                message=f"Expected image.mean(axis=(0, 1)) to return np.ndarray, but got {type(temp_mean).__name__}.",
+            )
+        panel_radiance_mean = temp_mean
+
     panel_reflectance_mean = np.full(image.bands, panel_reference_reflectance)
     panel_correction = panel_reflectance_mean / panel_radiance_mean
     return panel_correction
