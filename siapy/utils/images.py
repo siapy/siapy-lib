@@ -172,7 +172,7 @@ def convert_radiance_image_to_reflectance(
     panel_correction: np.ndarray,
     save_path: Annotated[
         str | Path | None, "Header file (with '.hdr' extension) name with path."
-    ],
+    ] = None,
     **kwargs: Any,
 ) -> np.ndarray | SpectralImage:
     image_ref_np = image.to_numpy() * panel_correction
