@@ -1,0 +1,2 @@
+
+::: siapy.core.exceptions
