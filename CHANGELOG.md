@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.5.4](https://github.com/siapy/siapy-lib/compare/v0.5.3...v0.5.4) (2024-09-18)
+
+
+### Bug Fixes
+
+* Refactor, add and correct type annotations ([12ffa05](https://github.com/siapy/siapy-lib/commit/12ffa05a19053dc220c5dbac6c351d2c116716ee))
+
+
+### Documentation
+
+* Add core.exceptions API documentation and update mkdocs.yml ([ca37d04](https://github.com/siapy/siapy-lib/commit/ca37d04e7d9a914a1a5e7e4b86b2a9c3e43e9b42))
+
 ## [0.5.3](https://github.com/siapy/siapy-lib/compare/v0.5.2...v0.5.3) (2024-09-17)
 
 
