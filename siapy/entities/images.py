@@ -2,7 +2,7 @@
 import sys
 from dataclasses import dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Iterable, Iterator
+from typing import TYPE_CHECKING, Any, Iterable, Iterator, Sequence
 
 import numpy as np
 import spectral as sp
@@ -265,7 +265,9 @@ class SpectralImage:
         image_arr_area[v_norm, u_norm, :] = image_arr[pixels.v(), pixels.u(), :]
         return image_arr_area
 
-    def mean(self, axis: int | tuple[int] | None = None) -> float | np.ndarray:
+    def mean(
+        self, axis: int | tuple[int, ...] | Sequence[int] | None = None
+    ) -> float | np.ndarray:
         image_arr = self.to_numpy()
         return np.nanmean(image_arr, axis=axis)
 

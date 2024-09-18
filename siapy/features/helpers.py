@@ -16,7 +16,7 @@ __all__ = [
 
 class FeatureSelectorConfig(BaseModel):
     k_features: Annotated[
-        int | tuple | str,
+        int | str | tuple[int, ...],
         "can be: 'best' - most extensive, (1, n) - check range of features, n - exact number of features",
     ] = (1, 20)
     cv: int = 3
@@ -38,7 +38,7 @@ def feature_selector_factory(
     problem_type: Literal["regression", "classification"],
     *,
     k_features: Annotated[
-        int | tuple | str,
+        int | str | tuple[int, ...],
         "can be: 'best' - most extensive, (1, n) - check range of features, n - exact number of features",
     ] = (1, 20),
     cv: int = 3,
