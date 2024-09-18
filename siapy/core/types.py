@@ -19,7 +19,7 @@ __all__ = [
 
 SpectralType = sp.io.envi.BilFile | sp.io.envi.BipFile | sp.io.envi.BsqFile
 ImageType = SpectralImage | np.ndarray | Image
-ImageSizeType = int | tuple[int, int]
+ImageSizeType = int | tuple[int, ...]
 ImageDataType = (
     np.uint8
     | np.int16

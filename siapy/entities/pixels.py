@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Annotated, ClassVar, Iterable, NamedTuple
+from typing import Annotated, ClassVar, Iterable, NamedTuple, Sequence
 
 import numpy as np
 import pandas as pd
@@ -32,6 +32,7 @@ class Pixels:
                 Annotated[int, "u coordinate on the image"],
                 Annotated[int, "v coordinate on the image"],
             ]
+            | Sequence[int]
         ],
     ) -> "Pixels":
         df = pd.DataFrame(iterable, columns=[Pixels.coords.U, Pixels.coords.V])

@@ -1,3 +1,5 @@
+from typing import Sequence
+
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -23,10 +25,10 @@ def map_affine_approx_2d(points_ref: np.ndarray, points_mov: np.ndarray) -> np.n
 
 
 def affine_matx_2d(
-    scale: tuple[float, float] = (1, 1),
-    trans: tuple[float, float] = (0, 0),
+    scale: tuple[float, float] | Sequence[float] = (1, 1),
+    trans: tuple[float, float] | Sequence[float] = (0, 0),
     rot: float = 0,
-    shear: tuple[float, float] = (0, 0),
+    shear: tuple[float, float] | Sequence[float] = (0, 0),
 ) -> np.ndarray:
     """Create arbitrary affine transformation matrix"""
     rot = rot * np.pi / 180
