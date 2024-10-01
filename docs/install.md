@@ -47,6 +47,14 @@ cd siapy
 make install
 ```
 
+### Verify Installation
+
+To verify that siapy has been installed correctly, you can run:
+
+```bash
+python -c "import siapy; print(siapy.__version__)"
+```
+
 ## Troubleshooting
 
 If you encounter any issues during installation, consider the following solutions:

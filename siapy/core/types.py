@@ -3,6 +3,7 @@ from typing import Any, Sequence
 import numpy as np
 import pandas as pd
 import spectral as sp
+from numpy.typing import ArrayLike
 from PIL.Image import Image
 
 from siapy.entities import SpectralImage, SpectralImageSet
@@ -34,5 +35,5 @@ ImageDataType = (
     | np.uint64
 )
 ImageContainerType = SpectralImage | SpectralImageSet
-ArrayLike1dType = np.ndarray | pd.Series | Sequence[Any]
-ArrayLike2dType = np.ndarray | pd.DataFrame | Sequence[Any]
+ArrayLike1dType = np.ndarray | pd.Series | Sequence[Any] | ArrayLike
+ArrayLike2dType = np.ndarray | pd.DataFrame | Sequence[Any] | ArrayLike
