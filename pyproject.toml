@@ -1,6 +1,6 @@
 [project]
 name = "siapy"
-version = "0.5.4"
+version = "0.5.5"
 description = "A python library for efficient processing of spectral images."
 authors = [{ name = "janezlapajne", email = "janez.lapajne@kis.si" }]
 

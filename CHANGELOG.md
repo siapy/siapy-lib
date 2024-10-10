@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.5](https://github.com/siapy/siapy-lib/compare/v0.5.4...v0.5.5) (2024-10-10)
+
+
+### Bug Fixes
+
+* Update n_jobs default value to use all processors ([e768b93](https://github.com/siapy/siapy-lib/commit/e768b9361ceb3cb49d3e43e970d7a7fc1b514166))
+
 ## [0.5.4](https://github.com/siapy/siapy-lib/compare/v0.5.3...v0.5.4) (2024-09-18)
 
 
