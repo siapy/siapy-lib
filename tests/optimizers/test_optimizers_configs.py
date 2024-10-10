@@ -24,7 +24,7 @@ def test_optimize_study_config_defaults():
     config = OptimizeStudyConfig()
     assert config.n_trials is None
     assert config.timeout is None
-    assert config.n_jobs == 1
+    assert config.n_jobs == -1
     assert config.catch == ()
     assert config.callbacks is None
     assert config.gc_after_trial is False

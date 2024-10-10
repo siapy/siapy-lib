@@ -29,7 +29,7 @@ class OptimizeStudyConfig(BaseModel):
     model_config = ConfigDict(arbitrary_types_allowed=True)
     n_trials: int | None = None
     timeout: float | None = None
-    n_jobs: int = 1
+    n_jobs: int = -1
     catch: Iterable[type[Exception]] | type[Exception] = ()
     callbacks: (
         list[Callable[[optuna.study.Study, optuna.trial.FrozenTrial], None]] | None
