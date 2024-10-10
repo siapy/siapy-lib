@@ -1,5 +1,5 @@
 from functools import partial
-from typing import Iterable, Literal
+from typing import Annotated, Iterable, Literal
 
 import numpy as np
 from sklearn import model_selection
@@ -38,6 +38,10 @@ class Scorer:
         | Iterable
         | Literal["RepeatedKFold", "RepeatedStratifiedKFold"]
         | None = None,
+        n_jobs: Annotated[
+            int | None,
+            "Number of jobs to run in parallel. `-1` means using all processors.",
+        ] = None,
     ) -> "Scorer":
         if isinstance(cv, str) and cv in ["RepeatedKFold", "RepeatedStratifiedKFold"]:
             cv = initialize_object(
@@ -52,7 +56,7 @@ class Scorer:
             scoring=scoring,
             cv=cv,  # type: ignore
             groups=None,
-            n_jobs=1,
+            n_jobs=n_jobs,
             verbose=0,
             fit_params=None,
             pre_dispatch=1,
