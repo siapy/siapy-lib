@@ -33,8 +33,6 @@ __Documentation__: <https://siapy.github.io/siapy-lib/>
 
 ---
 
-__Note:__ The library is currently under development!
-
 ## 💡 Installation
 
 To install the siapy library, use the following command:

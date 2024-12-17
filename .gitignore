@@ -13,3 +13,4 @@ site
 .pdm-python
 .coverage
 .vscode
+.history
