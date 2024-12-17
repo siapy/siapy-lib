@@ -143,7 +143,7 @@ def test_merge_images_by_specter():
 
 
 def test_calculate_correction_factor_from_panel_with_label(spectral_images):
-    pixels = Pixels.from_iterable([(900, 1150), (1050, 1300)])
+    pixels = Pixels.from_iterable([(200, 350), (300, 400)])
     rect = Shape.from_shape_type(
         shape_type="rectangle", pixels=pixels, label="reference_panel"
     )
