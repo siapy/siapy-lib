@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.5.6](https://github.com/siapy/siapy-lib/compare/v0.5.5...v0.5.6) (2024-12-20)
+
+
+### Dependencies
+
+* update dependencies and metadata in pdm.lock and pyproject.toml ([0ceea41](https://github.com/siapy/siapy-lib/commit/0ceea41a2eb34f26eac3ff190955eb1adaa44105))
+
+
+### Documentation
+
+* introduction.md ([a6faef3](https://github.com/siapy/siapy-lib/commit/a6faef3b20da728add41dda0666dd9c6240a4f55))
+
 ## [0.5.5](https://github.com/siapy/siapy-lib/compare/v0.5.4...v0.5.5) (2024-10-10)
 
 
