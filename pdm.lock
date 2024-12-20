@@ -5,7 +5,7 @@
 groups = ["default", "dev", "docs", "lint", "test"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:1d9528417182ea5c7a150f907f198710fe3f3891ff46c0ad174f291238a8755b"
+content_hash = "sha256:eb4d00bb8ee0b3c1e9c8744073b889455d773999a33e20e286e758ebb5fd1af9"
 
 [[metadata.targets]]
 requires_python = ">=3.10"
@@ -2207,7 +2207,7 @@ files = [
 
 [[package]]
 name = "pymdown-extensions"
-version = "10.9"
+version = "10.12"
 requires_python = ">=3.8"
 summary = "Extension pack for Python Markdown."
 groups = ["docs"]
@@ -2216,8 +2216,8 @@ dependencies = [
     "pyyaml",
 ]
 files = [
-    {file = "pymdown_extensions-10.9-py3-none-any.whl", hash = "sha256:d323f7e90d83c86113ee78f3fe62fc9dee5f56b54d912660703ea1816fed5626"},
-    {file = "pymdown_extensions-10.9.tar.gz", hash = "sha256:6ff740bcd99ec4172a938970d42b96128bdc9d4b9bcad72494f29921dc69b753"},
+    {file = "pymdown_extensions-10.12-py3-none-any.whl", hash = "sha256:49f81412242d3527b8b4967b990df395c89563043bc51a3d2d7d500e52123b77"},
+    {file = "pymdown_extensions-10.12.tar.gz", hash = "sha256:b0ee1e0b2bef1071a47891ab17003bfe5bf824a398e13f49f8ed653b699369a7"},
 ]
 
 [[package]]
