@@ -66,6 +66,7 @@ nav:
       - Contributing: contributing.md
   - Examples:
       - Introduction: examples/introduction.md
+      - Spectral Entity: examples/spectral_image.md
   - API Documentation:
       - Core:
           - Configs: api/core/configs.md
