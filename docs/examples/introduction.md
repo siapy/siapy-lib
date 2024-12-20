@@ -1,6 +1,6 @@
 The examples in this section provide an overview of the SiaPy library. You can find them [here](https://github.com/siapy/siapy-lib/tree/main/docs/examples/src).
 
-To follow along with the examples, please download the example data from [Zenodo]() and install the library by following the [installation instructions](https://siapy.github.io/siapy-lib/install/).
+To follow along with the examples, please download the example data from [Zenodo](https://zenodo.org/records/14534998) and install the library by following the [installation instructions](https://siapy.github.io/siapy-lib/install/).
 
 ## 📄 Data used in examples
 
@@ -11,7 +11,7 @@ The hyperspectral images were acquired using Hyspex push-broom cameras from Nors
 
 The acquired hyperspectral data, expressed as reflectance values, were already radiometrically calibrated to ensure accuracy and reliability for subsequent analysis.
 
-**Description of File Names**
+**Description of file names**
 
 | File Name                          | Description                                      |
 |------------------------------------|--------------------------------------------------|
