@@ -69,6 +69,7 @@ nav:
       - Spectral Image: examples/spectral_image.md
       - Spectral Image Set: examples/spectral_imageset.md
       - Transformations: examples/transformations.md
+      - Use cases: examples/use_cases.md
   - API Documentation:
       - Core:
           - Configs: api/core/configs.md
