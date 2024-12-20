@@ -12,7 +12,7 @@ except ImportError as e:
 
 # Set the path to the directory containing the data
 # !! ADJUST THIS PATH TO YOUR DATA DIRECTORY !!
-data_dir = "../../data"
+data_dir = "./docs/examples/data"
 
 # Find all header and image files in the data directory
 header_paths = sorted(Path(data_dir).rglob("*.hdr"))

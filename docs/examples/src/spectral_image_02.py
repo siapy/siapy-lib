@@ -6,13 +6,13 @@ from siapy.entities import Pixels, SpectralImage
 
 # Set the path to the directory containing the data
 # !! ADJUST THIS PATH TO YOUR DATA DIRECTORY !!
-data_dir = "../../data"
+data_dir = "./docs/examples/data"
 
 # Get first image
 header_path_img0 = sorted(Path(data_dir).rglob("*.hdr"))[1]
 image_path_img0 = sorted(Path(data_dir).rglob("*.img"))[1]
 
-# or you can do the same just by running
+# Load spectral image
 image = SpectralImage.envi_open(
     header_path=header_path_img0,
     image_path=image_path_img0,

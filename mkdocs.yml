@@ -68,6 +68,7 @@ nav:
       - Introduction: examples/introduction.md
       - Spectral Image: examples/spectral_image.md
       - Spectral Image Set: examples/spectral_imageset.md
+      - Transformations: examples/transformations.md
   - API Documentation:
       - Core:
           - Configs: api/core/configs.md
