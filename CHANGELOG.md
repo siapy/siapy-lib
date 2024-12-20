@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.5.7](https://github.com/siapy/siapy-lib/compare/v0.5.6...v0.5.7) (2024-12-20)
+
+
+### Documentation
+
+* add example for loading and processing a spectral image set ([2564e88](https://github.com/siapy/siapy-lib/commit/2564e88fed8dc306b9833b509ea0e8e80ab65bbf))
+* add example script for loading and using SpectralImage ([24d5a4b](https://github.com/siapy/siapy-lib/commit/24d5a4b629e2ce753f11dbab5af61d8ba720e051))
+* add examples for loading and processing spectral images ([3261665](https://github.com/siapy/siapy-lib/commit/3261665bbcc69f90af8e530304af333582563bbb))
+* enhance examples for loading and processing spectral images ([09600b0](https://github.com/siapy/siapy-lib/commit/09600b0a65099a89bab1ad5708ae83bffd7514b9))
+* update data directory paths in example scripts and add transformations examples ([d2e924f](https://github.com/siapy/siapy-lib/commit/d2e924f30e00d3622856e50c9b36086404f6564e))
+* update introduction.md with correct Zenodo link and improve formatting ([15349d6](https://github.com/siapy/siapy-lib/commit/15349d6d094e82358275e67436deedebf3fc3857))
+
 ## [0.5.6](https://github.com/siapy/siapy-lib/compare/v0.5.5...v0.5.6) (2024-12-20)
 
 
