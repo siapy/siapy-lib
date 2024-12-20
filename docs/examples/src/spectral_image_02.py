@@ -12,13 +12,11 @@ data_dir = "../../data"
 header_path_img0 = sorted(Path(data_dir).rglob("*.hdr"))[1]
 image_path_img0 = sorted(Path(data_dir).rglob("*.img"))[1]
 
-
 # or you can do the same just by running
 image = SpectralImage.envi_open(
     header_path=header_path_img0,
     image_path=image_path_img0,
 )
-
 
 # Convert to numpy
 image_np = image.to_numpy(nan_value=0.0)

@@ -27,7 +27,6 @@ image = SpectralImage.envi_open(
 )
 
 # Now you can easily use various property and util functions of the SpectralImage object
-
 # Get the shape of the image
 print("Image shape:", image.shape)
 
