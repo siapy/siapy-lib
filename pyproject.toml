@@ -3,6 +3,9 @@ name = "siapy"
 version = "0.5.5"
 description = "A python library for efficient processing of spectral images."
 authors = [{ name = "janezlapajne", email = "janez.lapajne@kis.si" }]
+requires-python = ">=3.10"
+readme = "README.md"
+license = { text = "MIT" }
 
 classifiers = [
     "Intended Audience :: Information Technology",
@@ -38,26 +41,8 @@ dependencies = [
     "setuptools>=72.1.0",
     "dask[dataframe]>=2024.7.1",
 ]
-requires-python = ">=3.10"
-readme = "README.md"
-license = { text = "MIT" }
 
-[project.urls]
-Homepage = "https://github.com/siapy/siapy-lib"
-Documentation = "https://github.com/siapy/siapy-lib/tree/main/docs"
-Repository = "https://github.com/siapy/siapy-lib"
-
-[build-system]
-requires = ["pdm-backend"]
-build-backend = "pdm.backend"
-
-[tool.pdm]
-distribution = true
-
-[tool.pdm.build]
-source-includes = ["tests/", "scripts/", "docs/"]
-
-[tool.pdm.dev-dependencies]
+[dependency-groups]
 lint = [
     "black>=24.4.2",
     "flake8>=7.0.0",
@@ -78,7 +63,23 @@ docs = [
     "mkdocs-redirects>=1.2.1",
     "griffe-typingdoc>=0.2.6",
     "mike>=2.1.3",
+    "pymdown-extensions>=10.12",
 ]
+
+[project.urls]
+Homepage = "https://github.com/siapy/siapy-lib"
+Documentation = "https://github.com/siapy/siapy-lib/tree/main/docs"
+Repository = "https://github.com/siapy/siapy-lib"
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+[tool.pdm]
+distribution = true
+
+[tool.pdm.build]
+source-includes = ["tests/", "scripts/", "docs/"]
 
 [tool.pytest.ini_options]
 markers = ["manual: mark test as manual to run them only on demand."]

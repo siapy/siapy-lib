@@ -214,7 +214,7 @@ def test_mean(spectral_images):
     spectral_image_vnir = spectral_images.vnir
 
     mean_all = spectral_image_vnir.mean()
-    assert isinstance(mean_all, float)
+    assert isinstance(mean_all, (float, np.floating))
     assert np.isclose(mean_all, np.nanmean(spectral_image_vnir.to_numpy()))
 
     mean_axis0 = spectral_image_vnir.mean(axis=0)

@@ -63,6 +63,9 @@ nav:
   - Get Started:
       - Welcome to SiaPy: index.md
       - Installation: install.md
+      - Contributing: contributing.md
+  - Examples:
+      - Introduction: examples/introduction.md
   - API Documentation:
       - Core:
           - Configs: api/core/configs.md
@@ -97,7 +100,6 @@ nav:
           - Evaluators: api/utils/evaluators.md
           - Images: api/utils/images.md
           - Plots: api/utils/plots.md
-  - Contributing: contributing.md
   - Release Notes: changelog.md
   - License: permit.md
 
@@ -112,6 +114,8 @@ markdown_extensions:
     permalink: true
   pymdownx.details:
   pymdownx.extra:
+  pymdownx.snippets:
+    check_paths: true
 
   # Python Markdown Extensions
   pymdownx.betterem:

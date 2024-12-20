@@ -1,8 +1,5 @@
-venv
 __pycache__
-dist
-tests/data
-site
+venv
 .venv
 .idea
 .ruff_cache
@@ -13,3 +10,9 @@ site
 .pdm-python
 .coverage
 .vscode
+.history
+site
+dist
+tests/data
+docs/examples/data/*
+!docs/examples/data/.gitkeep
