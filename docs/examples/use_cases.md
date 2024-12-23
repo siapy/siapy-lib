@@ -15,7 +15,11 @@ The CLI currently supports the following commands:
 - Convert radiance images to reflectance by utilizing a reference panel.
 - Display spectral signatures for in-depth analysis.
 
-💻 [Code](https://github.com/siapy/siapy-cli)
+/// Info
+
+💻 [Code Repository](https://github.com/siapy/siapy-cli)
+
+///
 
 ---
 
@@ -32,7 +36,11 @@ Key features:
 - Utilizes Explainable AI techniques to understand the model, the data on which the model is trained, and the most relevant spectral bands (important features) for the model.
 - Covers the entire process with visualization of results.
 
-💻 [Code](https://github.com/Manuscripts-code/Potato-plants-nemdetect--PP-2025)
+/// Info
+
+💻 [Code Repository](https://github.com/Manuscripts-code/Potato-plants-nemdetect--PP-2025)
+
+///
 
 ---
 
