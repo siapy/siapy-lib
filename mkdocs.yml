@@ -65,11 +65,13 @@ nav:
       - Installation: install.md
       - Contributing: contributing.md
   - Examples:
-      - Introduction: examples/introduction.md
-      - Spectral Image: examples/spectral_image.md
-      - Spectral Image Set: examples/spectral_imageset.md
-      - Transformations: examples/transformations.md
       - Use cases: examples/use_cases.md
+      - Concepts:
+          - Introduction: examples/introduction.md
+          - Spectral Image: examples/spectral_image.md
+          - Spectral Image Set: examples/spectral_imageset.md
+          - Visualizations: examples/visualization.md
+          - Transformations: examples/transformations.md
   - API Documentation:
       - Core:
           - Configs: api/core/configs.md
