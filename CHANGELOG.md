@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.5.8](https://github.com/siapy/siapy-lib/compare/v0.5.7...v0.5.8) (2024-12-23)
+
+
+### Documentation
+
+* add use cases documentation for SiaPy library and update navigation ([333bb9d](https://github.com/siapy/siapy-lib/commit/333bb9d4314b8d80b8a9904a81d430948fd62fb9))
+* enhance examples with visualization scripts and update navigation ([42fc4b0](https://github.com/siapy/siapy-lib/commit/42fc4b0a634e7b440446bf6ae07438243aea9502))
+* update README with installation instructions and add example usage ([5180335](https://github.com/siapy/siapy-lib/commit/51803350783fc30377f5965b5515460ec9e3c7c6))
+* update use cases documentation to clarify code repository links ([b205431](https://github.com/siapy/siapy-lib/commit/b2054311e9e24cf50a0a839111384b6173661a2b))
+
 ## [0.5.7](https://github.com/siapy/siapy-lib/compare/v0.5.6...v0.5.7) (2024-12-20)
 
 
