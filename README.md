@@ -41,7 +41,27 @@ To install the siapy library, use the following command:
 pip install siapy
 ```
 
-For detailed information and additional options, please refer to the [guide](https://siapy.github.io/siapy-lib/install/).
+For detailed information and additional options, please refer to the [instructions](https://siapy.github.io/siapy-lib/install/).
+
+## 💻 Examples
+
+``` python
+from pathlib import Path
+from siapy.entities import SpectralImageSet
+
+data_dir = "~/data"
+
+header_paths = sorted(Path(data_dir).rglob("*.hdr"))
+image_paths = sorted(Path(data_dir).rglob("*.img"))
+
+imageset = SpectralImageSet.from_paths(
+    header_paths=header_paths,
+    image_paths=image_paths,
+)
+print(imageset)
+```
+
+For an overview of the key concepts and functionalities of the SiaPy library, please refer to the [documentation](https://siapy.github.io/siapy-lib/examples/introduction/). Additionally, explore the use cases that demonstrate the library's capabilities [here](https://siapy.github.io/siapy-lib/examples/use_cases/).
 
 ## 🔍 Contribution guidelines
 

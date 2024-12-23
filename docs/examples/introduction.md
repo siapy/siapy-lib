@@ -1,4 +1,4 @@
-The examples in this section provide an overview of the SiaPy library. You can find them [here](https://github.com/siapy/siapy-lib/tree/main/docs/examples/src).
+This section provides an overview of key concepts and functionalities of the SiaPy library. You can find code snippets [here](https://github.com/siapy/siapy-lib/tree/main/docs/examples/src).
 
 To follow along with the examples, please download the example data from [Zenodo](https://zenodo.org/records/14534998) and install the library by following the [installation instructions](https://siapy.github.io/siapy-lib/install/).
 
