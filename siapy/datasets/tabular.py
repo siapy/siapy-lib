@@ -99,9 +99,11 @@ class TabularDataset:
                 }
             )
 
-            assert (
-                list(metadata_df.columns) == list(MetaDataEntity.model_fields.keys())
-            ), "Sanity check failed! The columns in metadata_df do not match MetaDataEntity fields."
+            assert list(metadata_df.columns) == list(
+                MetaDataEntity.model_fields.keys()
+            ), (
+                "Sanity check failed! The columns in metadata_df do not match MetaDataEntity fields."
+            )
 
             signatures = Signatures.from_dataframe(signatures_df)
 
