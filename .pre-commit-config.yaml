@@ -14,14 +14,14 @@ repos:
       - id: end-of-file-fixer
       - id: trailing-whitespace
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.8.2
+    rev: v0.9.1
     hooks:
       - id: ruff
         args:
           - --fix
       - id: ruff-format
   - repo: https://github.com/gitleaks/gitleaks
-    rev: v8.21.2
+    rev: v8.23.0
     hooks:
       - id: gitleaks
   - repo: https://github.com/codespell-project/codespell
@@ -31,7 +31,7 @@ repos:
         additional_dependencies:
           - tomli
   - repo: https://github.com/compilerla/conventional-pre-commit
-    rev: v3.6.0
+    rev: v4.0.0
     hooks:
       - id: conventional-pre-commit
         stages: [commit-msg]
