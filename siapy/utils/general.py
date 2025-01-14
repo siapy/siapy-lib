@@ -33,9 +33,9 @@ def initialize_object(
     **kwargs: Any,
 ) -> Any:
     module_args = module_args or {}
-    assert not set(kwargs).intersection(
-        module_args
-    ), "Overwriting kwargs given in config file is not allowed"
+    assert not set(kwargs).intersection(module_args), (
+        "Overwriting kwargs given in config file is not allowed"
+    )
     module_args.update(kwargs)
     return getattr(module, module_name)(*args, **module_args)
 
@@ -48,9 +48,9 @@ def initialize_function(
     **kwargs: Any,
 ) -> Callable[..., Any]:
     module_args = module_args or {}
-    assert not set(kwargs).intersection(
-        module_args
-    ), "Overwriting kwargs given in config file is not allowed"
+    assert not set(kwargs).intersection(module_args), (
+        "Overwriting kwargs given in config file is not allowed"
+    )
     module_args.update(kwargs)
     return partial(getattr(module, module_name), *args, **module_args)
 
