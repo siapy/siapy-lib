@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.5.9](https://github.com/siapy/siapy-lib/compare/v0.5.8...v0.5.9) (2025-01-15)
+
+
+### Bug Fixes
+
+* rename fit_params to params in Scorer and cross_validation functions ([4ce6a76](https://github.com/siapy/siapy-lib/commit/4ce6a7660e2a8504b8a5a4a14383bfabf7504b20))
+
+
+### Dependencies
+
+* update configuration files for improved linting and formatting ([ecdc54b](https://github.com/siapy/siapy-lib/commit/ecdc54b6d44416c8a2a73386d390cb635a484830))
+
+
+### Documentation
+
+* add overview and key features to README.md ([1b1fd70](https://github.com/siapy/siapy-lib/commit/1b1fd70ca237b5046fdf683209707fd8276073cf))
+
 ## [0.5.8](https://github.com/siapy/siapy-lib/compare/v0.5.7...v0.5.8) (2024-12-23)
 
 
