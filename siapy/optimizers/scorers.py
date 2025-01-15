@@ -58,7 +58,7 @@ class Scorer:
             groups=None,
             n_jobs=n_jobs,
             verbose=0,
-            fit_params=None,
+            params=None,
             pre_dispatch=1,
             error_score=0,
         )
