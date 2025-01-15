@@ -35,7 +35,7 @@ def cross_validation(
     cv: int | BaseCrossValidator | Iterable | None = None,
     n_jobs: int | None = 1,
     verbose: int = 0,
-    fit_params: dict[str, Any] | None = None,
+    params: dict[str, Any] | None = None,
     pre_dispatch: int | str = 1,
     error_score: Literal["raise"] | int = 0,
 ) -> float:
@@ -54,7 +54,7 @@ def cross_validation(
         cv=cv,
         n_jobs=n_jobs,
         verbose=verbose,
-        fit_params=fit_params,
+        params=params,
         pre_dispatch=pre_dispatch,
         error_score=error_score,
     )
