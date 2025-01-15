@@ -33,6 +33,22 @@ __Documentation__: <https://siapy.github.io/siapy-lib/>
 
 ---
 
+## 📚 Overview
+
+__SiaPy__ is a versatile Python library designed for processing and analyzing spectral images. It is particularly useful for scientific and academic purposes, but it also serves well for quick prototyping.
+
+Built on top of the well-known [spectral](https://github.com/spectralpython/spectral) library, SiaPy extends its capabilities with additional features and functionalities.
+
+### Key Features
+
+- __Image Processing__: Easily read, display, and manipulate spectral image data.
+- __Data Analysis__: Perform in-depth analysis of spectral signatures using advanced analytical techniques.
+- __Machine Learning Integration__: Select image regions for training models and segment images using pre-trained models.
+- __Camera Co-registration__: Align multiple cameras and compute transformations across different camera spaces.
+- __Radiometric Conversion__: Convert radiance to reflectance using reference panels.
+
+To make some of the functionality more easily accessible, a command line interface (CLI) is also provided. See [siapy-cli](https://github.com/siapy/siapy-cli). However, the full functionality can be exploited by using the library directly.
+
 ## 💡 Installation
 
 To install the siapy library, use the following command:
@@ -69,9 +85,9 @@ We always welcome small improvements or fixes. If you’re considering making mo
 
 Contributing to SiaPy isn’t limited to coding. You can also:
 
-* Help us manage and resolve issues, both new and existing.
-* Create tutorials, presentations, and other educational resources.
-* Propose new features.
+- Help us manage and resolve issues, both new and existing.
+- Create tutorials, presentations, and other educational resources.
+- Propose new features.
 
 Not sure where to start or how your skills might fit in? Don’t hesitate to reach out! You can contact us via email, or connect with us directly on GitHub by opening a new issue or commenting on an existing one.
 
