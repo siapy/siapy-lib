@@ -72,9 +72,7 @@ def area_normalization(image: ImageType) -> np.ndarray:
             return signal
         return signal / area
 
-    def _image_normalization(
-        image_np: np.ndarray, func1d: Callable[[np.ndarray], np.ndarray]
-    ) -> np.ndarray:
+    def _image_normalization(image_np: np.ndarray, func1d: Callable[[np.ndarray], np.ndarray]) -> np.ndarray:
         return np.apply_along_axis(func1d, axis=2, arr=image_np)
 
     return _image_normalization(image_np, _signal_normalize)

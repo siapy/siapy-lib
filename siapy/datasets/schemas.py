@@ -142,9 +142,7 @@ class TabularDatasetData(BaseModel):
         signals = self.signals.iloc[indices]
         metadata = self.metadata.iloc[indices]
         target = None if self.target is None else self.target.__getitem__(indices)
-        return TabularDatasetData(
-            pixels=pixels, signals=signals, metadata=metadata, target=target
-        )
+        return TabularDatasetData(pixels=pixels, signals=signals, metadata=metadata, target=target)
 
     def __len__(self) -> int:
         return len(self.pixels)

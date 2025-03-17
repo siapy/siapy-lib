@@ -87,8 +87,7 @@ class RegressionMetrics(NamedTuple):
 def calculate_classification_metrics(
     y_true,
     y_pred,
-    average: Literal["micro", "macro", "samples", "weighted", "binary"]
-    | None = "weighted",
+    average: Literal["micro", "macro", "samples", "weighted", "binary"] | None = "weighted",
 ):
     accuracy = accuracy_score(y_true, y_pred)
     precision = precision_score(y_true, y_pred, average=average)

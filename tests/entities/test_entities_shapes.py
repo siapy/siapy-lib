@@ -4,9 +4,9 @@ import pytest
 from siapy.core.exceptions import InvalidInputError
 from siapy.entities import Pixels, Shape
 from siapy.entities.shapes import (
-    SHAPE_TYPE_FREEDRAW,
-    SHAPE_TYPE_POINT,
-    SHAPE_TYPE_RECTANGLE,
+    _SHAPE_TYPE_FREEDRAW,
+    _SHAPE_TYPE_POINT,
+    _SHAPE_TYPE_RECTANGLE,
     FreeDraw,
     Point,
     Rectangle,
@@ -48,11 +48,11 @@ def test_shape_init():
 def test_shape_type_property():
     pixels = Pixels.from_iterable([(10, 15), (20, 25)])
     rectangle = Rectangle(pixels=pixels)
-    assert rectangle.shape_type == SHAPE_TYPE_RECTANGLE
+    assert rectangle.shape_type == _SHAPE_TYPE_RECTANGLE
     point = Point(pixels=pixels)
-    assert point.shape_type == SHAPE_TYPE_POINT
+    assert point.shape_type == _SHAPE_TYPE_POINT
     freedraw = FreeDraw(pixels=pixels)
-    assert freedraw.shape_type == SHAPE_TYPE_FREEDRAW
+    assert freedraw.shape_type == _SHAPE_TYPE_FREEDRAW
 
 
 def test_shape_pixels_property():
@@ -77,9 +77,7 @@ def test_rectangle_convex_hull():
     rectangle = Rectangle(pixels=pixels)
     convex_hull_output = rectangle.convex_hull()
 
-    expected_pixels = Pixels.from_iterable(
-        [(u, v) for u in range(10, 13) for v in range(21, 24)]
-    )
+    expected_pixels = Pixels.from_iterable([(u, v) for u in range(10, 13) for v in range(21, 24)])
     assert convex_hull_output.df.equals(expected_pixels.df)
 
 

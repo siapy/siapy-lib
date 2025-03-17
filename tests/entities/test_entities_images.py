@@ -238,9 +238,7 @@ def test_mean(spectral_images):
     mean_axis_tuple = spectral_image_vnir.mean(axis=(0, 1))
     assert isinstance(mean_axis_tuple, np.ndarray)
     assert mean_axis_tuple.shape == (spectral_image_vnir.to_numpy().shape[2],)
-    assert np.allclose(
-        mean_axis_tuple, np.nanmean(spectral_image_vnir.to_numpy(), axis=(0, 1))
-    )
+    assert np.allclose(mean_axis_tuple, np.nanmean(spectral_image_vnir.to_numpy(), axis=(0, 1)))
 
 
 def test_to_display(spectral_images):
@@ -280,30 +278,22 @@ def test_geometric_shapes_setter_invalid(spectral_images):
 
 
 def test_geometric_shapes_iteration(spectral_images, corresponding_pixels):
-    rect = Shape.from_shape_type(
-        shape_type="rectangle", pixels=corresponding_pixels.vnir
-    )
+    rect = Shape.from_shape_type(shape_type="rectangle", pixels=corresponding_pixels.vnir)
     spectral_images.vnir.geometric_shapes.shapes = [rect, rect]
     for shape in spectral_images.vnir.geometric_shapes:
         assert isinstance(shape, Shape)
 
 
 def test_geometric_shapes_getitem(spectral_images, corresponding_pixels):
-    rect = Shape.from_shape_type(
-        shape_type="rectangle", pixels=corresponding_pixels.vnir
-    )
+    rect = Shape.from_shape_type(shape_type="rectangle", pixels=corresponding_pixels.vnir)
     spectral_images.vnir.geometric_shapes.shapes = [rect]
     assert spectral_images.vnir.geometric_shapes[0] == rect
 
 
 def test_geometric_shapes_setitem_valid(spectral_images, corresponding_pixels):
-    rect = Shape.from_shape_type(
-        shape_type="rectangle", pixels=corresponding_pixels.vnir
-    )
+    rect = Shape.from_shape_type(shape_type="rectangle", pixels=corresponding_pixels.vnir)
     spectral_images.vnir.geometric_shapes.shapes = [rect]
-    new_rect = Shape.from_shape_type(
-        shape_type="rectangle", pixels=corresponding_pixels.vnir
-    )
+    new_rect = Shape.from_shape_type(shape_type="rectangle", pixels=corresponding_pixels.vnir)
     spectral_images.vnir.geometric_shapes[0] = new_rect
     assert spectral_images.vnir.geometric_shapes[0] == new_rect
 
@@ -316,20 +306,14 @@ def test_geometric_shapes_setitem_invalid(spectral_images):
 
 
 def test_geometric_shapes_len(spectral_images, corresponding_pixels):
-    rect = Shape.from_shape_type(
-        shape_type="rectangle", pixels=corresponding_pixels.vnir
-    )
+    rect = Shape.from_shape_type(shape_type="rectangle", pixels=corresponding_pixels.vnir)
     spectral_images.vnir.geometric_shapes.shapes = [rect, rect]
     assert len(spectral_images.vnir.geometric_shapes) == 2
 
 
 def test_geometric_shapes_eq(spectral_images, corresponding_pixels):
-    rect1 = Shape.from_shape_type(
-        shape_type="rectangle", pixels=corresponding_pixels.vnir
-    )
-    rect2 = Shape.from_shape_type(
-        shape_type="rectangle", pixels=corresponding_pixels.vnir
-    )
+    rect1 = Shape.from_shape_type(shape_type="rectangle", pixels=corresponding_pixels.vnir)
+    rect2 = Shape.from_shape_type(shape_type="rectangle", pixels=corresponding_pixels.vnir)
     spectral_images.vnir.geometric_shapes.shapes = [rect1, rect2]
     other_geometric_shapes = GeometricShapes(spectral_images.vnir)
     other_geometric_shapes.shapes = [rect1, rect2]
@@ -337,9 +321,7 @@ def test_geometric_shapes_eq(spectral_images, corresponding_pixels):
 
 
 def test_geometric_shapes_append_valid(spectral_images, corresponding_pixels):
-    rect = Shape.from_shape_type(
-        shape_type="rectangle", pixels=corresponding_pixels.vnir
-    )
+    rect = Shape.from_shape_type(shape_type="rectangle", pixels=corresponding_pixels.vnir)
     spectral_images.vnir.geometric_shapes.clear()
     spectral_images.vnir.geometric_shapes.append(rect)
     assert rect in spectral_images.vnir.geometric_shapes
@@ -353,9 +335,7 @@ def test_geometric_shapes_append_invalid(spectral_images):
 
 
 def test_geometric_shapes_extend_valid(spectral_images, corresponding_pixels):
-    rect = Shape.from_shape_type(
-        shape_type="rectangle", pixels=corresponding_pixels.vnir
-    )
+    rect = Shape.from_shape_type(shape_type="rectangle", pixels=corresponding_pixels.vnir)
     spectral_images.vnir.geometric_shapes.clear()
     spectral_images.vnir.geometric_shapes.extend([rect, rect])
     assert len(spectral_images.vnir.geometric_shapes) == 2
@@ -368,9 +348,7 @@ def test_geometric_shapes_extend_invalid(spectral_images):
 
 
 def test_geometric_shapes_insert_valid(spectral_images, corresponding_pixels):
-    rect = Shape.from_shape_type(
-        shape_type="rectangle", pixels=corresponding_pixels.vnir
-    )
+    rect = Shape.from_shape_type(shape_type="rectangle", pixels=corresponding_pixels.vnir)
     spectral_images.vnir.geometric_shapes.insert(0, rect)
     assert spectral_images.vnir.geometric_shapes[0] == rect
 
@@ -382,9 +360,7 @@ def test_geometric_shapes_insert_invalid(spectral_images):
 
 
 def test_geometric_shapes_remove_valid(spectral_images, corresponding_pixels):
-    rect = Shape.from_shape_type(
-        shape_type="rectangle", pixels=corresponding_pixels.vnir
-    )
+    rect = Shape.from_shape_type(shape_type="rectangle", pixels=corresponding_pixels.vnir)
     spectral_images.vnir.geometric_shapes.clear()
     spectral_images.vnir.geometric_shapes.append(rect)
     spectral_images.vnir.geometric_shapes.remove(rect)
@@ -398,9 +374,7 @@ def test_geometric_shapes_remove_invalid(spectral_images):
 
 
 def test_geometric_shapes_pop(spectral_images, corresponding_pixels):
-    rect = Shape.from_shape_type(
-        shape_type="rectangle", pixels=corresponding_pixels.vnir
-    )
+    rect = Shape.from_shape_type(shape_type="rectangle", pixels=corresponding_pixels.vnir)
     spectral_images.vnir.geometric_shapes.clear()
     spectral_images.vnir.geometric_shapes.append(rect)
     popped_shape = spectral_images.vnir.geometric_shapes.pop()
@@ -409,27 +383,21 @@ def test_geometric_shapes_pop(spectral_images, corresponding_pixels):
 
 
 def test_geometric_shapes_clear(spectral_images, corresponding_pixels):
-    rect = Shape.from_shape_type(
-        shape_type="rectangle", pixels=corresponding_pixels.vnir
-    )
+    rect = Shape.from_shape_type(shape_type="rectangle", pixels=corresponding_pixels.vnir)
     spectral_images.vnir.geometric_shapes.append(rect)
     spectral_images.vnir.geometric_shapes.clear()
     assert len(spectral_images.vnir.geometric_shapes) == 0
 
 
 def test_geometric_shapes_index_valid(spectral_images, corresponding_pixels):
-    rect = Shape.from_shape_type(
-        shape_type="rectangle", pixels=corresponding_pixels.vnir
-    )
+    rect = Shape.from_shape_type(shape_type="rectangle", pixels=corresponding_pixels.vnir)
     spectral_images.vnir.geometric_shapes.append(rect)
     index = spectral_images.vnir.geometric_shapes.index(rect)
     assert index == 0
 
 
 def test_geometric_shapes_index_invalid(spectral_images, corresponding_pixels):
-    rect = Shape.from_shape_type(
-        shape_type="rectangle", pixels=corresponding_pixels.vnir
-    )
+    rect = Shape.from_shape_type(shape_type="rectangle", pixels=corresponding_pixels.vnir)
     invalid_shape = "not a shape"
     spectral_images.vnir.geometric_shapes.append(rect)
     with pytest.raises(InvalidInputError):
@@ -437,9 +405,7 @@ def test_geometric_shapes_index_invalid(spectral_images, corresponding_pixels):
 
 
 def test_geometric_shapes_count(spectral_images, corresponding_pixels):
-    rect = Shape.from_shape_type(
-        shape_type="rectangle", pixels=corresponding_pixels.vnir
-    )
+    rect = Shape.from_shape_type(shape_type="rectangle", pixels=corresponding_pixels.vnir)
     spectral_images.vnir.geometric_shapes.clear()
     spectral_images.vnir.geometric_shapes.append(rect)
     spectral_images.vnir.geometric_shapes.append(rect)
@@ -448,12 +414,8 @@ def test_geometric_shapes_count(spectral_images, corresponding_pixels):
 
 
 def test_geometric_shapes_reverse(spectral_images, corresponding_pixels):
-    rect1 = Shape.from_shape_type(
-        shape_type="rectangle", pixels=corresponding_pixels.vnir
-    )
-    rect2 = Shape.from_shape_type(
-        shape_type="rectangle", pixels=corresponding_pixels.vnir
-    )
+    rect1 = Shape.from_shape_type(shape_type="rectangle", pixels=corresponding_pixels.vnir)
+    rect2 = Shape.from_shape_type(shape_type="rectangle", pixels=corresponding_pixels.vnir)
     spectral_images.vnir.geometric_shapes.append(rect1)
     spectral_images.vnir.geometric_shapes.append(rect2)
     spectral_images.vnir.geometric_shapes.reverse()
@@ -462,12 +424,8 @@ def test_geometric_shapes_reverse(spectral_images, corresponding_pixels):
 
 
 def test_geometric_shapes_sort(spectral_images, corresponding_pixels):
-    rect1 = Shape.from_shape_type(
-        shape_type="rectangle", pixels=corresponding_pixels.vnir, label="B"
-    )
-    rect2 = Shape.from_shape_type(
-        shape_type="rectangle", pixels=corresponding_pixels.vnir, label="A"
-    )
+    rect1 = Shape.from_shape_type(shape_type="rectangle", pixels=corresponding_pixels.vnir, label="B")
+    rect2 = Shape.from_shape_type(shape_type="rectangle", pixels=corresponding_pixels.vnir, label="A")
     spectral_images.vnir.geometric_shapes.clear()
     spectral_images.vnir.geometric_shapes.append(rect1)
     spectral_images.vnir.geometric_shapes.append(rect2)
@@ -477,12 +435,8 @@ def test_geometric_shapes_sort(spectral_images, corresponding_pixels):
 
 
 def test_geometric_shapes_get_by_name_found(spectral_images, corresponding_pixels):
-    rect1 = Shape.from_shape_type(
-        shape_type="rectangle", pixels=corresponding_pixels.vnir, label="Rect1"
-    )
-    rect2 = Shape.from_shape_type(
-        shape_type="rectangle", pixels=corresponding_pixels.vnir, label="Rect2"
-    )
+    rect1 = Shape.from_shape_type(shape_type="rectangle", pixels=corresponding_pixels.vnir, label="Rect1")
+    rect2 = Shape.from_shape_type(shape_type="rectangle", pixels=corresponding_pixels.vnir, label="Rect2")
     spectral_images.vnir.geometric_shapes.shapes = [rect1, rect2]
     found_shape = spectral_images.vnir.geometric_shapes.get_by_name("Rect1")
     assert found_shape == rect1
@@ -491,9 +445,7 @@ def test_geometric_shapes_get_by_name_found(spectral_images, corresponding_pixel
 
 def test_geometric_shapes_get_by_name_not_found(spectral_images, corresponding_pixels):
     # Create a shape
-    rect = Shape.from_shape_type(
-        shape_type="rectangle", pixels=corresponding_pixels.vnir, label="Rect"
-    )
+    rect = Shape.from_shape_type(shape_type="rectangle", pixels=corresponding_pixels.vnir, label="Rect")
     spectral_images.vnir.geometric_shapes.shapes = [rect]
     found_shape = spectral_images.vnir.geometric_shapes.get_by_name("NonExistent")
     assert found_shape is None

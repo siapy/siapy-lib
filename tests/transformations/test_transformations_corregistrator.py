@@ -17,10 +17,7 @@ def test_pixels_select_click_manual(spectral_images, corresponding_pixels):
 
     matx, _ = corregistrator.align(pixels_swir, pixels_vnir, plot_progress=False)
     pixels_transformed = corregistrator.transform(pixels_vnir, matx)
-    assert (
-        np.sqrt(np.sum((pixels_swir.to_numpy() - pixels_transformed.to_numpy()) ** 2))
-        < 10
-    )
+    assert np.sqrt(np.sum((pixels_swir.to_numpy() - pixels_transformed.to_numpy()) ** 2)) < 10
 
 
 def test_transform():

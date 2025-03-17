@@ -25,9 +25,7 @@ __all__ = [
 
 def save_image(
     image: Annotated[np.ndarray, "The image to save."],
-    save_path: Annotated[
-        str | Path, "Header file (with '.hdr' extension) name with path."
-    ],
+    save_path: Annotated[str | Path, "Header file (with '.hdr' extension) name with path."],
     *,
     metadata: Annotated[
         dict[str, Any] | None,
@@ -60,9 +58,7 @@ def save_image(
 
 def create_image(
     image: Annotated[np.ndarray, "The image to save."],
-    save_path: Annotated[
-        str | Path, "Header file (with '.hdr' extension) name with path."
-    ],
+    save_path: Annotated[str | Path, "Header file (with '.hdr' extension) name with path."],
     *,
     metadata: Annotated[
         dict[str, Any] | None,
@@ -102,12 +98,8 @@ def create_image(
 def merge_images_by_specter(
     *,
     image_original: Annotated[SpectralImage, "Original image."],
-    image_to_merge: Annotated[
-        SpectralImage, "Image which will be merged onto original image."
-    ],
-    save_path: Annotated[
-        str | Path, "Header file (with '.hdr' extension) name with path."
-    ],
+    image_to_merge: Annotated[SpectralImage, "Image which will be merged onto original image."],
+    save_path: Annotated[str | Path, "Header file (with '.hdr' extension) name with path."],
     overwrite: Annotated[
         bool,
         "If the associated image file or header already exist and set to True, the files will be overwritten; otherwise, if either of the files exist, an exception will be raised.",
@@ -134,9 +126,7 @@ def merge_images_by_specter(
         merged_meta = image_to_merge.metadata
         metadata_ext = {}
 
-        metadata_ext["wavelength"] = original_meta.get(
-            "wavelength", []
-        ) + merged_meta.get("wavelength", [])
+        metadata_ext["wavelength"] = original_meta.get("wavelength", []) + merged_meta.get("wavelength", [])
         metadata_ext["data type"] = original_meta.get("data type", "")
         metadata_ext["byte order"] = original_meta.get("byte order", "")
         metadata_ext["data ignore value"] = original_meta.get("data ignore value", "")
@@ -171,9 +161,7 @@ def merge_images_by_specter(
 def convert_radiance_image_to_reflectance(
     image: SpectralImage,
     panel_correction: np.ndarray,
-    save_path: Annotated[
-        str | Path | None, "Header file (with '.hdr' extension) name with path."
-    ] = None,
+    save_path: Annotated[str | Path | None, "Header file (with '.hdr' extension) name with path."] = None,
     **kwargs: Any,
 ) -> np.ndarray | SpectralImage:
     image_ref_np = image.to_numpy() * panel_correction
@@ -181,7 +169,10 @@ def convert_radiance_image_to_reflectance(
         return image_ref_np
 
     return create_image(
-        image=image_ref_np, save_path=save_path, metadata=image.metadata, **kwargs
+        image=image_ref_np,
+        save_path=save_path,
+        metadata=image.metadata,
+        **kwargs,
     )
 
 

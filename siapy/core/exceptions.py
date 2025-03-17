@@ -51,9 +51,7 @@ class InvalidTypeError(SiapyError):
         self.input_type: Any = type(input_value)
         self.allowed_types: type | tuple[type, ...] = allowed_types
         self.message: str = message
-        super().__init__(
-            f"{message}: {input_value} (type: {self.input_type}). Allowed types: {allowed_types}"
-        )
+        super().__init__(f"{message}: {input_value} (type: {self.input_type}). Allowed types: {allowed_types}")
 
 
 class ProcessingError(SiapyError):
@@ -78,9 +76,7 @@ class MethodNotImplementedError(SiapyError):
     def __init__(self, class_name: str, method_name: str) -> None:
         self.class_name: str = class_name
         self.method_name: str = method_name
-        super().__init__(
-            f"Method '{method_name}' not implemented in class '{class_name}'"
-        )
+        super().__init__(f"Method '{method_name}' not implemented in class '{class_name}'")
 
 
 class DirectInitializationError(SiapyError):

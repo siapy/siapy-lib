@@ -31,9 +31,7 @@ def test_cross_validation_with_kfold(mock_sklearn_dataset):
 def test_cross_validation_with_custom_scorer(mock_sklearn_dataset):
     X, y = mock_sklearn_dataset
     custom_scorer = make_scorer(accuracy_score)
-    mean_score = cross_validation(
-        model=SVC(random_state=0), X=X, y=y, scoring=custom_scorer
-    )
+    mean_score = cross_validation(model=SVC(random_state=0), X=X, y=y, scoring=custom_scorer)
     assert mean_score == pytest.approx(0.9)
 
 
@@ -58,11 +56,13 @@ def test_hold_out_validation(mock_sklearn_dataset):
 
 def test_hold_out_validation_with_manual_validation_set(mock_sklearn_dataset):
     X, y = mock_sklearn_dataset
-    X_train, X_val, y_train, y_val = train_test_split(
-        X, y, test_size=0.2, random_state=0
-    )
+    X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.2, random_state=0)
     score = hold_out_validation(
-        model=SVC(random_state=0), X=X_train, y=y_train, X_val=X_val, y_val=y_val
+        model=SVC(random_state=0),
+        X=X_train,
+        y=y_train,
+        X_val=X_val,
+        y_val=y_val,
     )
     assert score == pytest.approx(0.95)
 
@@ -76,31 +76,29 @@ def test_hold_out_validation_with_incomplete_manual_validation_set(
         InvalidInputError,
         match="To manually define validation set, both X_val and y_val must be specified.",
     ):
-        hold_out_validation(
-            model=SVC(random_state=0), X=X_train, y=y_train, X_val=X_val
-        )
+        hold_out_validation(model=SVC(random_state=0), X=X_train, y=y_train, X_val=X_val)
 
 
 def test_hold_out_validation_with_custom_scorer_func(mock_sklearn_dataset):
     X, y = mock_sklearn_dataset
     custom_scorer = make_scorer(accuracy_score)
     score = hold_out_validation(
-        model=SVC(random_state=0), X=X, y=y, scoring=custom_scorer, random_state=0
+        model=SVC(random_state=0),
+        X=X,
+        y=y,
+        scoring=custom_scorer,
+        random_state=0,
     )
     assert score == pytest.approx(0.95)
 
 
 def test_hold_out_validation_with_custom_scorer_str(mock_sklearn_dataset):
     X, y = mock_sklearn_dataset
-    score = hold_out_validation(
-        model=SVC(random_state=0), X=X, y=y, scoring="accuracy", random_state=0
-    )
+    score = hold_out_validation(model=SVC(random_state=0), X=X, y=y, scoring="accuracy", random_state=0)
     assert score == pytest.approx(0.95)
 
 
 def test_hold_out_validation_with_stratify(mock_sklearn_dataset):
     X, y = mock_sklearn_dataset
-    score = hold_out_validation(
-        model=SVC(random_state=0), X=X, y=y, stratify=y, random_state=0
-    )
+    score = hold_out_validation(model=SVC(random_state=0), X=X, y=y, stratify=y, random_state=0)
     assert score == pytest.approx(0.95)

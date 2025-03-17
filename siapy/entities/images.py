@@ -1,8 +1,7 @@
 # mypy: ignore-errors
-import sys
 from dataclasses import dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Iterable, Iterator, Sequence
+from typing import TYPE_CHECKING, Any, Sequence
 
 import numpy as np
 import spectral as sp
@@ -10,7 +9,7 @@ from PIL import Image, ImageOps
 
 from siapy.core.exceptions import InvalidFilepathError, InvalidInputError
 
-from .shapes import Shape
+from .shapes import GeometricShapes, Shape
 from .signatures import Signatures
 
 if TYPE_CHECKING:
@@ -19,121 +18,16 @@ if TYPE_CHECKING:
 
 
 __all__ = [
-    "GeometricShapes",
     "SpectralImage",
 ]
 
 
 @dataclass
-class GeometricShapes:
-    def __init__(
-        self, image: "SpectralImage", geometric_shapes: list["Shape"] | None = None
-    ):
-        self._image = image
-        self._geometric_shapes = (
-            geometric_shapes if geometric_shapes is not None else []
-        )
-
-    def __iter__(self) -> Iterator[Shape]:
-        return iter(self.shapes)
-
-    def __getitem__(self, index: int) -> Shape:
-        return self.shapes[index]
-
-    def __setitem__(self, index: int, shape: Shape):
-        self._check_shape_type(shape)
-        self._geometric_shapes[index] = shape
-
-    def __len__(self) -> int:
-        return len(self._geometric_shapes)
-
-    def __eq__(self, other: Any) -> bool:
-        if not isinstance(other, GeometricShapes):
-            return NotImplemented
-        return (
-            self._geometric_shapes == other._geometric_shapes
-            and self._image == other._image
-        )
-
-    @property
-    def shapes(self) -> list["Shape"]:
-        return self._geometric_shapes.copy()
-
-    @shapes.setter
-    def shapes(self, shapes: list["Shape"]):
-        self._check_shape_type(shapes)
-        self._geometric_shapes = shapes
-
-    def append(self, shape: "Shape"):
-        self._check_shape_type(shape)
-        self._geometric_shapes.append(shape)
-
-    def extend(self, shapes: Iterable["Shape"]):
-        self._check_shape_type(shapes)
-        self._geometric_shapes.extend(shapes)
-
-    def insert(self, index: int, shape: "Shape"):
-        self._check_shape_type(shape)
-        self._geometric_shapes.insert(index, shape)
-
-    def remove(self, shape: "Shape"):
-        self._check_shape_type(shape)
-        self._geometric_shapes.remove(shape)
-
-    def pop(self, index: int = -1) -> "Shape":
-        return self._geometric_shapes.pop(index)
-
-    def clear(self):
-        self._geometric_shapes.clear()
-
-    def index(self, shape: "Shape", start: int = 0, stop: int = sys.maxsize) -> int:
-        self._check_shape_type(shape)
-        return self._geometric_shapes.index(shape, start, stop)
-
-    def count(self, shape: "Shape") -> int:
-        self._check_shape_type(shape)
-        return self._geometric_shapes.count(shape)
-
-    def reverse(self):
-        self._geometric_shapes.reverse()
-
-    def sort(self, key: Any = None, reverse: bool = False):
-        self._geometric_shapes.sort(key=key, reverse=reverse)
-
-    def get_by_name(self, name: str) -> Shape | None:
-        names = [shape.label for shape in self.shapes]
-        if name in names:
-            index = names.index(name)
-            return self.shapes[index]
-
-    def _check_shape_type(self, shapes: Shape | Iterable[Shape]):
-        if isinstance(shapes, Shape):
-            return
-
-        if not isinstance(shapes, Iterable):
-            raise InvalidInputError(
-                {
-                    "shapes_type": type(shapes).__name__,
-                },
-                "Shapes must be an instance of Shape or an iterable of Shape instances.",
-            )
-        if not all(isinstance(shape, Shape) for shape in shapes):
-            raise InvalidInputError(
-                {
-                    "invalid_items": [
-                        type(shape).__name__
-                        for shape in shapes
-                        if not isinstance(shape, Shape)
-                    ],
-                },
-                "All items must be instances of Shape subclass.",
-            )
-
-
-@dataclass
 class SpectralImage:
     def __init__(
-        self, sp_file: "SpectralType", geometric_shapes: list["Shape"] | None = None
+        self,
+        sp_file: "SpectralType",
+        geometric_shapes: list["Shape"] | None = None,
     ):
         self._sp_file = sp_file
         self._geometric_shapes = GeometricShapes(self, geometric_shapes)
@@ -150,15 +44,10 @@ class SpectralImage:
     def __eq__(self, other: Any) -> bool:
         if not isinstance(other, SpectralImage):
             return NotImplemented
-        return (
-            self.filepath.name == other.filepath.name
-            and self._sp_file == other._sp_file
-        )
+        return self.filepath.name == other.filepath.name and self._sp_file == other._sp_file
 
     @classmethod
-    def envi_open(
-        cls, *, header_path: str | Path, image_path: str | Path | None = None
-    ) -> "SpectralImage":
+    def envi_open(cls, *, header_path: str | Path, image_path: str | Path | None = None) -> "SpectralImage":
         if not Path(header_path).exists():
             raise InvalidFilepathError(str(header_path))
         sp_file = sp.envi.open(file=header_path, image=image_path)
@@ -255,9 +144,7 @@ class SpectralImage:
         v_max = pixels.v().max()
         v_min = pixels.v().min()
         # create new image
-        image_arr_area = np.nan * np.ones(
-            (v_max - v_min + 1, u_max - u_min + 1, self.bands)
-        )
+        image_arr_area = np.nan * np.ones((v_max - v_min + 1, u_max - u_min + 1, self.bands))
         # convert original coordinates to coordinates for new image
         v_norm = pixels.v() - v_min
         u_norm = pixels.u() - u_min
@@ -265,9 +152,7 @@ class SpectralImage:
         image_arr_area[v_norm, u_norm, :] = image_arr[pixels.v(), pixels.u(), :]
         return image_arr_area
 
-    def mean(
-        self, axis: int | tuple[int, ...] | Sequence[int] | None = None
-    ) -> float | np.ndarray:
+    def mean(self, axis: int | tuple[int, ...] | Sequence[int] | None = None) -> float | np.ndarray:
         image_arr = self.to_numpy()
         return np.nanmean(image_arr, axis=axis)
 
@@ -285,10 +170,7 @@ def _parse_description(description: str) -> dict[str, Any]:
             key = key.strip()
             value = value.strip()
             if "," in value:  # Special handling for values with commas
-                value = [
-                    float(v) if v.replace(".", "", 1).isdigit() else v
-                    for v in value.split(",")
-                ]
+                value = [float(v) if v.replace(".", "", 1).isdigit() else v for v in value.split(",")]
             elif value.isdigit():
                 value = int(value)
             elif value.replace(".", "", 1).isdigit():

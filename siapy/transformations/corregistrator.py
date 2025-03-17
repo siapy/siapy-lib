@@ -16,11 +16,7 @@ __all__ = [
 def map_affine_approx_2d(points_ref: np.ndarray, points_mov: np.ndarray) -> np.ndarray:
     """Affine transformation"""
     # U = T*X -> T = U*X'(X*X')^-1
-    matx_2d = (
-        points_ref.transpose()
-        @ points_mov
-        @ np.linalg.inv(points_mov.transpose() @ points_mov)
-    )
+    matx_2d = points_ref.transpose() @ points_mov @ np.linalg.inv(points_mov.transpose() @ points_mov)
     return matx_2d
 
 
@@ -75,9 +71,7 @@ def align(
         points_mov = np.dot(points_mov, matx_2d_combined.transpose())
 
         matrices.append(matx_2d_combined)
-        errors.append(
-            np.sqrt(np.sum((points_ref_corr[:, :2] - points_mov_corr[:, :2]) ** 2))
-        )
+        errors.append(np.sqrt(np.sum((points_ref_corr[:, :2] - points_mov_corr[:, :2]) ** 2)))
         idx = idx + 1
 
         # check for convergence
@@ -105,8 +99,6 @@ def align(
 
 def transform(pixels: Pixels, transformation_matx: np.ndarray):
     """Transform pixels"""
-    points_transformed = np.dot(
-        pixels.df_homogenious().to_numpy(), transformation_matx.transpose()
-    )
+    points_transformed = np.dot(pixels.df_homogenious().to_numpy(), transformation_matx.transpose())
     points_transformed = np.round(points_transformed[:, :2]).astype("int")
     return Pixels.from_iterable(points_transformed)

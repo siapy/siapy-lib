@@ -120,7 +120,5 @@ def spectral_tabular_dataset(spectral_images_set):
 
 @pytest.fixture(scope="module")
 def mock_sklearn_dataset():
-    X, y = make_classification(
-        n_samples=100, n_features=10, n_classes=2, random_state=0
-    )
+    X, y = make_classification(n_samples=100, n_features=10, n_classes=2, random_state=0)
     return X, y

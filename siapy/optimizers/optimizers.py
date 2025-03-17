@@ -53,11 +53,15 @@ class TabularOptimizer:
 
         if target is None:
             raise InvalidInputError(
-                input_value=target, message="Target data is required for optimization."
+                input_value=target,
+                message="Target data is required for optimization.",
             )
         if signals_val is not None and target_val is None:
             raise InvalidInputError(
-                input_value={"signals_val": signals_val, "target_val": target_val},
+                input_value={
+                    "signals_val": signals_val,
+                    "target_val": target_val,
+                },
                 message=(
                     "If validation data (data_val) is provided, "
                     "validation targets (data_val.target) must also be provided."
