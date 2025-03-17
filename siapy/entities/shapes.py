@@ -21,10 +21,10 @@ __all__ = [
     "FreeDraw",
 ]
 
-SHAPE_TYPE_RECTANGLE = "rectangle"
-SHAPE_TYPE_POINT = "point"
-SHAPE_TYPE_FREEDRAW = "freedraw"
-ShapeType = Literal[SHAPE_TYPE_RECTANGLE, SHAPE_TYPE_POINT, SHAPE_TYPE_FREEDRAW]  # type: ignore
+_SHAPE_TYPE_RECTANGLE = "rectangle"
+_SHAPE_TYPE_POINT = "point"
+_SHAPE_TYPE_FREEDRAW = "freedraw"
+ShapeType = Literal[_SHAPE_TYPE_RECTANGLE, _SHAPE_TYPE_POINT, _SHAPE_TYPE_FREEDRAW]  # type: ignore
 
 
 @dataclass
@@ -47,9 +47,9 @@ class Shape(ABC):
         label: str | None = None,
     ) -> "Shape":
         types_map: dict[ShapeType, type[Shape]] = {
-            SHAPE_TYPE_RECTANGLE: Rectangle,
-            SHAPE_TYPE_POINT: Point,
-            SHAPE_TYPE_FREEDRAW: FreeDraw,
+            _SHAPE_TYPE_RECTANGLE: Rectangle,
+            _SHAPE_TYPE_POINT: Point,
+            _SHAPE_TYPE_FREEDRAW: FreeDraw,
         }
         if shape_type in types_map:
             return types_map[shape_type](
@@ -191,7 +191,7 @@ class GeometricShapes:
 
 class Rectangle(Shape):
     def __init__(self, pixels: Pixels, label: str | None = None, **kwargs: Any):
-        super().__init__(SHAPE_TYPE_RECTANGLE, pixels, label)
+        super().__init__(_SHAPE_TYPE_RECTANGLE, pixels, label)
 
     def convex_hull(self) -> Pixels:
         # Rectangle is defined by two opposite corners
@@ -207,7 +207,7 @@ class Rectangle(Shape):
 
 class Point(Shape):
     def __init__(self, pixels: Pixels, label: str | None = None, **kwargs: Any):
-        super().__init__(SHAPE_TYPE_POINT, pixels, label)
+        super().__init__(_SHAPE_TYPE_POINT, pixels, label)
 
     def convex_hull(self) -> Pixels:
         return self.pixels
@@ -215,7 +215,7 @@ class Point(Shape):
 
 class FreeDraw(Shape):
     def __init__(self, pixels: Pixels, label: str | None = None, **kwargs: Any):
-        super().__init__(SHAPE_TYPE_FREEDRAW, pixels, label)
+        super().__init__(_SHAPE_TYPE_FREEDRAW, pixels, label)
 
     def convex_hull(self) -> Pixels:
         if len(self.pixels) < 3:

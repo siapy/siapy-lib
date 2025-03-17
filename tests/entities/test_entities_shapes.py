@@ -4,9 +4,9 @@ import pytest
 from siapy.core.exceptions import InvalidInputError
 from siapy.entities import Pixels, Shape
 from siapy.entities.shapes import (
-    SHAPE_TYPE_FREEDRAW,
-    SHAPE_TYPE_POINT,
-    SHAPE_TYPE_RECTANGLE,
+    _SHAPE_TYPE_FREEDRAW,
+    _SHAPE_TYPE_POINT,
+    _SHAPE_TYPE_RECTANGLE,
     FreeDraw,
     Point,
     Rectangle,
@@ -48,11 +48,11 @@ def test_shape_init():
 def test_shape_type_property():
     pixels = Pixels.from_iterable([(10, 15), (20, 25)])
     rectangle = Rectangle(pixels=pixels)
-    assert rectangle.shape_type == SHAPE_TYPE_RECTANGLE
+    assert rectangle.shape_type == _SHAPE_TYPE_RECTANGLE
     point = Point(pixels=pixels)
-    assert point.shape_type == SHAPE_TYPE_POINT
+    assert point.shape_type == _SHAPE_TYPE_POINT
     freedraw = FreeDraw(pixels=pixels)
-    assert freedraw.shape_type == SHAPE_TYPE_FREEDRAW
+    assert freedraw.shape_type == _SHAPE_TYPE_FREEDRAW
 
 
 def test_shape_pixels_property():
