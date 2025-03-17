@@ -5,10 +5,10 @@
 groups = ["default", "dev", "docs", "lint", "test"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:0ebce9446949543961b696845ca1fdc067e166c46ae5930de15e20bf2f4c091c"
+content_hash = "sha256:eb65c0e646e7285ee83d841af7cdbe350041e51521d64176da49b58fe4f1017e"
 
 [[metadata.targets]]
-requires_python = ">=3.10"
+requires_python = ">=3.10,<3.13"
 
 [[package]]
 name = "alembic"
