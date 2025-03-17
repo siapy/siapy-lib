@@ -5,9 +5,7 @@ try:
 
     print("Libraries detected successfully.")
 except ImportError as e:
-    print(
-        f"Error: {e}. Please ensure that the SiaPy library is installed and the environment is activated."
-    )
+    print(f"Error: {e}. Please ensure that the SiaPy library is installed and the environment is activated.")
     exit(1)
 
 # Set the path to the directory containing the data

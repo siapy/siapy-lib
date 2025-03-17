@@ -40,9 +40,7 @@ matx = np.array(
 selected_areas_vnir = pixels_select_lasso(image_vnir)
 
 # Transform the selected areas from the VNIR image to the space of the SWIR image.
-selected_areas_swir = [
-    corregistrator.transform(pixels_vnir, matx) for pixels_vnir in selected_areas_vnir
-]
+selected_areas_swir = [corregistrator.transform(pixels_vnir, matx) for pixels_vnir in selected_areas_vnir]
 
 # Display the selected areas in both images
 display_multiple_images_with_areas(
