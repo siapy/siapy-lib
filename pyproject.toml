@@ -43,11 +43,7 @@ dependencies = [
 ]
 
 [dependency-groups]
-lint = [
-    "ruff>=0.4.8",
-    "mypy>=1.10.1",
-    "pandas-stubs>=2.2.2.240603",
-]
+lint = ["ruff>=0.4.8", "mypy>=1.10.1", "pandas-stubs>=2.2.2.240603"]
 dev = ["pre-commit>=3.7.1", "tomli>=2.0.1", "codespell>=2.3.0"]
 test = ["pytest>=8.2.2", "pytest-cov>=5.0.0", "pytest-xdist>=3.6.1"]
 docs = [
@@ -93,14 +89,8 @@ ignore_missing_imports = true
 module = "sklearn.*"
 ignore_missing_imports = true
 
-[tool.flake8]
-ignore = "E302, E305, E203, E501, W503, E501"
-select = "C,E,F,W,B,B950"
-max-line-length = 100
-exclude = [".git", "__pycache__", "__init__.py", ".mypy_cache", ".pytest_cache"]
-per-file-ignores = ["tests/*:F401,F811"]
-
 [tool.ruff]
+line-length = 120
 extend-exclude = []
 exclude = []
 lint.ignore = ["F811"]
