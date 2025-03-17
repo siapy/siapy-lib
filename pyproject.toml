@@ -44,8 +44,6 @@ dependencies = [
 
 [dependency-groups]
 lint = [
-    "black>=24.4.2",
-    "flake8>=7.0.0",
     "ruff>=0.4.8",
     "mypy>=1.10.1",
     "pandas-stubs>=2.2.2.240603",
