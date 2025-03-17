@@ -36,6 +36,8 @@ jobs:
         run: ./scripts/test.sh "Coverage for ${{ github.sha }}"
       - name: Store coverage files
         uses: actions/upload-artifact@v4
+        # Only upload for Python 3.12
+        if: matrix.python-version == '3.12'
         with:
           name: coverage-html
           path: htmlcov
