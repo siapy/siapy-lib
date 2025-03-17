@@ -77,9 +77,7 @@ def test_rectangle_convex_hull():
     rectangle = Rectangle(pixels=pixels)
     convex_hull_output = rectangle.convex_hull()
 
-    expected_pixels = Pixels.from_iterable(
-        [(u, v) for u in range(10, 13) for v in range(21, 24)]
-    )
+    expected_pixels = Pixels.from_iterable([(u, v) for u in range(10, 13) for v in range(21, 24)])
     assert convex_hull_output.df.equals(expected_pixels.df)
 
 

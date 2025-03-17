@@ -6,7 +6,10 @@ from autofeat import AutoFeatClassifier, AutoFeatRegressor  # type: ignore
 from sklearn.base import BaseEstimator, TransformerMixin
 
 from siapy.core.exceptions import MethodNotImplementedError
-from siapy.features.helpers import FeatureSelectorConfig, feature_selector_factory
+from siapy.features.helpers import (
+    FeatureSelectorConfig,
+    feature_selector_factory,
+)
 from siapy.features.spectral_indices import compute_spectral_indices
 from siapy.utils.general import set_random_seed
 
@@ -145,30 +148,30 @@ class AutoSpectralIndices(BaseEstimator, TransformerMixin):
         merge_with_original: bool = True,
     ):
         self.spectral_indices = spectral_indices
-        self.selector = feature_selector_factory(
-            problem_type=problem_type, config=selector_config
-        )
+        self.selector = feature_selector_factory(problem_type=problem_type, config=selector_config)
         self.bands_map = bands_map
         self.merge_with_original = merge_with_original
 
     def fit(self, data: pd.DataFrame, target: pd.Series) -> BaseEstimator:
         df_indices = compute_spectral_indices(
-            data=data, spectral_indices=self.spectral_indices, bands_map=self.bands_map
+            data=data,
+            spectral_indices=self.spectral_indices,
+            bands_map=self.bands_map,
         )
         self.selector.fit(df_indices, target)
         return self
 
     def transform(self, data: pd.DataFrame) -> pd.DataFrame:
         df_indices = compute_spectral_indices(
-            data=data, spectral_indices=self.spectral_indices, bands_map=self.bands_map
+            data=data,
+            spectral_indices=self.spectral_indices,
+            bands_map=self.bands_map,
         )
         if hasattr(self.selector[1], "k_feature_idx_"):
             columns_select_idx = list(self.selector[1].k_feature_idx_)
             df_indices = df_indices.iloc[:, columns_select_idx]
         else:
-            raise MethodNotImplementedError(
-                self.selector[1].__class__.__name__, "k_feature_idx_"
-            )
+            raise MethodNotImplementedError(self.selector[1].__class__.__name__, "k_feature_idx_")
         if self.merge_with_original:
             return pd.concat([data, df_indices], axis=1)
         return df_indices

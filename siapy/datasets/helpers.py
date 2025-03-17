@@ -3,7 +3,11 @@ from typing import TYPE_CHECKING
 import pandas as pd
 
 if TYPE_CHECKING:
-    from .schemas import ClassificationTarget, RegressionTarget, TabularDatasetData
+    from .schemas import (
+        ClassificationTarget,
+        RegressionTarget,
+        TabularDatasetData,
+    )
 
 __all__ = [
     "generate_classification_target",
@@ -37,7 +41,9 @@ def generate_regression_target(
     dataframe: pd.DataFrame,
     column_name: str,
 ) -> "RegressionTarget":
-    from .schemas import RegressionTarget  # Local import to avoid circular dependency
+    from .schemas import (
+        RegressionTarget,
+    )  # Local import to avoid circular dependency
 
     return RegressionTarget(name=column_name, value=dataframe[column_name])
 

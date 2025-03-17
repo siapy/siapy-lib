@@ -51,9 +51,7 @@ class SpectralImageSet:
         if image_paths is None:
             spectral_images = [
                 SpectralImage.envi_open(header_path=hdr_path)
-                for hdr_path in track(
-                    header_paths, description="Loading spectral images..."
-                )
+                for hdr_path in track(header_paths, description="Loading spectral images...")
             ]
         else:
             spectral_images = [

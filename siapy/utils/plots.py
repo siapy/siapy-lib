@@ -70,14 +70,10 @@ def pixels_select_click(image: ImageType) -> Pixels:
     return Pixels.from_iterable(coordinates)
 
 
-def pixels_select_lasso(
-    image: ImageType, selector_props: dict[str, Any] | None = None
-) -> list[Pixels]:
+def pixels_select_lasso(image: ImageType, selector_props: dict[str, Any] | None = None) -> list[Pixels]:
     image_display = validate_image_to_numpy_3channels(image)
 
-    x, y = np.meshgrid(
-        np.arange(image_display.shape[1]), np.arange(image_display.shape[0])
-    )
+    x, y = np.meshgrid(np.arange(image_display.shape[1]), np.arange(image_display.shape[0]))
     pixes_all_stack = np.vstack((x.flatten(), y.flatten())).T
 
     fig, ax = plt.subplots(1, 1)
@@ -112,11 +108,7 @@ def pixels_select_lasso(
             enter_clicked = 1
             plt.close()
 
-    props = (
-        selector_props
-        if selector_props is not None
-        else {"color": "red", "linewidth": 2, "linestyle": "-"}
-    )
+    props = selector_props if selector_props is not None else {"color": "red", "linewidth": 2, "linestyle": "-"}
     lasso = LassoSelector(ax, onselect, props=props)  # noqa: F841
     fig.canvas.mpl_connect("button_release_event", onrelease)
     fig.canvas.mpl_connect("close_event", onexit)

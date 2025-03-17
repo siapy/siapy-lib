@@ -45,16 +45,12 @@ def test_initialize_function():
     assert func() == "function_result"
     mock_module.test_function.assert_called_with()
 
-    func = initialize_function(
-        mock_module, "test_function", module_args={"arg1": 1}, arg2=2
-    )
+    func = initialize_function(mock_module, "test_function", module_args={"arg1": 1}, arg2=2)
     assert func() == "function_result"
     mock_module.test_function.assert_called_with(arg1=1, arg2=2)
 
     with pytest.raises(AssertionError):
-        initialize_function(
-            mock_module, "test_function", module_args={"arg1": 1}, arg1=2
-        )
+        initialize_function(mock_module, "test_function", module_args={"arg1": 1}, arg1=2)
 
 
 def test_ensure_dir():
@@ -70,9 +66,7 @@ def test_ensure_dir():
 def test_get_number_cpus():
     assert get_number_cpus() == multiprocessing.cpu_count()
     assert get_number_cpus(2) == 2
-    assert (
-        get_number_cpus(multiprocessing.cpu_count() + 10) == multiprocessing.cpu_count()
-    )
+    assert get_number_cpus(multiprocessing.cpu_count() + 10) == multiprocessing.cpu_count()
     with pytest.raises(InvalidInputError):
         get_number_cpus(0)
 

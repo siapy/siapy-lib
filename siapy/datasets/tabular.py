@@ -32,11 +32,7 @@ class TabularDataEntity(MetaDataEntity):
 @dataclass
 class TabularDataset:
     def __init__(self, container: ImageContainerType):
-        self._image_set = (
-            SpectralImageSet([container])
-            if isinstance(container, SpectralImage)
-            else container
-        )
+        self._image_set = SpectralImageSet([container]) if isinstance(container, SpectralImage) else container
         self._data_entities: list[TabularDataEntity] = []
 
     def __len__(self) -> int:
@@ -99,9 +95,7 @@ class TabularDataset:
                 }
             )
 
-            assert list(metadata_df.columns) == list(
-                MetaDataEntity.model_fields.keys()
-            ), (
+            assert list(metadata_df.columns) == list(MetaDataEntity.model_fields.keys()), (
                 "Sanity check failed! The columns in metadata_df do not match MetaDataEntity fields."
             )
 

@@ -25,7 +25,9 @@ __all__ = [
 @dataclass
 class SpectralImage:
     def __init__(
-        self, sp_file: "SpectralType", geometric_shapes: list["Shape"] | None = None
+        self,
+        sp_file: "SpectralType",
+        geometric_shapes: list["Shape"] | None = None,
     ):
         self._sp_file = sp_file
         self._geometric_shapes = GeometricShapes(self, geometric_shapes)
@@ -42,15 +44,10 @@ class SpectralImage:
     def __eq__(self, other: Any) -> bool:
         if not isinstance(other, SpectralImage):
             return NotImplemented
-        return (
-            self.filepath.name == other.filepath.name
-            and self._sp_file == other._sp_file
-        )
+        return self.filepath.name == other.filepath.name and self._sp_file == other._sp_file
 
     @classmethod
-    def envi_open(
-        cls, *, header_path: str | Path, image_path: str | Path | None = None
-    ) -> "SpectralImage":
+    def envi_open(cls, *, header_path: str | Path, image_path: str | Path | None = None) -> "SpectralImage":
         if not Path(header_path).exists():
             raise InvalidFilepathError(str(header_path))
         sp_file = sp.envi.open(file=header_path, image=image_path)
@@ -147,9 +144,7 @@ class SpectralImage:
         v_max = pixels.v().max()
         v_min = pixels.v().min()
         # create new image
-        image_arr_area = np.nan * np.ones(
-            (v_max - v_min + 1, u_max - u_min + 1, self.bands)
-        )
+        image_arr_area = np.nan * np.ones((v_max - v_min + 1, u_max - u_min + 1, self.bands))
         # convert original coordinates to coordinates for new image
         v_norm = pixels.v() - v_min
         u_norm = pixels.u() - u_min
@@ -157,9 +152,7 @@ class SpectralImage:
         image_arr_area[v_norm, u_norm, :] = image_arr[pixels.v(), pixels.u(), :]
         return image_arr_area
 
-    def mean(
-        self, axis: int | tuple[int, ...] | Sequence[int] | None = None
-    ) -> float | np.ndarray:
+    def mean(self, axis: int | tuple[int, ...] | Sequence[int] | None = None) -> float | np.ndarray:
         image_arr = self.to_numpy()
         return np.nanmean(image_arr, axis=axis)
 
@@ -177,10 +170,7 @@ def _parse_description(description: str) -> dict[str, Any]:
             key = key.strip()
             value = value.strip()
             if "," in value:  # Special handling for values with commas
-                value = [
-                    float(v) if v.replace(".", "", 1).isdigit() else v
-                    for v in value.split(",")
-                ]
+                value = [float(v) if v.replace(".", "", 1).isdigit() else v for v in value.split(",")]
             elif value.isdigit():
                 value = int(value)
             elif value.replace(".", "", 1).isdigit():

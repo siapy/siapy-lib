@@ -60,14 +60,9 @@ class TrialParameters:
 
     @classmethod
     def from_dict(cls, parameters: ParametersDictType) -> "TrialParameters":
-        float_params = [
-            FloatParameter(**fp) for fp in parameters.get("float_parameters", [])
-        ]
+        float_params = [FloatParameter(**fp) for fp in parameters.get("float_parameters", [])]
         int_params = [IntParameter(**ip) for ip in parameters.get("int_parameters", [])]
-        cat_params = [
-            CategoricalParameter(**cp)
-            for cp in parameters.get("categorical_parameters", [])
-        ]
+        cat_params = [CategoricalParameter(**cp) for cp in parameters.get("categorical_parameters", [])]
         return cls(
             float_parameters=float_params,
             int_parameters=int_params,

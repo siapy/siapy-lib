@@ -14,9 +14,7 @@ iterable_homo = [(1, 2, 1), (3, 4, 1), (5, 6, 1)]
 def test_from_iterable():
     pixels = Pixels.from_iterable(iterable)
     assert isinstance(pixels, Pixels)
-    assert pixels.df.equals(
-        pd.DataFrame(iterable, columns=[Pixels.coords.U, Pixels.coords.V])
-    )
+    assert pixels.df.equals(pd.DataFrame(iterable, columns=[Pixels.coords.U, Pixels.coords.V]))
 
 
 def test_df():
@@ -31,7 +29,8 @@ def test_df_homogenious():
     df_homogenious = pixels.df_homogenious()
     assert df_homogenious.equals(
         pd.DataFrame(
-            iterable_homo, columns=[Pixels.coords.U, Pixels.coords.V, Pixels.coords.H]
+            iterable_homo,
+            columns=[Pixels.coords.U, Pixels.coords.V, Pixels.coords.H],
         )
     )
 

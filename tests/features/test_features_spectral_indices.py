@@ -48,7 +48,8 @@ def test_compute_spectral_indices():
 
 def test_compute_spectral_indices_with_map():
     data = pd.DataFrame(
-        np.random.default_rng(seed=0).random((5, 2)), columns=["R", "not-correct"]
+        np.random.default_rng(seed=0).random((5, 2)),
+        columns=["R", "not-correct"],
     )
     spectral_indices = get_spectral_indices(["R", "G"])
     with pytest.raises(InvalidInputError):

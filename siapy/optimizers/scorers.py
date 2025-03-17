@@ -6,7 +6,11 @@ from sklearn import model_selection
 from sklearn.base import BaseEstimator
 
 from siapy.core.types import ArrayLike1dType, ArrayLike2dType
-from siapy.utils.evaluators import ScorerFuncType, cross_validation, hold_out_validation
+from siapy.utils.evaluators import (
+    ScorerFuncType,
+    cross_validation,
+    hold_out_validation,
+)
 from siapy.utils.general import initialize_object
 
 __all__ = [
@@ -43,7 +47,10 @@ class Scorer:
             "Number of jobs to run in parallel. `-1` means using all processors.",
         ] = None,
     ) -> "Scorer":
-        if isinstance(cv, str) and cv in ["RepeatedKFold", "RepeatedStratifiedKFold"]:
+        if isinstance(cv, str) and cv in [
+            "RepeatedKFold",
+            "RepeatedStratifiedKFold",
+        ]:
             cv = initialize_object(
                 module=model_selection,
                 module_name=cv,

@@ -21,9 +21,7 @@ class FeatureSelectorConfig(BaseModel):
     ] = (1, 20)
     cv: int = 3
     forward: Annotated[bool, "selection in forward direction"] = True
-    floating: Annotated[
-        bool, "floating algorithm - can go back and remove features once added"
-    ] = True
+    floating: Annotated[bool, "floating algorithm - can go back and remove features once added"] = True
     verbose: int = 2
     n_jobs: int = 1
     pre_dispatch: int | str = "2*n_jobs"
@@ -43,9 +41,7 @@ def feature_selector_factory(
     ] = (1, 20),
     cv: int = 3,
     forward: Annotated[bool, "selection in forward direction"] = True,
-    floating: Annotated[
-        bool, "floating algorithm - can go back and remove features once added"
-    ] = True,
+    floating: Annotated[bool, "floating algorithm - can go back and remove features once added"] = True,
     verbose: int = 2,
     n_jobs: int = 1,
     pre_dispatch: int | str = "2*n_jobs",

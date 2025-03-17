@@ -85,12 +85,12 @@ class Shape(ABC):
 @dataclass
 class GeometricShapes:
     def __init__(
-        self, image: "SpectralImage", geometric_shapes: list["Shape"] | None = None
+        self,
+        image: "SpectralImage",
+        geometric_shapes: list["Shape"] | None = None,
     ):
         self._image = image
-        self._geometric_shapes = (
-            geometric_shapes if geometric_shapes is not None else []
-        )
+        self._geometric_shapes = geometric_shapes if geometric_shapes is not None else []
 
     def __iter__(self) -> Iterator[Shape]:
         return iter(self.shapes)
@@ -108,10 +108,7 @@ class GeometricShapes:
     def __eq__(self, other: Any) -> bool:
         if not isinstance(other, GeometricShapes):
             return NotImplemented
-        return (
-            self._geometric_shapes == other._geometric_shapes
-            and self._image == other._image
-        )
+        return self._geometric_shapes == other._geometric_shapes and self._image == other._image
 
     @property
     def shapes(self) -> list["Shape"]:
@@ -179,11 +176,7 @@ class GeometricShapes:
         if not all(isinstance(shape, Shape) for shape in shapes):
             raise InvalidInputError(
                 {
-                    "invalid_items": [
-                        type(shape).__name__
-                        for shape in shapes
-                        if not isinstance(shape, Shape)
-                    ],
+                    "invalid_items": [type(shape).__name__ for shape in shapes if not isinstance(shape, Shape)],
                 },
                 "All items must be instances of Shape subclass.",
             )

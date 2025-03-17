@@ -40,10 +40,7 @@ def cross_validation(
     error_score: Literal["raise"] | int = 0,
 ) -> float:
     if X_val is not None or y_val is not None:
-        logger.info(
-            "Specification of X_val and y_val is redundant for cross_validation."
-            "These parameters are ignored."
-        )
+        logger.info("Specification of X_val and y_val is redundant for cross_validation.These parameters are ignored.")
     check_model_prediction_methods(model)
     score = cross_val_score(
         estimator=model,
