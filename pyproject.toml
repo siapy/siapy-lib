@@ -40,6 +40,9 @@ dependencies = [
     "autofeat>=2.1.1",
     "setuptools>=72.1.0",
     "dask[dataframe]>=2024.7.1",
+    "geopandas>=1.0.1",
+    "rasterio>=1.4.3",
+    "xarray>=2025.1.2",
 ]
 
 [dependency-groups]
