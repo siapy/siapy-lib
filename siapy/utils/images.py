@@ -9,6 +9,7 @@ from siapy.core import logger
 from siapy.core.exceptions import InvalidInputError
 from siapy.core.types import ImageDataType, ImageType
 from siapy.entities import SpectralImage
+from siapy.entities.images import SpectralLibImage
 from siapy.transformations.image import rescale
 from siapy.utils.validators import validate_image_to_numpy
 
@@ -92,7 +93,7 @@ def create_image(
     mmap = spectral_image.open_memmap(writable=True)
     mmap[:, :, :] = image
     logger.info(f"Image created as:  {save_path}")
-    return SpectralImage(spectral_image)
+    return SpectralImage(SpectralLibImage(spectral_image))
 
 
 def merge_images_by_specter(

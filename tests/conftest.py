@@ -32,11 +32,11 @@ class SpectralImages(SimpleNamespace):
 
 @pytest.fixture(scope="module")
 def spectral_images(configs) -> SpectralImages:
-    spectral_image_vnir = SpectralImage.envi_open(
+    spectral_image_vnir = SpectralImage.spy_open(
         header_path=configs.image_vnir_hdr_path,
         image_path=configs.image_vnir_img_path,
     )
-    spectral_image_swir = SpectralImage.envi_open(
+    spectral_image_swir = SpectralImage.spy_open(
         header_path=configs.image_swir_hdr_path,
         image_path=configs.image_swir_img_path,
     )

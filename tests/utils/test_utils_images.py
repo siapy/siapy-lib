@@ -67,7 +67,7 @@ def test_save_image_metadata_argument():
         metadata = {"description": "test"}
         save_path = Path(tmpdir, "test_image.hdr")
         save_image(image, save_path, metadata=metadata)
-        image_disc = SpectralImage.envi_open(header_path=save_path)
+        image_disc = SpectralImage.spy_open(header_path=save_path)
         assert image_disc.metadata["description"] == "test"
 
 
@@ -77,7 +77,7 @@ def test_save_image_dtype_argument():
         save_path = Path(tmpdir, "test_image.hdr")
         dtype = np.uint16
         save_image(image, save_path, dtype=dtype)
-        image_disc = SpectralImage.envi_open(header_path=save_path)
+        image_disc = SpectralImage.spy_open(header_path=save_path)
         assert image_disc.file.dtype == np.dtype(dtype)
 
 

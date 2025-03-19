@@ -7,27 +7,28 @@ from PIL import Image
 
 from siapy.core.exceptions import InvalidFilepathError, InvalidInputError
 from siapy.entities import Pixels, Shape, SpectralImage
-from siapy.entities.images import GeometricShapes, _parse_description
+from siapy.entities.images.spectral_lib import _parse_description
+from siapy.entities.shapes import GeometricShapes
 from siapy.utils.plots import pixels_select_lasso
 
 
-def test_envi_open(configs):
-    spectral_image_vnir = SpectralImage.envi_open(
+def test_spy_open(configs):
+    spectral_image_vnir = SpectralImage.spy_open(
         header_path=configs.image_vnir_hdr_path,
         image_path=configs.image_vnir_img_path,
     )
     assert isinstance(spectral_image_vnir, SpectralImage)
 
-    spectral_image_swir = SpectralImage.envi_open(
+    spectral_image_swir = SpectralImage.spy_open(
         header_path=configs.image_swir_hdr_path,
         image_path=configs.image_swir_img_path,
     )
     assert isinstance(spectral_image_swir, SpectralImage)
 
 
-def test_envi_open_invalid():
+def test_spy_open_invalid():
     with pytest.raises(InvalidFilepathError):
-        SpectralImage.envi_open(header_path="invalid_header_path")
+        SpectralImage.spy_open(header_path="invalid_header_path")
 
 
 def test_fixture_spectral_images(spectral_images):

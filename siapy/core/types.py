@@ -9,7 +9,7 @@ from PIL.Image import Image
 from siapy.entities import SpectralImage, SpectralImageSet
 
 __all__ = [
-    "SpectralType",
+    "SpectralLibType",
     "ImageType",
     "ImageSizeType",
     "ImageDataType",
@@ -18,7 +18,7 @@ __all__ = [
     "ArrayLike2dType",
 ]
 
-SpectralType = sp.io.envi.BilFile | sp.io.envi.BipFile | sp.io.envi.BsqFile
+SpectralLibType = sp.io.envi.BilFile | sp.io.envi.BipFile | sp.io.envi.BsqFile
 ImageType = SpectralImage | np.ndarray | Image
 ImageSizeType = int | tuple[int, ...]
 ImageDataType = (

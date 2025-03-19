@@ -30,7 +30,7 @@ def test_from_paths_invalid(configs):
 
 
 def create_spectral_image(hdr_path, img_path):
-    return SpectralImage.envi_open(header_path=hdr_path, image_path=img_path)
+    return SpectralImage.spy_open(header_path=hdr_path, image_path=img_path)
 
 
 def test_len(configs):
