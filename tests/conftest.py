@@ -10,12 +10,22 @@ from siapy.entities import Pixels, Shape, SpectralImage, SpectralImageSet
 
 
 class PytestConfigs(SimpleNamespace):
-    image_vnir_hdr_path = TEST_DATA_DIR / "vnir.hdr"
-    image_vnir_img_path = TEST_DATA_DIR / "vnir.hyspex"
-    image_swir_hdr_path = TEST_DATA_DIR / "swir.hdr"
-    image_swir_img_path = TEST_DATA_DIR / "swir.hyspex"
+    image_vnir_hdr_path = TEST_DATA_DIR / "hyspex" / "vnir.hdr"
+    image_vnir_img_path = TEST_DATA_DIR / "hyspex" / "vnir.hyspex"
+    image_swir_hdr_path = TEST_DATA_DIR / "hyspex" / "swir.hdr"
+    image_swir_img_path = TEST_DATA_DIR / "hyspex" / "swir.hyspex"
     image_vnir_name = "VNIR_1600_SN0034"
     image_swir_name = "SWIR_384me_SN3109"
+
+    image_micasense_blue = TEST_DATA_DIR / "micasense" / "blue.tif"
+    image_micasense_green = TEST_DATA_DIR / "micasense" / "green.tif"
+    image_micasense_red = TEST_DATA_DIR / "micasense" / "red.tif"
+    image_micasense_nir = TEST_DATA_DIR / "micasense" / "nir.tif"
+    image_micasense_rededge = TEST_DATA_DIR / "micasense" / "rededge.tif"
+    image_micasense_merged = TEST_DATA_DIR / "micasense" / "merged.tif"
+
+    shapefile_point = TEST_DATA_DIR / "micasense" / "point.shp"
+    shapefile_buffer = TEST_DATA_DIR / "micasense" / "buffer.shp"
 
 
 @pytest.fixture(scope="session")

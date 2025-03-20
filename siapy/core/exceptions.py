@@ -1,3 +1,4 @@
+from pathlib import Path
 from typing import Any
 
 __all__ = [
@@ -24,8 +25,8 @@ class SiapyError(Exception):
 class InvalidFilepathError(SiapyError):
     """Exception raised when a required file is not found."""
 
-    def __init__(self, filename: str) -> None:
-        self.filename: str = filename
+    def __init__(self, filename: str | Path) -> None:
+        self.filename: str = str(filename)
         super().__init__(f"File not found: {filename}")
 
 
