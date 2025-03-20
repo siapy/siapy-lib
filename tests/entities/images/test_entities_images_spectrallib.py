@@ -1,9 +1,5 @@
-from pathlib import Path
-
 import numpy as np
 import pytest
-import spectral as sp
-from PIL import Image
 
 from siapy.core.exceptions import InvalidFilepathError, InvalidInputError
 from siapy.entities.images.spectral_lib import SpectralLibImage, _parse_description
