@@ -15,4 +15,4 @@ site
 dist
 tests/data/*
 docs/examples/data/*
-!docs/examples/data/.gitkeep
+!.gitkeep
