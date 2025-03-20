@@ -7,8 +7,7 @@ from rich.progress import track
 
 from siapy.core import logger
 from siapy.core.exceptions import InvalidInputError
-
-from .images.spimage import SpectralImage
+from siapy.entities import SpectralImage
 
 __all__ = [
     "SpectralImageSet",
