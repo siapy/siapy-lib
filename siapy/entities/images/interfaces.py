@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Any, TypeVar
+from typing import Any
 
 import numpy as np
 from PIL import Image
@@ -10,13 +10,10 @@ __all__ = [
 ]
 
 
-T = TypeVar("T", bound="ImageBase")
-
-
 class ImageBase(ABC):
     @classmethod
     @abstractmethod
-    def open(cls: type[T], *, header_path: str | Path, image_path: str | Path | None = None) -> T:
+    def open(cls: type["ImageBase"], *, header_path: str | Path, image_path: str | Path | None = None) -> "ImageBase":
         pass
 
     @property
