@@ -1,2 +1,0 @@
-
-::: siapy.entities.images
