@@ -12,7 +12,7 @@ from siapy.core.exceptions import InvalidFilepathError, InvalidInputError
 from .interfaces import ImageBase
 
 if TYPE_CHECKING:
-    from ...core.types import SpectralLibType
+    from siapy.core.types import SpectralLibType
 
 __all__ = [
     "SpectralLibImage",
@@ -29,14 +29,18 @@ class SpectralLibImage(ImageBase):
 
     @classmethod
     def open(cls, *, header_path: str | Path, image_path: str | Path | None = None) -> "SpectralLibImage":
-        if not Path(header_path).exists():
+        header_path = Path(header_path)
+        if not header_path.exists():
             raise InvalidFilepathError(header_path)
-        sp_file = sp.envi.open(file=header_path, image=image_path)
+
+        try:
+            sp_file = sp.envi.open(file=header_path, image=image_path)
+        except Exception as e:
+            raise InvalidInputError({"filepath": str(header_path)}, f"Failed to open spectral file: {e}") from e
+
         if isinstance(sp_file, sp.io.envi.SpectralLibrary):
-            raise InvalidInputError(
-                {"file_type": type(sp_file).__name__},
-                "Opened file of type SpectralLibrary",
-            )
+            raise InvalidInputError({"file_type": type(sp_file).__name__}, "Expected Image, got SpectralLibrary")
+
         return cls(sp_file)
 
     @property
