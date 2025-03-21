@@ -47,7 +47,12 @@ dependencies = [
 ]
 
 [dependency-groups]
-lint = ["ruff>=0.4.8", "mypy>=1.10.1", "pandas-stubs>=2.2.2.240603"]
+lint = [
+    "ruff>=0.4.8",
+    "mypy>=1.10.1",
+    "pandas-stubs>=2.2.2.240603",
+    "types-shapely>=2.0.0.20250202",
+]
 dev = ["pre-commit>=3.7.1", "tomli>=2.0.1", "codespell>=2.3.0"]
 test = [
     "pytest>=8.2.2",
@@ -98,6 +103,15 @@ ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
 module = "sklearn.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "geopandas.*"
+ignore_missing_imports = true
+
+
+[[tool.mypy.overrides]]
+module = "rasterio.*"
 ignore_missing_imports = true
 
 [tool.ruff]
