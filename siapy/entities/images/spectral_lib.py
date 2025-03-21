@@ -30,13 +30,11 @@ class SpectralLibImage(ImageBase):
     @classmethod
     def open(cls, *, header_path: str | Path, image_path: str | Path | None = None) -> "SpectralLibImage":
         if not Path(header_path).exists():
-            raise InvalidFilepathError(str(header_path))
+            raise InvalidFilepathError(header_path)
         sp_file = sp.envi.open(file=header_path, image=image_path)
         if isinstance(sp_file, sp.io.envi.SpectralLibrary):
             raise InvalidInputError(
-                {
-                    "file_type": type(sp_file).__name__,
-                },
+                {"file_type": type(sp_file).__name__},
                 "Opened file of type SpectralLibrary",
             )
         return cls(sp_file)

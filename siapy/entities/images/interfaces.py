@@ -13,7 +13,7 @@ __all__ = [
 class ImageBase(ABC):
     @classmethod
     @abstractmethod
-    def open(cls: type["ImageBase"], *, header_path: str | Path, image_path: str | Path | None = None) -> "ImageBase":
+    def open(cls: type["ImageBase"], *args: Any, **kwargs: Any) -> "ImageBase":
         pass
 
     @property
