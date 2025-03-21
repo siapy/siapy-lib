@@ -22,7 +22,7 @@ tests_dir="$script_dir/../tests"
 cd "$tests_dir"
 
 # Create a compressed archive using the provided version
-tar -czvf "testdata-v${version}.tar.gz" data/
+tar -czvf "testdata-v${version}.tar.gz" --exclude="*.tar.gz*" data/
 mv "testdata-v${version}.tar.gz" "data/testdata-v${version}.tar.gz"
 
 # Add a checksum file to verify integrity
