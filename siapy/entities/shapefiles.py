@@ -14,8 +14,8 @@ __all__ = [
 
 
 class Coordinates(NamedTuple):
-    X: Annotated[str, "x coordinate in global coordiante system"] = "x"
-    Y: Annotated[str, "x coordinate in global coordiante system"] = "y"
+    X: Annotated[str, "x coordinate in global coordinate system"] = "x"
+    Y: Annotated[str, "x coordinate in global coordinate system"] = "y"
 
 
 @dataclass
