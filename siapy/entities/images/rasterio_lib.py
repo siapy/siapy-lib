@@ -3,13 +3,15 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 import numpy as np
-import rasterio
+import rioxarray
 from PIL import Image, ImageOps
-from rasterio.enums import Resampling
 
 from siapy.core.exceptions import InvalidFilepathError, InvalidInputError
 
 from .interfaces import ImageBase
+
+if TYPE_CHECKING:
+    from siapy.core.types import XarrayType
 
 __all__ = [
     "RasterioLibImage",
@@ -18,41 +20,45 @@ __all__ = [
 
 @dataclass
 class RasterioLibImage(ImageBase):
-    def __init__(self, file: rasterio.DatasetReader):
+    def __init__(self, file: "XarrayType"):
         self._file = file
 
     @classmethod
     def open(cls, filepath: str | Path) -> "RasterioLibImage":
-        if not Path(filepath).exists():
+        filepath = Path(filepath)
+        if not filepath.exists():
             raise InvalidFilepathError(filepath)
+
         try:
-            raster_file = rasterio.open(filepath)
-            return cls(raster_file)
+            raster = rioxarray.open_rasterio(filepath)
         except Exception as e:
-            raise InvalidInputError(
-                {"filepath": filepath},
-                f"Failed to open raster file: {e}",
-            ) from e
+            raise InvalidInputError({"filepath": str(filepath)}, f"Failed to open raster file: {e}") from e
+
+        if isinstance(raster, list):
+            raise InvalidInputError({"file_type": type(raster).__name__}, "Expected DataArray, got Dataset")
+
+        return cls(raster)
 
     @property
-    def file(self) -> rasterio.DatasetReader:
+    def file(self) -> "XarrayType":
         return self._file
 
     @property
     def filepath(self) -> Path:
-        return Path(self.file.name)
+        return Path(self.file.encoding["source"])
 
     @property
     def metadata(self) -> dict[str, Any]:
-        return self.file.tags()
+        return dict(self.file.attrs)
 
     @property
     def shape(self) -> tuple[int, int, int]:
-        return (self.file.height, self.file.width, self.file.count)
+        # rioxarray uses (band, y, x) ordering
+        return (self.file.y.size, self.file.x.size, self.file.band.size)
 
     @property
     def bands(self) -> int:
-        return self.file.count
+        return self.file.band.size
 
     @property
     def default_bands(self) -> list[int]:
@@ -63,14 +69,15 @@ class RasterioLibImage(ImageBase):
 
     @property
     def wavelengths(self) -> list[float]:
-        # Try to get wavelengths from metadata
+        # Try to get wavelengths from band attributes
         wavelengths = []
-        for i in range(1, self.bands + 1):
-            band = self.file.tags(i).get("wavelength")
-            if band:
-                wavelengths.append(float(band))
+        for band_idx in range(self.bands):
+            band_data = self.file.sel(band=band_idx + 1)
+            wave = band_data.attrs.get("wavelength")
+            if wave:
+                wavelengths.append(float(wave))
             else:
-                wavelengths.append(float(i))
+                wavelengths.append(float(band_idx + 1))
         return wavelengths
 
     @property
@@ -78,12 +85,14 @@ class RasterioLibImage(ImageBase):
         return self.metadata.get("camera_id", "")
 
     def to_display(self, equalize: bool = True) -> Image.Image:
-        # Read default bands and scale to 8-bit
-        display_bands = [self.file.read(i + 1) for i in self.default_bands]
-        image_3ch = np.dstack(display_bands)
+        # Select default bands and convert to numpy
+        bands_data = [self.file.sel(band=i + 1).values for i in self.default_bands]
+        image_3ch = np.dstack(bands_data)
 
         # Normalize and scale to 0-255
-        image_3ch = ((image_3ch - image_3ch.min()) * (255.0 / (image_3ch.max() - image_3ch.min()))).astype(np.uint8)
+        image_3ch = (
+            (image_3ch - np.nanmin(image_3ch)) * (255.0 / (np.nanmax(image_3ch) - np.nanmin(image_3ch)))
+        ).astype(np.uint8)
 
         image = Image.fromarray(image_3ch)
         if equalize:
@@ -91,10 +100,10 @@ class RasterioLibImage(ImageBase):
         return image
 
     def to_numpy(self, nan_value: float | None = None) -> np.ndarray:
-        # Read all bands
-        image = np.dstack([self.file.read(i) for i in range(1, self.bands + 1)])
+        # Convert to numpy with proper band ordering
+        image = np.moveaxis(self.file.values, 0, -1)  # Move bands to last axis
 
         if nan_value is not None:
-            image[np.isnan(image)] = nan_value
+            image = np.nan_to_num(image, nan=nan_value)
 
         return image

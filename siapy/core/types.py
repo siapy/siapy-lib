@@ -3,6 +3,7 @@ from typing import Any, Sequence
 import numpy as np
 import pandas as pd
 import spectral as sp
+import xarray as xr
 from numpy.typing import ArrayLike
 from PIL.Image import Image
 
@@ -19,6 +20,7 @@ __all__ = [
 ]
 
 SpectralLibType = sp.io.envi.BilFile | sp.io.envi.BipFile | sp.io.envi.BsqFile
+XarrayType = xr.DataArray | xr.Dataset
 ImageType = SpectralImage | np.ndarray | Image
 ImageSizeType = int | tuple[int, ...]
 ImageDataType = (
