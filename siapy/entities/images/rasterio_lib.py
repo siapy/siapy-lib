@@ -85,25 +85,22 @@ class RasterioLibImage(ImageBase):
         return self.metadata.get("camera_id", "")
 
     def to_display(self, equalize: bool = True) -> Image.Image:
-        # Select default bands and convert to numpy
-        bands_data = [self.file.sel(band=i + 1).values for i in self.default_bands]
-        image_3ch = np.dstack(bands_data)
+        selected_bands = [i + 1 for i in self.default_bands]  # Adjust for 1-indexed bands
+        bands_data = self.file.sel(band=selected_bands)
+        image_3ch = bands_data.transpose("y", "x", "band").values
+        image_3ch_clean = np.nan_to_num(np.asarray(image_3ch))
+        min_val = np.nanmin(image_3ch_clean)
+        max_val = np.nanmax(image_3ch_clean)
 
-        # Normalize and scale to 0-255
-        image_3ch = (
-            (image_3ch - np.nanmin(image_3ch)) * (255.0 / (np.nanmax(image_3ch) - np.nanmin(image_3ch)))
-        ).astype(np.uint8)
+        image_scaled = ((image_3ch_clean - min_val) * (255.0 / (max_val - min_val))).astype(np.uint8)
 
-        image = Image.fromarray(image_3ch)
+        image = Image.fromarray(image_scaled)
         if equalize:
             image = ImageOps.equalize(image)
         return image
 
     def to_numpy(self, nan_value: float | None = None) -> np.ndarray:
-        # Convert to numpy with proper band ordering
-        image = np.moveaxis(self.file.values, 0, -1)  # Move bands to last axis
-
+        image = np.moveaxis(np.asarray(self.file.values), 0, -1)
         if nan_value is not None:
             image = np.nan_to_num(image, nan=nan_value)
-
         return image

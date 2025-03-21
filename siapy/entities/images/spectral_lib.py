@@ -112,6 +112,7 @@ class SpectralLibImage(ImageBase):
         return image
 
     def _remove_nan(self, image: np.ndarray, nan_value: float = 0.0) -> np.ndarray:
+        # TODO: Remove this function and substitute with np.nan_to_num
         image_mask = np.bitwise_not(np.bool_(np.isnan(image).sum(axis=2)))
         image[~image_mask] = nan_value
         return image
