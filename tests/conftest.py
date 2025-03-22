@@ -7,6 +7,7 @@ from sklearn.datasets import make_classification
 from siapy.core.configs import TEST_DATA_DIR
 from siapy.datasets.tabular import TabularDataset, TabularDatasetData
 from siapy.entities import Pixels, Shape, SpectralImage, SpectralImageSet
+from tests.data_maneger import verify_testdata_integrity
 
 
 class PytestConfigs(SimpleNamespace):
@@ -30,6 +31,7 @@ class PytestConfigs(SimpleNamespace):
 
 @pytest.fixture(scope="session")
 def configs():
+    verify_testdata_integrity()
     return PytestConfigs()
 
 

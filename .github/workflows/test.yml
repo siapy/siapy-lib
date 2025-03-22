@@ -20,8 +20,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          lfs: true # This option ensures that Git LFS files are checked out
       - name: Setup PDM
         uses: pdm-project/setup-pdm@v4
         with:
