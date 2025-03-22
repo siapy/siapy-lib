@@ -85,9 +85,7 @@ class Signatures:
 
     @classmethod
     def from_dataframe(cls, dataframe: pd.DataFrame) -> "Signatures":
-        if not all(
-            coord in dataframe.columns for coord in [Pixels.coords.U, Pixels.coords.V]
-        ):
+        if not all(coord in dataframe.columns for coord in [Pixels.coords.U, Pixels.coords.V]):
             raise InvalidInputError(
                 dataframe.columns.tolist(),
                 f"DataFrame must include columns for both '{Pixels.coords.U}' and '{Pixels.coords.V}' coordinates.",

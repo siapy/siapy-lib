@@ -33,9 +33,7 @@ def initialize_object(
     **kwargs: Any,
 ) -> Any:
     module_args = module_args or {}
-    assert not set(kwargs).intersection(module_args), (
-        "Overwriting kwargs given in config file is not allowed"
-    )
+    assert not set(kwargs).intersection(module_args), "Overwriting kwargs given in config file is not allowed"
     module_args.update(kwargs)
     return getattr(module, module_name)(*args, **module_args)
 
@@ -48,9 +46,7 @@ def initialize_function(
     **kwargs: Any,
 ) -> Callable[..., Any]:
     module_args = module_args or {}
-    assert not set(kwargs).intersection(module_args), (
-        "Overwriting kwargs given in config file is not allowed"
-    )
+    assert not set(kwargs).intersection(module_args), "Overwriting kwargs given in config file is not allowed"
     module_args.update(kwargs)
     return partial(getattr(module, module_name), *args, **module_args)
 
@@ -71,21 +67,19 @@ def get_number_cpus(parallelize: int = -1) -> int:
     elif parallelize > num_cpus:
         parallelize = num_cpus
     else:
-        raise InvalidInputError(
-            input_value=parallelize, message="Define accurate number of CPUs."
-        )
+        raise InvalidInputError(input_value=parallelize, message="Define accurate number of CPUs.")
     return parallelize
 
 
-def dict_zip(*dicts: dict[str, Any]) -> Generator[tuple[str, Any, Any], None, None]:
+def dict_zip(
+    *dicts: dict[str, Any],
+) -> Generator[tuple[str, Any, Any], None, None]:
     if not dicts:
         return
 
     n = len(dicts[0])
     if any(len(d) != n for d in dicts):
-        raise InvalidInputError(
-            input_value=dicts, message="Arguments must have the same length."
-        )
+        raise InvalidInputError(input_value=dicts, message="Arguments must have the same length.")
 
     for key, first_val in dicts[0].items():
         yield key, first_val, *(other[key] for other in dicts[1:])

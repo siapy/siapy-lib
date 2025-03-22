@@ -21,9 +21,7 @@ def test_validate_image_to_numpy_3channels_with_spectral_image(spectral_images):
     image_vnir_np = validate_image_to_numpy_3channels(image_vnir)
     assert isinstance(image_vnir_np, np.ndarray)
     assert image_vnir_np.shape[2] == 3
-    assert isinstance(
-        validate_image_to_numpy_3channels(image_vnir.to_display()), np.ndarray
-    )
+    assert isinstance(validate_image_to_numpy_3channels(image_vnir.to_display()), np.ndarray)
 
 
 def test_validate_image_to_numpy_3channels_with_image():
@@ -34,9 +32,7 @@ def test_validate_image_to_numpy_3channels_with_image():
 
 def test_validate_image_to_numpy_3channels_with_numpy_array():
     mock_numpy_array = np.random.rand(100, 100, 3)
-    assert np.array_equal(
-        validate_image_to_numpy_3channels(mock_numpy_array), mock_numpy_array
-    )
+    assert np.array_equal(validate_image_to_numpy_3channels(mock_numpy_array), mock_numpy_array)
 
 
 def test_validate_image_to_numpy_3channels_with_invalid_input():

@@ -30,6 +30,9 @@ lint: .pdm
 test: .pdm
 	./scripts/test.sh "Develop"
 
+.PHONY: flt ## Run format, lint, and test
+flt: format lint test
+
 .PHONY: codespell  ## Use Codespell to do spellchecking
 codespell: .pre-commit
 	pdm run pre-commit run codespell --all-files
@@ -47,24 +50,7 @@ update-branches:
 
 .PHONY: clean  ## Clear local caches and build artifacts
 clean:
-	rm -rf `find . -name __pycache__`
-	rm -f `find . -type f -name '*.py[co]'`
-	rm -f `find . -type f -name '*~'`
-	rm -f `find . -type f -name '.*~'`
-	rm -rf .pdm-build
-	rm -rf .mypy_cache
-	rm -rf .cache
-	rm -rf .pytest_cache
-	rm -rf .ruff_cache
-	rm -rf htmlcov
-	rm -rf *.egg-info
-	rm -f .coverage
-	rm -f .coverage.*
-	rm -rf build
-	rm -rf dist
-	rm -rf site
-	rm -rf docs/_build
-	rm -rf coverage.xml
+	./scripts/clean.sh
 
 .PHONY: generate-docs  ## Generate the docs
 generate-docs:
@@ -77,6 +63,10 @@ serve-docs:
 .PHONY: version  ## Check project version
 version:
 	python -c "import siapy; print(siapy.__version__)"
+
+.PHONY: compress-data  ## Compress the data files
+compress-data:
+	./scripts/compress-data.sh $(version)
 
 .PHONY: help  ## Display this message
 help:

@@ -32,14 +32,12 @@ def sample_dataframe() -> pd.DataFrame:
     return pd.DataFrame(data)
 
 
-def test_dataframe_generate_classification_target_single_column(sample_dataframe):
-    classification_target = generate_classification_target(
-        sample_dataframe, "shape_type"
-    )
+def test_dataframe_generate_classification_target_single_column(
+    sample_dataframe,
+):
+    classification_target = generate_classification_target(sample_dataframe, "shape_type")
     assert isinstance(classification_target, ClassificationTarget)
-    assert all(
-        classification_target.label == pd.Series(["rectangle", "circle"], name="label")
-    )
+    assert all(classification_target.label == pd.Series(["rectangle", "circle"], name="label"))
     assert classification_target.value.name == "encoded"
     assert classification_target.encoding.name == "encoding"
     assert list(classification_target.value) == [0, 1]
@@ -49,15 +47,12 @@ def test_dataframe_generate_classification_target_single_column(sample_dataframe
     }
 
 
-def test_dataframe_generate_classification_target_multiple_columns(sample_dataframe):
-    classification_target = generate_classification_target(
-        sample_dataframe, ["shape_type", "shape_label"]
-    )
+def test_dataframe_generate_classification_target_multiple_columns(
+    sample_dataframe,
+):
+    classification_target = generate_classification_target(sample_dataframe, ["shape_type", "shape_label"])
     assert isinstance(classification_target, ClassificationTarget)
-    assert all(
-        classification_target.label
-        == pd.Series(["rectangle__c", "circle__d"], name="label")
-    )
+    assert all(classification_target.label == pd.Series(["rectangle__c", "circle__d"], name="label"))
     assert list(classification_target.value) == [0, 1]
     assert classification_target.encoding.to_dict() == {
         0: "rectangle__c",

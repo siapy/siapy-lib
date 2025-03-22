@@ -118,7 +118,8 @@ def test_signatures_create():
     assert signatures.signals == signals
     assert signatures.to_dataframe().equals(pd.concat([pixels_df, signals_df], axis=1))
     assert np.array_equal(
-        signatures.to_numpy(), pd.concat([pixels_df, signals_df], axis=1).to_numpy()
+        signatures.to_numpy(),
+        pd.concat([pixels_df, signals_df], axis=1).to_numpy(),
     )
 
 
@@ -134,9 +135,7 @@ def test_signatures_from_array_and_pixels():
     from_array_and_pixels = Signatures.from_array_and_pixels(image, pixels)
 
     assert from_array_and_pixels.pixels == pixels
-    assert from_array_and_pixels.signals.df.equals(
-        pd.DataFrame(list(image[pixels.v(), pixels.u(), :]))
-    )
+    assert from_array_and_pixels.signals.df.equals(pd.DataFrame(list(image[pixels.v(), pixels.u(), :])))
 
 
 def test_signatures_from_dataframe():

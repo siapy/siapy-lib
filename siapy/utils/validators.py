@@ -23,9 +23,7 @@ def validate_image_to_numpy_3channels(image: ImageType) -> np.ndarray:
         image_display = np.array(image.to_display())
     elif isinstance(image, Image):
         image_display = np.array(image)
-    elif (
-        isinstance(image, np.ndarray) and len(image.shape) == 3 and image.shape[-1] == 3
-    ):
+    elif isinstance(image, np.ndarray) and len(image.shape) == 3 and image.shape[-1] == 3:
         image_display = image.copy()
     else:
         raise InvalidInputError(

@@ -17,11 +17,11 @@ header_path_img1 = sorted(Path(data_dir).rglob("*.hdr"))[1]
 image_path_img1 = sorted(Path(data_dir).rglob("*.img"))[1]
 
 # Load VNIR and SWIR spectral images
-image_swir = SpectralImage.envi_open(
+image_swir = SpectralImage.spy_open(
     header_path=header_path_img0,
     image_path=image_path_img0,
 )
-image_vnir = SpectralImage.envi_open(
+image_vnir = SpectralImage.spy_open(
     header_path=header_path_img1,
     image_path=image_path_img1,
 )
@@ -40,9 +40,7 @@ matx = np.array(
 selected_areas_vnir = pixels_select_lasso(image_vnir)
 
 # Transform the selected areas from the VNIR image to the space of the SWIR image.
-selected_areas_swir = [
-    corregistrator.transform(pixels_vnir, matx) for pixels_vnir in selected_areas_vnir
-]
+selected_areas_swir = [corregistrator.transform(pixels_vnir, matx) for pixels_vnir in selected_areas_vnir]
 
 # Display the selected areas in both images
 display_multiple_images_with_areas(

@@ -13,24 +13,28 @@ def test_classification_target_from_iterable():
     data = ["a", "b", "c"]
     classification_target = ClassificationTarget.from_iterable(data)
     assert isinstance(classification_target, ClassificationTarget)
-    pd.testing.assert_series_equal(
-        classification_target.label, pd.Series(["a", "b", "c"])
-    )
+    pd.testing.assert_series_equal(classification_target.label, pd.Series(["a", "b", "c"]))
 
 
 def test_classification_target_from_dict():
-    data = {"label": ["a", "b", "c"], "value": [1, 2, 3], "encoding": ["x", "y", "z"]}
+    data = {
+        "label": ["a", "b", "c"],
+        "value": [1, 2, 3],
+        "encoding": ["x", "y", "z"],
+    }
     classification_target = ClassificationTarget.from_dict(data)
     assert isinstance(classification_target, ClassificationTarget)
     assert all(classification_target.label == pd.Series(data["label"], name="label"))
     assert all(classification_target.value == pd.Series(data["value"], name="value"))
-    assert all(
-        classification_target.encoding == pd.Series(data["encoding"], name="encoding")
-    )
+    assert all(classification_target.encoding == pd.Series(data["encoding"], name="encoding"))
 
 
 def test_classification_target_to_dict():
-    data = {"label": ["a", "b", "c"], "value": [1, 2, 3], "encoding": ["x", "y", "z"]}
+    data = {
+        "label": ["a", "b", "c"],
+        "value": [1, 2, 3],
+        "encoding": ["x", "y", "z"],
+    }
     classification_target = ClassificationTarget.from_dict(data)
     to_dict_data = classification_target.to_dict()
     assert to_dict_data["label"] == data["label"]
@@ -39,7 +43,11 @@ def test_classification_target_to_dict():
 
 
 def test_classification_target_to_dataframe():
-    data = {"label": ["a", "b", "c"], "value": [1, 2, 3], "encoding": ["x", "y", "z"]}
+    data = {
+        "label": ["a", "b", "c"],
+        "value": [1, 2, 3],
+        "encoding": ["x", "y", "z"],
+    }
     classification_target = ClassificationTarget.from_dict(data)
     df = classification_target.to_dataframe()
     expected_df = pd.DataFrame({"value": [1, 2, 3], "label": ["a", "b", "c"]})
@@ -47,7 +55,11 @@ def test_classification_target_to_dataframe():
 
 
 def test_classification_target_getitem():
-    data = {"label": ["a", "b", "c"], "value": [1, 2, 3], "encoding": ["x", "y", "z"]}
+    data = {
+        "label": ["a", "b", "c"],
+        "value": [1, 2, 3],
+        "encoding": ["x", "y", "z"],
+    }
     classification_target = ClassificationTarget.from_dict(data)
     sliced_target = classification_target[1:3]
     assert all(sliced_target.label == pd.Series(["b", "c"], index=[1, 2], name="label"))
@@ -55,13 +67,21 @@ def test_classification_target_getitem():
 
 
 def test_classification_target_len():
-    data = {"label": ["a", "b", "c"], "value": [1, 2, 3], "encoding": ["x", "y", "z"]}
+    data = {
+        "label": ["a", "b", "c"],
+        "value": [1, 2, 3],
+        "encoding": ["x", "y", "z"],
+    }
     classification_target = ClassificationTarget.from_dict(data)
     assert len(classification_target) == 3
 
 
 def test_classification_target_reset_index():
-    data = {"label": ["a", "b", "c"], "value": [1, 2, 3], "encoding": ["x", "y", "z"]}
+    data = {
+        "label": ["a", "b", "c"],
+        "value": [1, 2, 3],
+        "encoding": ["x", "y", "z"],
+    }
     classification_target = ClassificationTarget.from_dict(data)
     reset_target = classification_target.reset_index()
     assert all(reset_target.label.index == pd.RangeIndex(start=0, stop=3))
@@ -75,9 +95,7 @@ def test_regression_target_from_iterable():
     data = [1.0, 2.5, 3.3]
     regression_target = RegressionTarget.from_iterable(data)
     assert isinstance(regression_target, RegressionTarget)
-    pd.testing.assert_series_equal(
-        regression_target.value, pd.Series([1.0, 2.5, 3.3], name="value")
-    )
+    pd.testing.assert_series_equal(regression_target.value, pd.Series([1.0, 2.5, 3.3], name="value"))
 
 
 def test_regression_target_from_dict():
@@ -134,15 +152,9 @@ def test_tabular_dataset_data_from_dict():
     }
     tabular_dataset_data = TabularDatasetData.from_dict(data)
     assert isinstance(tabular_dataset_data, TabularDatasetData)
-    pd.testing.assert_frame_equal(
-        tabular_dataset_data.pixels, pd.DataFrame(data["pixels"]).astype(int)
-    )
-    pd.testing.assert_frame_equal(
-        tabular_dataset_data.signals, pd.DataFrame(data["signals"])
-    )
-    pd.testing.assert_frame_equal(
-        tabular_dataset_data.metadata, pd.DataFrame(data["metadata"])
-    )
+    pd.testing.assert_frame_equal(tabular_dataset_data.pixels, pd.DataFrame(data["pixels"]).astype(int))
+    pd.testing.assert_frame_equal(tabular_dataset_data.signals, pd.DataFrame(data["signals"]))
+    pd.testing.assert_frame_equal(tabular_dataset_data.metadata, pd.DataFrame(data["metadata"]))
 
 
 def test_tabular_dataset_data_to_dict():
@@ -150,7 +162,11 @@ def test_tabular_dataset_data_to_dict():
         "pixels": {"0": [255, 255], "1": [0, 0]},
         "signals": {"0": [1.0, 2.0], "1": [3.0, 4.0]},
         "metadata": {"0": ["meta1", "meta1"], "1": ["meta2", "meta2"]},
-        "target": {"label": ["a", "b"], "value": [1, 2], "encoding": ["x", "y"]},
+        "target": {
+            "label": ["a", "b"],
+            "value": [1, 2],
+            "encoding": ["x", "y"],
+        },
     }
     tabular_dataset_data = TabularDatasetData.from_dict(data)
     to_dict_data = tabular_dataset_data.to_dict()
@@ -167,7 +183,11 @@ def test_tabular_dataset_data_to_dataframe():
         "pixels": {"0": [255, 255], "1": [0, 0]},
         "signals": {"0": [1.0, 2.0], "1": [3.0, 4.0]},
         "metadata": {"0": ["meta1", "meta1"], "1": ["meta2", "meta2"]},
-        "target": {"label": ["a", "b"], "value": [1, 2], "encoding": ["x", "y"]},
+        "target": {
+            "label": ["a", "b"],
+            "value": [1, 2],
+            "encoding": ["x", "y"],
+        },
     }
     tabular_dataset_data = TabularDatasetData.from_dict(data)
     df = tabular_dataset_data.to_dataframe()
@@ -201,15 +221,9 @@ def test_tabular_dataset_data_getitem():
     tabular_dataset_data = TabularDatasetData.from_dict(data)
     sliced_data = tabular_dataset_data[1:3]
     assert isinstance(sliced_data, TabularDatasetData)
-    pd.testing.assert_frame_equal(
-        sliced_data.pixels, pd.DataFrame(data["pixels"]).iloc[1:3].astype(int)
-    )
-    pd.testing.assert_frame_equal(
-        sliced_data.signals, pd.DataFrame(data["signals"]).iloc[1:3]
-    )
-    pd.testing.assert_frame_equal(
-        sliced_data.metadata, pd.DataFrame(data["metadata"]).iloc[1:3]
-    )
+    pd.testing.assert_frame_equal(sliced_data.pixels, pd.DataFrame(data["pixels"]).iloc[1:3].astype(int))
+    pd.testing.assert_frame_equal(sliced_data.signals, pd.DataFrame(data["signals"]).iloc[1:3])
+    pd.testing.assert_frame_equal(sliced_data.metadata, pd.DataFrame(data["metadata"]).iloc[1:3])
     assert all(sliced_data.target.label == pd.Series(["b"], index=[1], name="label"))
 
 
@@ -218,7 +232,11 @@ def test_tabular_dataset_data_reset_index():
         "pixels": {"0": [255, 255], "1": [0, 0]},
         "signals": {"0": [1.0, 2.0], "1": [3.0, 4.0]},
         "metadata": {"meta1": ["a", "b"], "meta2": ["c", "d"]},
-        "target": {"label": ["a", "b"], "value": [1, 2], "encoding": ["x", "y"]},
+        "target": {
+            "label": ["a", "b"],
+            "value": [1, 2],
+            "encoding": ["x", "y"],
+        },
     }
     tabular_dataset_data = TabularDatasetData.from_dict(data)
     sliced_data = tabular_dataset_data[1:2]
@@ -237,9 +255,7 @@ def test_tabular_dataset_data_reset_index():
         reset_data.metadata,
         pd.DataFrame(data["metadata"]).iloc[1:2].reset_index(drop=True),
     )
-    expected_target_df = pd.DataFrame({"label": ["b"], "value": [2]}).reset_index(
-        drop=True
-    )
+    expected_target_df = pd.DataFrame({"label": ["b"], "value": [2]}).reset_index(drop=True)
     assert all(reset_data.target.label == expected_target_df["label"])
     assert all(reset_data.target.value == expected_target_df["value"])
     pd.testing.assert_series_equal(
@@ -261,7 +277,11 @@ def test_tabular_dataset_data_target_from_dict_regression():
 
 
 def test_tabular_dataset_data_target_from_dict_classification():
-    data = {"label": ["a", "b", "c"], "value": [1, 2, 3], "encoding": ["x", "y", "z"]}
+    data = {
+        "label": ["a", "b", "c"],
+        "value": [1, 2, 3],
+        "encoding": ["x", "y", "z"],
+    }
     target = TabularDatasetData.target_from_dict(data)
     assert isinstance(target, ClassificationTarget)
     assert all(target.label == pd.Series(data["label"], name="label"))

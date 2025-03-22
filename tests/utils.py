@@ -4,18 +4,12 @@ from sklearn.pipeline import Pipeline
 from siapy.utils.general import dict_zip
 
 
-def assert_estimators_parameters_equal(
-    estimator1: BaseEstimator, estimator2: BaseEstimator
-) -> bool:
+def assert_estimators_parameters_equal(estimator1: BaseEstimator, estimator2: BaseEstimator) -> bool:
     if len(estimator1.get_params()) != len(estimator2.get_params()):
         return False
 
-    for params_key, params1_val, params2_val in dict_zip(
-        estimator1.get_params(), estimator2.get_params()
-    ):
-        if isinstance(params1_val, BaseEstimator) and isinstance(
-            params2_val, BaseEstimator
-        ):
+    for params_key, params1_val, params2_val in dict_zip(estimator1.get_params(), estimator2.get_params()):
+        if isinstance(params1_val, BaseEstimator) and isinstance(params2_val, BaseEstimator):
             if not assert_estimators_parameters_equal(params1_val, params2_val):
                 return False
         elif params1_val != params2_val:

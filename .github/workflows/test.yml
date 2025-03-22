@@ -11,13 +11,20 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+      fail-fast: false
+
+    name: Test Python ${{ matrix.python-version }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          lfs: true # This option ensures that Git LFS files are checked out
       - name: Setup PDM
         uses: pdm-project/setup-pdm@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: true
       - name: Install dependencies
         run: pdm install
       - name: Lint code
@@ -27,6 +34,8 @@ jobs:
         run: ./scripts/test.sh "Coverage for ${{ github.sha }}"
       - name: Store coverage files
         uses: actions/upload-artifact@v4
+        # Only upload for Python 3.12
+        if: matrix.python-version == '3.12'
         with:
           name: coverage-html
           path: htmlcov

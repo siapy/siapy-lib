@@ -3,6 +3,8 @@
 set -e
 set -x
 
-pdm run mypy siapy
-pdm run ruff check siapy tests scripts
-pdm run ruff format siapy tests --check
+docs_src="docs/examples/src"
+
+pdm run mypy siapy $docs_src
+pdm run ruff check siapy tests scripts $docs_src
+pdm run ruff format siapy tests $docs_src --check

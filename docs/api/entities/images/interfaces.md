@@ -1,0 +1,1 @@
+::: siapy.entities.images.interfaces
