@@ -1,5 +1,49 @@
 # Changelog
 
+## [0.6.0](https://github.com/siapy/siapy-lib/compare/v0.5.9...v0.6.0) (2025-03-22)
+
+
+### Features
+
+* add compress-data target to Makefile and enhance compression script with versioning ([910f7e9](https://github.com/siapy/siapy-lib/commit/910f7e91f186e8acfdeff4fbbb5e81b3c1779892))
+* add script to compress test data and generate checksum ([865ea02](https://github.com/siapy/siapy-lib/commit/865ea02c9a0a382e3749d3c18fb89685d819ac76))
+* add Shapefile entity with loading and geometry handling capabilities; update exceptions for filepath validation ([20bd3fc](https://github.com/siapy/siapy-lib/commit/20bd3fc4f0d96744283af8eb25e7b8f858577993))
+* add SpectralLibImage support and update image loading methods ([04e4b72](https://github.com/siapy/siapy-lib/commit/04e4b723e89aba328e19313c00a262967293f0ce))
+* add TestDataManager class for managing test data downloads and verification; enhance compress-data script with git tagging ([d00b0da](https://github.com/siapy/siapy-lib/commit/d00b0da3d6fea6921f8d666523c91ff3a4992522))
+* implement RasterioLibImage for raster file handling; update ImageBase interface and add tests ([a6df199](https://github.com/siapy/siapy-lib/commit/a6df199dcb6df081e71b14dc8da7860b05e70efa))
+* implementation of spectral images base class ([d333c44](https://github.com/siapy/siapy-lib/commit/d333c44125b4ba9d2ad9a1ed7b1e6e03315f81fe))
+* integrate xarray support in rasterio and spectral libraries ([37bac16](https://github.com/siapy/siapy-lib/commit/37bac16abe18232cdebded0f7276ea3acd14faf9))
+
+
+### Bug Fixes
+
+* correct spelling of "coordinate" in Coordinates class annotations ([bb26fef](https://github.com/siapy/siapy-lib/commit/bb26fef3780275edf677b8eb5f78f8adaf1d31d5))
+* improve error handling in SpectralLibImage.open method ([4cec71e](https://github.com/siapy/siapy-lib/commit/4cec71e23d7ac14b8d516f943716847ca912c4c5))
+* improve test data integrity verification and extraction process in data_manager.py ([9817bd2](https://github.com/siapy/siapy-lib/commit/9817bd2202cd14ffd9a81bbd47cd5fa6c7775adc))
+* include docs/examples/src in linting and formatting scripts ([3889e81](https://github.com/siapy/siapy-lib/commit/3889e816ae028bf492174991f4bcee2e61fc7af9))
+* optimize image processing in RasterioLibImage and update nan handling in SpectralLibImage ([2ffb19b](https://github.com/siapy/siapy-lib/commit/2ffb19b6d54b779c55fc01311fa479d755202bc2))
+* remove Git LFS checkout option from workflow and integrate test data integrity verification in pytest configuration ([e3ad547](https://github.com/siapy/siapy-lib/commit/e3ad547b2493c1bdd286841ddabd121bfad9a07c))
+* update pre-commit configuration to include tests directory for linting ([c26cdd0](https://github.com/siapy/siapy-lib/commit/c26cdd0e4a4ce23eeb1c401eb161a7f10d598b1e))
+* update Python version in workflow configurations from 3.10 to 3.12 ([381ed36](https://github.com/siapy/siapy-lib/commit/381ed36e2054aefec58ae70e7a50878bcbdc3023))
+* update Python version in workflow configurations from 3.10 to 3.12 ([3e4287c](https://github.com/siapy/siapy-lib/commit/3e4287c1f8180d2481a30e290d72dec116d91b9d))
+* update Python version in workflow configurations from 3.10 to 3.12 ([db90263](https://github.com/siapy/siapy-lib/commit/db9026360258b2fcd998bb7e2d9b236bb61f0f0d))
+* update Python version range in pdm.lock to support 3.10 and below 3.13 ([80187de](https://github.com/siapy/siapy-lib/commit/80187de9479e3a1566cc89b29cdec60122ed7808))
+* update type hint for open method in ImageBase class; remove TypeVar ([4234dc5](https://github.com/siapy/siapy-lib/commit/4234dc58f028538edcffb2550786f27a6bff91e1))
+
+
+### Dependencies
+
+* add geopandas, rasterio, and xarray as dependencies in pyproject.toml ([1c7cfde](https://github.com/siapy/siapy-lib/commit/1c7cfde193c52d3347bf5ba60df215b4afe30f22))
+* add types-shapely dependency for improved type checking in linting ([88f0070](https://github.com/siapy/siapy-lib/commit/88f00700ad4ca5550beed4d870c5f6d6394be12b))
+* remove unused lint dependencies from pdm.lock and pyproject.toml ([53b00e1](https://github.com/siapy/siapy-lib/commit/53b00e11af62aa7a442953b581ab9ef031974dbb))
+* update configuration files for improved performance -- pdm update ([4f060d4](https://github.com/siapy/siapy-lib/commit/4f060d484bd2807ed3c7d9e7a02b821604a408ac))
+* update dependencies and add new testing packages in pdm.lock and pyproject.toml ([da716ed](https://github.com/siapy/siapy-lib/commit/da716ed3c319ffd59060dc544528dfaca21276ca))
+
+
+### Documentation
+
+* reorganize API documentation structure for images and shapefiles ([52e6446](https://github.com/siapy/siapy-lib/commit/52e64465bdce316f87d4afd083dc5b962e50d472))
+
 ## [0.5.9](https://github.com/siapy/siapy-lib/compare/v0.5.8...v0.5.9) (2025-01-15)
 
 
