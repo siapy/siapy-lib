@@ -28,9 +28,10 @@ mv "testdata-v${version}.tar.gz" "data/testdata-v${version}.tar.gz"
 # Add a checksum file to verify integrity
 sha256sum "data/testdata-v${version}.tar.gz" >"data/testdata-v${version}.tar.gz.sha256"
 
-# Push tag to remote repository
-git tag "testdata-v${version}"
-git push origin "testdata-v${version}"
+## -- Uncomment the following lines to push the tag to the remote repository --
+# # Push tag to remote repository
+# git tag "testdata-v${version}"
+# git push origin "testdata-v${version}"
 
 set +x
 echo "Archive created at: $tests_dir/data/testdata-v${version}.tar.gz"
