@@ -64,6 +64,10 @@ serve-docs:
 version:
 	python -c "import siapy; print(siapy.__version__)"
 
+.PHONY: compress-data  ## Compress the data files
+compress-data:
+	./scripts/compress-data.sh $(version)
+
 .PHONY: help  ## Display this message
 help:
 	@grep -E \

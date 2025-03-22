@@ -12,7 +12,7 @@ header_path_img0 = sorted(Path(data_dir).rglob("*.hdr"))[1]
 image_path_img0 = sorted(Path(data_dir).rglob("*.img"))[1]
 
 # Load spectral image
-image = SpectralImage.envi_open(
+image = SpectralImage.spy_open(
     header_path=header_path_img0,
     image_path=image_path_img0,
 )

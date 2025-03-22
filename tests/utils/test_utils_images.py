@@ -8,6 +8,7 @@ import pytest
 import spectral as sp
 
 from siapy.entities import SpectralImage
+from siapy.entities.images import SpectralLibImage
 from siapy.entities.pixels import Pixels
 from siapy.entities.shapes import Shape
 from siapy.utils.images import (
@@ -67,7 +68,7 @@ def test_save_image_metadata_argument():
         metadata = {"description": "test"}
         save_path = Path(tmpdir, "test_image.hdr")
         save_image(image, save_path, metadata=metadata)
-        image_disc = SpectralImage.envi_open(header_path=save_path)
+        image_disc = SpectralImage.spy_open(header_path=save_path)
         assert image_disc.metadata["description"] == "test"
 
 
@@ -77,8 +78,8 @@ def test_save_image_dtype_argument():
         save_path = Path(tmpdir, "test_image.hdr")
         dtype = np.uint16
         save_image(image, save_path, dtype=dtype)
-        image_disc = SpectralImage.envi_open(header_path=save_path)
-        assert image_disc.file.dtype == np.dtype(dtype)
+        image_disc = SpectralImage.spy_open(header_path=save_path)
+        assert image_disc.image.file.dtype == np.dtype(dtype)
 
 
 def test_save_image_path_argument():
@@ -113,23 +114,23 @@ def test_create_image_dtype_argument():
         save_path = Path(tmpdir, "test_image.hdr")
         dtype = np.uint8
         result = create_image(image, save_path, dtype=dtype)
-        assert result.file.dtype == np.dtype(dtype)
+        assert result.image.file.dtype == np.dtype(dtype)
 
 
 def test_merge_images_by_specter():
-    class MockSpectralImage(SpectralImage):
-        def __init__(self, image: np.ndarray):
-            self.image = image
+    class MockSpectralImage(SpectralImage[SpectralLibImage]):
+        def __init__(self, array: np.ndarray):
+            self.array = array
 
-        def to_numpy(self) -> np.ndarray:  # type: ignore
-            return self.image
+        def to_numpy(self) -> np.ndarray:
+            return self.array
 
         @property
         def shape(self) -> tuple[int, int, int]:
-            return self.image.shape  # type: ignore
+            return self.array.shape
 
-    mock_vnir = MockSpectralImage(np.random.default_rng().random((100, 100, 10)))
-    mock_swir = MockSpectralImage(np.random.default_rng().random((100, 100, 20)))
+    mock_vnir = MockSpectralImage(np.random.default_rng(seed=0).random((100, 100, 10)))
+    mock_swir = MockSpectralImage(np.random.default_rng(seed=0).random((200, 100, 20)))
 
     with TemporaryDirectory() as tmpdir:
         save_path = Path(tmpdir, "test_image_merged.hdr")

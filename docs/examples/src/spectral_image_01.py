@@ -3,6 +3,7 @@ from pathlib import Path
 import spectral as sp
 
 from siapy.entities import SpectralImage
+from siapy.entities.images import SpectralLibImage
 
 # Set the path to the directory containing the data
 # !! ADJUST THIS PATH TO YOUR DATA DIRECTORY !!
@@ -18,10 +19,10 @@ image_path_img0 = image_paths[0]
 # Load the image using spectral library and then wrap over SpectralImage object
 sp_file = sp.envi.open(file=header_path_img0, image=image_path_img0)
 assert not isinstance(sp_file, sp.io.envi.SpectralLibrary)
-image = SpectralImage(sp_file)
+image = SpectralImage(SpectralLibImage(sp_file))
 
 # or you can do the same just by running
-image = SpectralImage.envi_open(
+image = SpectralImage.spy_open(
     header_path=header_path_img0,
     image_path=image_path_img0,
 )
@@ -43,16 +44,16 @@ print("File path:", image.filepath)
 print("Metadata:", image.metadata)
 
 # Get the number of rows
-print("Number of rows:", image.rows)
+print("Number of rows:", image.image.rows)
 
 # Get the number of columns
-print("Number of columns:", image.cols)
+print("Number of columns:", image.image.cols)
 
 # Get the default bands
 print("Default bands:", image.default_bands)
 
 # Get the description
-print("Description:", image.description)
+print("Description:", image.image.description)
 
 # Get the camera ID
 print("Camera ID:", image.camera_id)

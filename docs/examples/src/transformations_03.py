@@ -19,7 +19,7 @@ header_path_img0 = sorted(Path(data_dir).rglob("*.hdr"))[0]
 image_path_img0 = sorted(Path(data_dir).rglob("*.img"))[0]
 
 # Load VNIR and SWIR spectral images
-image_swir = SpectralImage.envi_open(
+image_swir = SpectralImage.spy_open(
     header_path=header_path_img0,
     image_path=image_path_img0,
 )

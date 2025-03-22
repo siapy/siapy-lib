@@ -7,8 +7,7 @@ from rich.progress import track
 
 from siapy.core import logger
 from siapy.core.exceptions import InvalidInputError
-
-from .images import SpectralImage
+from siapy.entities import SpectralImage
 
 __all__ = [
     "SpectralImageSet",
@@ -50,12 +49,12 @@ class SpectralImageSet:
 
         if image_paths is None:
             spectral_images = [
-                SpectralImage.envi_open(header_path=hdr_path)
+                SpectralImage.spy_open(header_path=hdr_path)
                 for hdr_path in track(header_paths, description="Loading spectral images...")
             ]
         else:
             spectral_images = [
-                SpectralImage.envi_open(header_path=hdr_path, image_path=img_path)
+                SpectralImage.spy_open(header_path=hdr_path, image_path=img_path)
                 for hdr_path, img_path in track(
                     zip(header_paths, image_paths),
                     description="Loading spectral images...",

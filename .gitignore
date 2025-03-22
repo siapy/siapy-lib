@@ -13,6 +13,6 @@ venv
 .history
 site
 dist
-tests/data
+tests/data/*
 docs/examples/data/*
-!docs/examples/data/.gitkeep
+!.gitkeep

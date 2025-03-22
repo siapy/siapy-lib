@@ -19,6 +19,8 @@ repos:
       - id: ruff
         args:
           - --fix
+          - --config=pyproject.toml
+        files: ^(siapy|tests)/
       - id: ruff-format
   - repo: https://github.com/gitleaks/gitleaks
     rev: v8.24.0

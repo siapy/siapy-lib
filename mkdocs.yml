@@ -83,9 +83,14 @@ nav:
           - Schemas: api/datasets/schemas.md
           - Tabular: api/datasets/tabular.md
       - Entities:
-          - Images: api/entities/images.md
+          - Images:
+              - Interfaces: api/entities/images/interfaces.md
+              - Rasterio Library: api/entities/images/rasterio_lib.md
+              - Spectral Library: api/entities/images/spectral_lib.md
+              - Spectral Images: api/entities/images/spimage.md
           - Image Sets: api/entities/imagesets.md
           - Pixels: api/entities/pixels.md
+          - Shapefiles: api/entities/shapefiles.md
           - Shapes: api/entities/shapes.md
           - Signatures: api/entities/signatures.md
       - Features:
