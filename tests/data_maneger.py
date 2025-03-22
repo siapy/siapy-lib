@@ -65,19 +65,20 @@ def verify_testdata_integrity() -> bool:
                 current_checksum = calculate_checksum(archive_path)
                 if current_checksum == expected_checksum:
                     logger.info("Test data is up-to-date")
+                    extract_archive(archive_path, data_dir.parent)
+                    logger.info("Test data successfully extracted")
+                    return True
                 else:
                     logger.info("Test data checksum mismatch, re-downloading...")
-                    download_file(archive_url, archive_path)
-                    logger.info("Test data archive downloaded successfully")
             else:
                 logger.info("Archive not found, downloading...")
-                download_file(archive_url, archive_path)
-                logger.info("Test data archive downloaded successfully")
         except requests.RequestException:
             logger.warning("Could not verify remote checksum, using existing data")
             return False
 
     try:
+        download_file(archive_url, archive_path)
+        logger.info("Test data archive downloaded successfully")
         extract_archive(archive_path, data_dir.parent)
         logger.info("Test data successfully extracted")
         return True
