@@ -49,12 +49,20 @@ class RasterioLibImage(ImageBase):
 
     @property
     def metadata(self) -> dict[str, Any]:
-        return dict(self.file.attrs)
+        return self.file.attrs
 
     @property
     def shape(self) -> tuple[int, int, int]:
         # rioxarray uses (band, y, x) ordering
         return (self.file.y.size, self.file.x.size, self.file.band.size)
+
+    @property
+    def rows(self) -> int:
+        return self.file.y.size
+
+    @property
+    def cols(self) -> int:
+        return self.file.x.size
 
     @property
     def bands(self) -> int:
@@ -63,30 +71,19 @@ class RasterioLibImage(ImageBase):
     @property
     def default_bands(self) -> list[int]:
         # Most common RGB band combination for satellite imagery
-        if self.bands >= 3:
-            return [0, 1, 2]
-        return list(range(min(3, self.bands)))
+        return list(range(1, min(3, self.bands) + 1))
 
     @property
     def wavelengths(self) -> list[float]:
-        # Try to get wavelengths from band attributes
-        wavelengths = []
-        for band_idx in range(self.bands):
-            band_data = self.file.sel(band=band_idx + 1)
-            wave = band_data.attrs.get("wavelength")
-            if wave:
-                wavelengths.append(float(wave))
-            else:
-                wavelengths.append(float(band_idx + 1))
-        return wavelengths
+        return self.file.band.values
 
     @property
     def camera_id(self) -> str:
+        # Todo: camera_id is not a standard metadata field, should be updated
         return self.metadata.get("camera_id", "")
 
     def to_display(self, equalize: bool = True) -> Image.Image:
-        selected_bands = [i + 1 for i in self.default_bands]  # Adjust for 1-indexed bands
-        bands_data = self.file.sel(band=selected_bands)
+        bands_data = self.file.sel(band=self.default_bands)
         image_3ch = bands_data.transpose("y", "x", "band").values
         image_3ch_clean = np.nan_to_num(np.asarray(image_3ch))
         min_val = np.nanmin(image_3ch_clean)
@@ -100,7 +97,7 @@ class RasterioLibImage(ImageBase):
         return image
 
     def to_numpy(self, nan_value: float | None = None) -> np.ndarray:
-        image = np.moveaxis(np.asarray(self.file.values), 0, -1)
+        image = np.asarray(self.file.transpose("y", "x", "band").values)
         if nan_value is not None:
             image = np.nan_to_num(image, nan=nan_value)
         return image
