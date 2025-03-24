@@ -11,4 +11,4 @@ pdm install
 
 # Install pre-commit
 pdm run pre-commit uninstall
-pdm run pre-commit install --hook-type commit-msg
+pdm run pre-commit install # --hook-type commit-msg
