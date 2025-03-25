@@ -24,6 +24,13 @@ def test_spy_open(configs):
     assert isinstance(spectral_image_swir, SpectralImage)
 
 
+def test_rasterio_open(configs):
+    spectral_image = SpectralImage.rasterio_open(configs.image_micasense_merged)
+    assert isinstance(spectral_image, SpectralImage)
+    spectral_image = SpectralImage.rasterio_open(configs.image_micasense_blue)
+    assert isinstance(spectral_image, SpectralImage)
+
+
 def test_spy_open_invalid():
     with pytest.raises(InvalidFilepathError):
         SpectralImage.spy_open(header_path="invalid_header_path")

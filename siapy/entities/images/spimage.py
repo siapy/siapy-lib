@@ -8,6 +8,7 @@ from PIL import Image
 from ..shapes import GeometricShapes, Shape
 from ..signatures import Signatures
 from .interfaces import ImageBase
+from .rasterio_lib import RasterioLibImage
 from .spectral_lib import SpectralLibImage
 
 if TYPE_CHECKING:
@@ -52,10 +53,10 @@ class SpectralImage(Generic[T]):
         image = SpectralLibImage.open(header_path=header_path, image_path=image_path)
         return SpectralImage(image)
 
-    # @classmethod
-    # def rasterio_open(cls, filepath: str | Path) -> "SpectralImage":
-    #     image = RasterioLib.open(filepath)
-    #     return cls(image)
+    @classmethod
+    def rasterio_open(cls, filepath: str | Path) -> "SpectralImage[RasterioLibImage]":
+        image = RasterioLibImage.open(filepath)
+        return SpectralImage(image)
 
     @property
     def image(self) -> T:
