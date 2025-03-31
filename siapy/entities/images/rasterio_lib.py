@@ -35,7 +35,7 @@ class RasterioLibImage(ImageBase):
             raise InvalidInputError({"filepath": str(filepath)}, f"Failed to open raster file: {e}") from e
 
         if isinstance(raster, list):
-            raise InvalidInputError({"file_type": type(raster).__name__}, "Expected DataArray, got Dataset")
+            raise InvalidInputError({"file_type": type(raster).__name__}, "Expected DataArray or Dataset, got list")
 
         return cls(raster)
 
@@ -101,3 +101,6 @@ class RasterioLibImage(ImageBase):
         if nan_value is not None:
             image = np.nan_to_num(image, nan=nan_value)
         return image
+
+    def to_xarray(self) -> "XarrayType":
+        return self.file

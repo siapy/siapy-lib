@@ -77,3 +77,8 @@ def test_to_numpy_with_nan_handling(configs):
     assert isinstance(arr_no_nans, np.ndarray)
     assert arr_no_nans.shape == raster.shape
     assert not np.any(np.isnan(arr_no_nans))
+
+
+def test_to_xarray(configs):
+    raster = RasterioLibImage.open(configs.image_micasense_merged)
+    assert isinstance(raster.to_xarray(), XarrayType)

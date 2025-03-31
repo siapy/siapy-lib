@@ -226,3 +226,27 @@ def test_to_display(spectral_images):
 
     pixel_data = np.array(image)
     assert (pixel_data >= 0).all() and (pixel_data <= 255).all()
+
+
+def test_to_xarray(spectral_images):
+    spectral_image_vnir = spectral_images.vnir
+    xarray_vnir = spectral_image_vnir.to_xarray()
+
+    assert xarray_vnir is not None
+    assert hasattr(xarray_vnir, "dims")
+    assert hasattr(xarray_vnir, "coords")
+    assert hasattr(xarray_vnir, "attrs")
+
+    assert xarray_vnir.dims == ("y", "x", "band")
+    assert xarray_vnir.shape == spectral_image_vnir.shape
+
+    assert len(xarray_vnir.coords["y"]) == spectral_image_vnir.shape[0]
+    assert len(xarray_vnir.coords["x"]) == spectral_image_vnir.shape[1]
+    assert len(xarray_vnir.coords["band"]) == spectral_image_vnir.shape[2]
+
+    assert xarray_vnir.coords["band"].shape[0] == len(spectral_image_vnir.wavelengths)
+    assert all(xarray_vnir.coords["band"].values == spectral_image_vnir.wavelengths)
+
+    assert xarray_vnir.attrs == spectral_image_vnir.metadata
+
+    assert np.array_equal(xarray_vnir.values, spectral_image_vnir.to_numpy(), equal_nan=True)

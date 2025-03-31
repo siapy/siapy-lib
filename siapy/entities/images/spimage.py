@@ -12,6 +12,8 @@ from .rasterio_lib import RasterioLibImage
 from .spectral_lib import SpectralLibImage
 
 if TYPE_CHECKING:
+    from siapy.core.types import XarrayType
+
     from ..pixels import Pixels
 
 
@@ -99,6 +101,9 @@ class SpectralImage(Generic[T]):
 
     def to_numpy(self, nan_value: float | None = None) -> np.ndarray:
         return self.image.to_numpy(nan_value)
+
+    def to_xarray(self) -> "XarrayType":
+        return self.image.to_xarray()
 
     def to_signatures(self, pixels: "Pixels") -> Signatures:
         image_arr = self.to_numpy()
