@@ -1,8 +1,7 @@
 from .images import SpectralImage
 from .imagesets import SpectralImageSet
 from .pixels import Pixels
-from .shapefiles import Shapefile
-from .shapes import Shape
+from .shapes import Shapefile
 from .signatures import Signatures
 
 __all__ = [
@@ -10,6 +9,5 @@ __all__ = [
     "SpectralImageSet",
     "Pixels",
     "Signatures",
-    "Shape",
     "Shapefile",
 ]

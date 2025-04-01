@@ -1,9 +1,12 @@
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import numpy as np
 from PIL import Image
+
+if TYPE_CHECKING:
+    from siapy.core.types import XarrayType
 
 __all__ = [
     "ImageBase",
@@ -57,4 +60,8 @@ class ImageBase(ABC):
 
     @abstractmethod
     def to_numpy(self, nan_value: float | None = None) -> np.ndarray:
+        pass
+
+    @abstractmethod
+    def to_xarray(self) -> "XarrayType":
         pass

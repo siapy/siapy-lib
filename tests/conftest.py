@@ -6,7 +6,8 @@ from sklearn.datasets import make_classification
 
 from siapy.core.configs import TEST_DATA_DIR
 from siapy.datasets.tabular import TabularDataset, TabularDatasetData
-from siapy.entities import Pixels, Shape, SpectralImage, SpectralImageSet
+from siapy.entities import Pixels, SpectralImage, SpectralImageSet
+from siapy.entities.shapes import create_shape_from_geometry
 from tests.data_manager import verify_testdata_integrity
 
 
@@ -103,7 +104,7 @@ def corresponding_pixels() -> CorrespondingPixels:
 def spectral_images_set(spectral_images):
     pixels_input = [(10, 15), (60, 66)]
     pixels = Pixels.from_iterable(pixels_input)
-    rectangle = Shape.from_shape_type(shape_type="rectangle", pixels=pixels)
+    rectangle = create_shape_from_geometry(shape="rectangle", pixels=pixels)
 
     spectral_images.vnir.geometric_shapes.append(rectangle)
     spectral_images.swir.geometric_shapes.append(rectangle)
