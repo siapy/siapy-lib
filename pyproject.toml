@@ -109,7 +109,6 @@ ignore_missing_imports = true
 module = "geopandas.*"
 ignore_missing_imports = true
 
-
 [[tool.mypy.overrides]]
 module = "rasterio.*"
 ignore_missing_imports = true
