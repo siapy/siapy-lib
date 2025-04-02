@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, ClassVar, Iterable, NamedTuple, Sequence
+from typing import Any, ClassVar, Iterable, NamedTuple, Sequence, TypeAlias
 
 import numpy as np
 import pandas as pd
@@ -25,7 +25,7 @@ class PixelCoordinate(NamedTuple):
     y: int  # y coordinate on the image
 
 
-CoordinateInput = PixelCoordinate | tuple[int, int] | Sequence[int]
+CoordinateInput: TypeAlias = PixelCoordinate | tuple[int, int] | Sequence[int]
 
 
 @dataclass
@@ -69,10 +69,10 @@ class Pixels:
         df_homo[self.coords.H] = 1
         return df_homo
 
-    def u(self) -> pd.Series:
+    def u(self) -> pd.Series[int]:
         return self.df[self.coords.X]
 
-    def v(self) -> pd.Series:
+    def v(self) -> pd.Series[int]:
         return self.df[self.coords.Y]
 
     def to_numpy(self) -> np.ndarray:
