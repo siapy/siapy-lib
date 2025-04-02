@@ -15,7 +15,7 @@ def test_tabular_optimizer_from_tabular_dataset_data_valid(
     spectral_tabular_dataset,
 ):
     data = spectral_tabular_dataset.dataset_data.model_copy()
-    data.target = RegressionTarget(name="test", value=data.pixels["u"])
+    data.target = RegressionTarget(name="test", value=data.pixels["x"])
     model = SVR()
     configs = TabularOptimizerConfig()
     optimizer = TabularOptimizer.from_tabular_dataset_data(model=model, configs=configs, data=data)
@@ -41,7 +41,7 @@ def test_tabular_optimizer_with_validation_data_without_targets(
 ):
     data = spectral_tabular_dataset.dataset_data.model_copy()
     data_val = spectral_tabular_dataset.dataset_data.model_copy()
-    target = RegressionTarget(name="test", value=data.pixels["u"])
+    target = RegressionTarget(name="test", value=data.pixels["x"])
     data.target = target
     model = SVR()
     configs = TabularOptimizerConfig()
@@ -52,8 +52,8 @@ def test_tabular_optimizer_with_validation_data_without_targets(
 def test_tabular_optimizer_with_validation_data(spectral_tabular_dataset):
     data = spectral_tabular_dataset.dataset_data.model_copy()
     data_val = spectral_tabular_dataset.dataset_data.model_copy()
-    data.target = RegressionTarget(name="test", value=data.pixels["u"])
-    data_val.target = RegressionTarget(name="test_val", value=data_val.pixels["v"])
+    data.target = RegressionTarget(name="test", value=data.pixels["x"])
+    data_val.target = RegressionTarget(name="test_val", value=data_val.pixels["y"])
     model = SVR()
     configs = TabularOptimizerConfig()
     optimizer = TabularOptimizer.from_tabular_dataset_data(model=model, configs=configs, data=data, data_val=data_val)
@@ -69,7 +69,7 @@ def test_tabular_optimizer_with_validation_data(spectral_tabular_dataset):
 def test_tabular_optimizer_run(spectral_tabular_dataset):
     data = spectral_tabular_dataset.dataset_data.model_copy()
     data.signals = data.signals.iloc[:, :10]
-    data.target = RegressionTarget(name="test", value=data.pixels["u"])
+    data.target = RegressionTarget(name="test", value=data.pixels["x"])
     model = SVR()
     study_config = OptimizeStudyConfig(n_trials=3, timeout=3000)
     trial_parameters = TrialParameters.from_dict({"int_parameters": [{"name": "C", "low": 1, "high": 100}]})
@@ -95,7 +95,7 @@ def test_tabular_optimizer_get_best_model_no_best_trial(
     spectral_tabular_dataset,
 ):
     data = spectral_tabular_dataset.dataset_data.model_copy()
-    data.target = RegressionTarget(name="test", value=data.pixels["u"])
+    data.target = RegressionTarget(name="test", value=data.pixels["x"])
     model = SVR()
     configs = TabularOptimizerConfig()
     optimizer = TabularOptimizer.from_tabular_dataset_data(model=model, configs=configs, data=data)
@@ -107,7 +107,7 @@ def test_tabular_optimizer_trial_params_no_trial_parameters(
     spectral_tabular_dataset,
 ):
     data = spectral_tabular_dataset.dataset_data.model_copy()
-    data.target = RegressionTarget(name="test", value=data.pixels["u"])
+    data.target = RegressionTarget(name="test", value=data.pixels["x"])
     model = SVR()
     configs = TabularOptimizerConfig()
     optimizer = TabularOptimizer.from_tabular_dataset_data(model=model, configs=configs, data=data)
@@ -118,7 +118,7 @@ def test_tabular_optimizer_trial_params_no_trial_parameters(
 
 def test_tabular_optimizer_scorer_no_scorer_defined(spectral_tabular_dataset):
     data = spectral_tabular_dataset.dataset_data.model_copy()
-    data.target = RegressionTarget(name="test", value=data.pixels["u"])
+    data.target = RegressionTarget(name="test", value=data.pixels["x"])
     model = SVR()
     configs = TabularOptimizerConfig()
     optimizer = TabularOptimizer.from_tabular_dataset_data(model=model, configs=configs, data=data)

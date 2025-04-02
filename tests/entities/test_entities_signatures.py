@@ -40,7 +40,7 @@ def test_signals_save_and_load_to_parquet():
 
 
 def test_signatures_filter_create():
-    pixels_df = pd.DataFrame({"u": [0, 1], "v": [0, 1]})
+    pixels_df = pd.DataFrame({"x": [0, 1], "y": [0, 1]})
     signals_df = pd.DataFrame([[1, 2], [3, 4]])
     pixels = Pixels(pixels_df)
     signals = Signals(signals_df)
@@ -50,7 +50,7 @@ def test_signatures_filter_create():
 
 
 def test_signatures_filter_build():
-    pixels_df = pd.DataFrame({"u": [0, 1], "v": [0, 1]})
+    pixels_df = pd.DataFrame({"x": [0, 1], "y": [0, 1]})
     signals_df = pd.DataFrame([[1, 2], [3, 4]])
     pixels = Pixels(pixels_df)
     signals = Signals(signals_df)
@@ -60,7 +60,7 @@ def test_signatures_filter_build():
 
 
 def test_signatures_filter_with_slice():
-    pixels_df = pd.DataFrame({"u": [0, 1], "v": [0, 1]})
+    pixels_df = pd.DataFrame({"x": [0, 1], "y": [0, 1]})
     signals_df = pd.DataFrame([[1, 2], [3, 4]])
     pixels = Pixels(pixels_df)
     signals = Signals(signals_df)
@@ -76,7 +76,7 @@ def test_signatures_filter_with_slice():
 
 
 def test_signatures_filter_with_list_int():
-    pixels_df = pd.DataFrame({"u": [0, 1], "v": [0, 1]})
+    pixels_df = pd.DataFrame({"x": [0, 1], "y": [0, 1]})
     signals_df = pd.DataFrame([[1, 2], [3, 4]])
     pixels = Pixels(pixels_df)
     signals = Signals(signals_df)
@@ -92,7 +92,7 @@ def test_signatures_filter_with_list_int():
 
 
 def test_signatures_filter_with_list_bool():
-    pixels_df = pd.DataFrame({"u": [0, 1], "v": [0, 1]})
+    pixels_df = pd.DataFrame({"x": [0, 1], "y": [0, 1]})
     signals_df = pd.DataFrame([[1, 2], [3, 4]])
     pixels = Pixels(pixels_df)
     signals = Signals(signals_df)
@@ -108,7 +108,7 @@ def test_signatures_filter_with_list_bool():
 
 
 def test_signatures_create():
-    pixels_df = pd.DataFrame({"u": [0, 1], "v": [0, 1]})
+    pixels_df = pd.DataFrame({"x": [0, 1], "y": [0, 1]})
     signals_df = pd.DataFrame([[1, 2], [3, 4]])
     pixels = Pixels(pixels_df)
     signals = Signals(signals_df)
@@ -129,7 +129,7 @@ def test_signatures_raise_error():
 
 
 def test_signatures_from_array_and_pixels():
-    pixels_df = pd.DataFrame({"u": [0, 1], "v": [0, 1]})
+    pixels_df = pd.DataFrame({"x": [0, 1], "y": [0, 1]})
     pixels = Pixels(pixels_df)
     image = np.array([[[1, 2], [3, 4]], [[5, 6], [7, 8]]])
     from_array_and_pixels = Signatures.from_array_and_pixels(image, pixels)
@@ -139,9 +139,9 @@ def test_signatures_from_array_and_pixels():
 
 
 def test_signatures_from_dataframe():
-    df = pd.DataFrame({"u": [0, 1], "v": [0, 1], "0": [1, 2], "1": [3, 4]})
+    df = pd.DataFrame({"x": [0, 1], "y": [0, 1], "0": [1, 2], "1": [3, 4]})
     signatures = Signatures.from_dataframe(df)
-    expected_pixels_df = pd.DataFrame({"u": [0, 1], "v": [0, 1]})
+    expected_pixels_df = pd.DataFrame({"x": [0, 1], "y": [0, 1]})
     expected_signals_df = pd.DataFrame({"0": [1, 2], "1": [3, 4]})
 
     assert signatures.pixels.df.equals(expected_pixels_df)
@@ -159,7 +159,7 @@ def test_signatures_from_dataframe():
 
 
 def test_signatures_save_and_load_to_parquet():
-    df = pd.DataFrame({"u": [0, 1], "v": [0, 1], "0": [1, 2], "1": [3, 4]})
+    df = pd.DataFrame({"x": [0, 1], "y": [0, 1], "0": [1, 2], "1": [3, 4]})
     signatures = Signatures.from_dataframe(df)
     with TemporaryDirectory() as tmpdir:
         parquet_file = Path(tmpdir, "test_signatures.parquet")
