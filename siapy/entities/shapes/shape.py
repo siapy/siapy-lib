@@ -3,10 +3,12 @@ from pathlib import Path
 from typing import Optional
 
 import geopandas as gpd
+import numpy as np
+import pandas as pd
 from shapely.geometry import LineString, MultiLineString, MultiPoint, MultiPolygon, Point, Polygon
 from shapely.geometry.base import BaseGeometry
 
-from siapy.core.exceptions import ConfigurationError, InvalidTypeError
+from siapy.core.exceptions import ConfigurationError, InvalidFilepathError, InvalidInputError, InvalidTypeError
 from siapy.entities.pixels import PixelCoordinate, Pixels
 
 __all__ = [
@@ -59,11 +61,20 @@ class Shape:
         elif geometry is not None:
             self._geodataframe = gpd.GeoDataFrame(geometry=[geometry])
         else:
-            raise ConfigurationError("Must provide either geometry or geodataframe")
+            ConfigurationError("Must provide either geometry or geodataframe")
+
+    def __len__(self) -> int:
+        return len(self.df)
 
     @classmethod
     def open_shapefile(cls, filepath: str | Path, label: str = "") -> "Shape":
-        geo_df = gpd.read_file(filepath)
+        filepath = Path(filepath)
+        if not filepath.exists():
+            raise InvalidFilepathError(filepath)
+        try:
+            geo_df = gpd.read_file(filepath)
+        except Exception as e:
+            raise InvalidInputError({"filepath": str(filepath)}, f"Failed to open shapefile: {e}") from e
         return cls(geo_dataframe=geo_df, label=label)
 
     @classmethod
@@ -75,6 +86,16 @@ class Shape:
                 message="Geometry must be of type BaseGeometry",
             )
         return cls(geometry=geometry, label=label)
+
+    @classmethod
+    def from_geodataframe(cls, geo_dataframe: gpd.GeoDataFrame, label: str = "") -> "Shape":
+        if not isinstance(geo_dataframe, gpd.GeoDataFrame):
+            raise InvalidTypeError(
+                input_value=geo_dataframe,
+                allowed_types=gpd.GeoDataFrame,
+                message="GeoDataFrame must be of type GeoDataFrame",
+            )
+        return cls(geo_dataframe=geo_dataframe, label=label)
 
     @classmethod
     def from_point(cls, x: float, y: float, label: str = "") -> "Shape":
@@ -155,25 +176,32 @@ class Shape:
         return cls(geometry=circle, label=label)
 
     @property
+    def df(self) -> gpd.GeoDataFrame:
+        return self._geodataframe
+
+    @property
     def label(self) -> str:
         return self._label
 
     @property
-    def geometry(self) -> BaseGeometry:
-        """Return the Shapely geometry."""
-        if self._geodataframe.empty:
-            raise ConfigurationError("No geometry data available")
-        return self._geodataframe.geometry.iloc[0]
+    def geometry(self) -> gpd.GeoSeries:
+        if self.df.empty:
+            raise ConfigurationError("No geometry data available in GeoDataFrame")
+        return self.df.geometry
+
+    @geometry.setter
+    def geometry(self, geometry: gpd.GeoSeries) -> None:
+        if not isinstance(geometry, gpd.GeoSeries):
+            raise InvalidTypeError(
+                input_value=geometry,
+                allowed_types=gpd.GeoSeries,
+                message="Geometry must be of type GeoSeries",
+            )
+        self.df.geometry = geometry
 
     @property
     def shape_type(self) -> str:
-        """Return the type of the shape geometry."""
-        return self.geometry.geom_type.lower()
-
-    @property
-    def properties(self) -> dict:
-        """Return additional properties associated with the shape."""
-        return self._geodataframe.iloc[0].to_dict()
+        return self.geometry.geom_type[0].lower()
 
     @property
     def is_multi(self) -> bool:
@@ -191,40 +219,51 @@ class Shape:
     def is_polygon(self) -> bool:
         return self.shape_type in (ShapeGeometryEnum.POLYGON.value, ShapeGeometryEnum.MULTIPOLYGON.value)
 
-    def to_pixels(self) -> Pixels:
-        """Convert the shape to pixels representation."""
-        geom = self.geometry
-        if geom.geom_type == "Point":
-            return Pixels.from_iterable([(int(geom.x), int(geom.y))])
+    def copy(self) -> "Shape":
+        """Create a deep copy of the Shape instance."""
+        copied_df = self.df.copy(deep=True)
+        return Shape(label=self.label, geo_dataframe=copied_df)
 
-        bounds = geom.bounds  # (minx, miny, maxx, maxy)
-        if geom.geom_type in ("Polygon", "Rectangle"):
-            return Pixels.from_iterable(
-                [
-                    (int(bounds[0]), int(bounds[1])),  # min corner
-                    (int(bounds[2]), int(bounds[3])),  # max corner
-                ]
-            )
+    def boundary(self) -> gpd.GeoSeries:
+        return self.geometry.boundary
 
-        coords = list(geom.coords) if hasattr(geom, "coords") else []
-        return Pixels.from_iterable([(int(x), int(y)) for x, y in coords])
+    def bounds(self) -> pd.DataFrame:
+        return self.geometry.bounds
 
-    def convex_hull(self) -> "Shape":
-        """Return the convex hull of this shape."""
-        return Shape(geometry=self.geometry.convex_hull)
+    def centroid(self) -> gpd.GeoSeries:
+        return self.geometry.centroid
+
+    def convex_hull(self) -> gpd.GeoSeries:
+        return self.geometry.convex_hull
+
+    def envelope(self) -> gpd.GeoSeries:
+        return self.geometry.envelope
+
+    def exterior(self) -> gpd.GeoSeries:
+        if not self.is_polygon:
+            raise ConfigurationError("Exterior is only applicable to Polygon geometries")
+        return self.geometry.exterior
 
     def buffer(self, distance: float) -> "Shape":
-        """Create a buffer around this shape."""
-        return Shape(geometry=self.geometry.buffer(distance))
+        buffered_geometry = self.geometry.buffer(distance)
+        result = self.copy()
+        result.geometry = buffered_geometry
+        return result
 
     def intersection(self, other: "Shape") -> "Shape":
-        """Find the intersection between this shape and another."""
-        return Shape(geometry=self.geometry.intersection(other.geometry))
+        intersection_geometry = self.geometry.intersection(other.geometry)
+        result = self.copy()
+        result.geometry = intersection_geometry
+        return result
 
     def union(self, other: "Shape") -> "Shape":
-        """Find the union of this shape with another."""
-        return Shape(geometry=self.geometry.union(other.geometry))
+        union_geometry = self.geometry.union(other.geometry)
+        result = self.copy()
+        result.geometry = union_geometry
+        return result
 
     def to_file(self, filepath: str | Path, driver: str = "ESRI Shapefile") -> None:
-        """Save the shape to a file."""
         self._geodataframe.to_file(filepath, driver=driver)
+
+    def to_numpy(self) -> np.ndarray:
+        return self.df.to_numpy()

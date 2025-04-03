@@ -69,10 +69,10 @@ class Pixels:
         df_homo[self.coords.H] = 1
         return df_homo
 
-    def u(self) -> pd.Series[int]:
+    def u(self) -> pd.Series:
         return self.df[self.coords.X]
 
-    def v(self) -> pd.Series[int]:
+    def v(self) -> pd.Series:
         return self.df[self.coords.Y]
 
     def to_numpy(self) -> np.ndarray:
