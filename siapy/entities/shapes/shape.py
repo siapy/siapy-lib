@@ -7,6 +7,7 @@ import numpy as np
 import pandas as pd
 from shapely.geometry import LineString, MultiLineString, MultiPoint, MultiPolygon, Point, Polygon
 from shapely.geometry.base import BaseGeometry
+from shapely.prepared import prep as shapely_prep
 
 from siapy.core.exceptions import ConfigurationError, InvalidFilepathError, InvalidInputError, InvalidTypeError
 from siapy.entities.pixels import PixelCoordinate, Pixels
@@ -61,7 +62,7 @@ class Shape:
         elif geometry is not None:
             self._geodataframe = gpd.GeoDataFrame(geometry=[geometry])
         else:
-            ConfigurationError("Must provide either geometry or geodataframe")
+            raise ConfigurationError("Must provide either geometry or geodataframe")
 
     def __len__(self) -> int:
         return len(self.df)
@@ -219,30 +220,36 @@ class Shape:
     def is_polygon(self) -> bool:
         return self.shape_type in (ShapeGeometryEnum.POLYGON.value, ShapeGeometryEnum.MULTIPOLYGON.value)
 
-    def copy(self) -> "Shape":
-        """Create a deep copy of the Shape instance."""
-        copied_df = self.df.copy(deep=True)
-        return Shape(label=self.label, geo_dataframe=copied_df)
-
+    @property
     def boundary(self) -> gpd.GeoSeries:
         return self.geometry.boundary
 
+    @property
     def bounds(self) -> pd.DataFrame:
         return self.geometry.bounds
 
+    @property
     def centroid(self) -> gpd.GeoSeries:
         return self.geometry.centroid
 
+    @property
     def convex_hull(self) -> gpd.GeoSeries:
         return self.geometry.convex_hull
 
+    @property
     def envelope(self) -> gpd.GeoSeries:
         return self.geometry.envelope
 
+    @property
     def exterior(self) -> gpd.GeoSeries:
         if not self.is_polygon:
             raise ConfigurationError("Exterior is only applicable to Polygon geometries")
         return self.geometry.exterior
+
+    def copy(self) -> "Shape":
+        """Create a deep copy of the Shape instance."""
+        copied_df = self.df.copy(deep=True)
+        return Shape(label=self.label, geo_dataframe=copied_df)
 
     def buffer(self, distance: float) -> "Shape":
         buffered_geometry = self.geometry.buffer(distance)
@@ -267,3 +274,30 @@ class Shape:
 
     def to_numpy(self) -> np.ndarray:
         return self.df.to_numpy()
+
+    def get_pixels_within_convex_hull(self, resolution: float = 1.0) -> list[Pixels]:
+        pixels: list[Pixels] = []
+        for hull in self.convex_hull:
+            minx, miny, maxx, maxy = hull.bounds
+
+            u_min = np.ceil(minx / resolution) * resolution
+            v_min = np.ceil(miny / resolution) * resolution
+            u_max = np.floor(maxx / resolution) * resolution
+            v_max = np.floor(maxy / resolution) * resolution
+
+            # Creating a prepared geometry improves performance for contains checks
+            hull_prep = shapely_prep(hull)
+
+            u_values = np.arange(u_min, u_max + resolution / 2, resolution)
+            v_values = np.arange(v_min, v_max + resolution / 2, resolution)
+
+            contained_points = []
+            for u in u_values:
+                for v in v_values:
+                    point = Point(u, v)
+                    if hull_prep.contains(point) or hull_prep.intersects(point):
+                        contained_points.append((u, v))
+
+            pixels.append(Pixels.from_iterable(contained_points))
+
+        return pixels
