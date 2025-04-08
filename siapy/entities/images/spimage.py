@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, Any, Generic, Sequence, TypeVar
 import numpy as np
 from PIL import Image
 
-from ..shapes import GeometricShapes, ShapeBase
+from ..shapes import GeometricShapes, Shape
 from ..signatures import Signatures
 from .interfaces import ImageBase
 from .rasterio_lib import RasterioLibImage
@@ -29,7 +29,7 @@ class SpectralImage(Generic[T]):
     def __init__(
         self,
         image: T,
-        geometric_shapes: list["ShapeBase"] | None = None,
+        geometric_shapes: list["Shape"] | None = None,
     ):
         self._image = image
         self._geometric_shapes = GeometricShapes(self, geometric_shapes)

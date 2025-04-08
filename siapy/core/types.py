@@ -11,6 +11,7 @@ from siapy.entities import SpectralImage, SpectralImageSet
 
 __all__ = [
     "SpectralLibType",
+    "XarrayType",
     "ImageType",
     "ImageSizeType",
     "ImageDataType",

@@ -189,7 +189,13 @@ def calculate_correction_factor_from_panel(
                 input_value={"panel_shape_label": panel_shape_label},
                 message="Panel shape label not found.",
             )
-        panel_signatures = image.to_signatures(panel_shape.convex_hull())
+        if len(panel_shape) != 1:
+            raise InvalidInputError(
+                input_value={"panel_shape": panel_shape},
+                message="Panel shape label must refer to a single shape.",
+            )
+        pixels_hull = panel_shape.get_pixels_within_convex_hull()[0].as_type(int)
+        panel_signatures = image.to_signatures(pixels_hull)
         panel_radiance_mean = panel_signatures.signals.mean()
 
     else:

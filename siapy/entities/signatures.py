@@ -77,6 +77,7 @@ class Signatures:
 
     @classmethod
     def from_array_and_pixels(cls, image: np.ndarray, pixels: Pixels) -> "Signatures":
+        pixels = pixels.as_type(int)
         u = pixels.u()
         v = pixels.v()
         signals_list = image[v, u, :]
@@ -85,13 +86,13 @@ class Signatures:
 
     @classmethod
     def from_dataframe(cls, dataframe: pd.DataFrame) -> "Signatures":
-        if not all(coord in dataframe.columns for coord in [Pixels.coords.U, Pixels.coords.V]):
+        if not all(coord in dataframe.columns for coord in [Pixels.coords.X, Pixels.coords.Y]):
             raise InvalidInputError(
                 dataframe.columns.tolist(),
-                f"DataFrame must include columns for both '{Pixels.coords.U}' and '{Pixels.coords.V}' coordinates.",
+                f"DataFrame must include columns for both '{Pixels.coords.X}' and '{Pixels.coords.Y}' coordinates.",
             )
-        pixels = Pixels(dataframe[[Pixels.coords.U, Pixels.coords.V]])
-        signals = Signals(dataframe.drop(columns=[Pixels.coords.U, Pixels.coords.V]))
+        pixels = Pixels(dataframe[[Pixels.coords.X, Pixels.coords.Y]])
+        signals = Signals(dataframe.drop(columns=[Pixels.coords.X, Pixels.coords.Y]))
         return cls._create(pixels, signals)
 
     @classmethod
