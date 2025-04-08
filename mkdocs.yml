@@ -88,10 +88,9 @@ nav:
               - Rasterio Library: api/entities/images/rasterio_lib.md
               - Spectral Library: api/entities/images/spectral_lib.md
               - Spectral Images: api/entities/images/spimage.md
+          - Shape: api/entities/shapes/shape.md
           - Image Sets: api/entities/imagesets.md
           - Pixels: api/entities/pixels.md
-          - Shapefiles: api/entities/shapefiles.md
-          - Shapes: api/entities/shapes.md
           - Signatures: api/entities/signatures.md
       - Features:
           - Features: api/features/features.md

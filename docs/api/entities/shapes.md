@@ -1,1 +1,0 @@
-::: siapy.entities.shapes
