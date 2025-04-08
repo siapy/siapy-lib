@@ -133,3 +133,34 @@ def test_validate_pixel_input_dimensions():
 
     reordered_df = pd.DataFrame([(1, 2)], columns=[HomogeneousCoordinate.Y, HomogeneousCoordinate.X])
     validate_pixel_input_dimensions(reordered_df)
+
+
+def test_as_type():
+    float_iterable = [(1.5, 2.7), (3.2, 4.9), (5.1, 6.3)]
+    float_pixels = Pixels.from_iterable(float_iterable)
+
+    int_pixels = float_pixels.as_type(int)
+
+    assert isinstance(int_pixels, Pixels)
+    assert int_pixels is not float_pixels
+
+    assert int_pixels[0].x == 1
+    assert int_pixels[0].y == 2
+    assert int_pixels[1].x == 3
+    assert int_pixels[1].y == 4
+    assert int_pixels[2].x == 5
+    assert int_pixels[2].y == 6
+
+    assert float_pixels[0].x == 1.5
+    assert float_pixels[0].y == 2.7
+
+    # Test converting integers to float
+    int_iterable = [(1, 2), (3, 4), (5, 6)]
+    int_pixels = Pixels.from_iterable(int_iterable)
+    float_pixels = int_pixels.as_type(float)
+
+    # Verify conversion to float
+    assert isinstance(float_pixels[0].x, float)
+    assert isinstance(float_pixels[0].y, float)
+    assert float_pixels[0].x == 1.0
+    assert float_pixels[0].y == 2.0

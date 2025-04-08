@@ -22,6 +22,7 @@ class MetaDataEntity(BaseModel):
     shape_idx: int
     shape_type: str
     shape_label: str | None
+    geometry_idx: int
 
 
 class TabularDataEntity(MetaDataEntity):
@@ -61,17 +62,20 @@ class TabularDataset:
         self.data_entities.clear()
         for image_idx, image in enumerate(self.image_set):
             for shape_idx, shape in enumerate(image.geometric_shapes.shapes):
-                signatures = image.to_signatures(shape.convex_hull())
-                entity = TabularDataEntity(
-                    image_idx=image_idx,
-                    shape_idx=shape_idx,
-                    image_filepath=image.filepath,
-                    camera_id=image.camera_id,
-                    shape_type=shape.shape_type,
-                    shape_label=shape.label,
-                    signatures=signatures,
-                )
-                self.data_entities.append(entity)
+                convex_hulls = shape.get_pixels_within_convex_hull()
+                for geometry_idx, pixels in enumerate(convex_hulls):
+                    signatures = image.to_signatures(pixels)
+                    entity = TabularDataEntity(
+                        image_idx=image_idx,
+                        shape_idx=shape_idx,
+                        geometry_idx=geometry_idx,
+                        image_filepath=image.filepath,
+                        camera_id=image.camera_id,
+                        shape_type=shape.shape_type,
+                        shape_label=shape.label,
+                        signatures=signatures,
+                    )
+                    self.data_entities.append(entity)
 
     def generate_dataset_data(self, mean_signatures=True) -> TabularDatasetData:
         self._check_data_entities()
@@ -92,6 +96,7 @@ class TabularDataset:
                     "shape_idx": [str(entity.shape_idx)] * signatures_len,
                     "shape_type": [entity.shape_type] * signatures_len,
                     "shape_label": [entity.shape_label] * signatures_len,
+                    "geometry_idx": [str(entity.geometry_idx)] * signatures_len,
                 }
             )
 

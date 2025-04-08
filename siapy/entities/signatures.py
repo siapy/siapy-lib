@@ -77,6 +77,7 @@ class Signatures:
 
     @classmethod
     def from_array_and_pixels(cls, image: np.ndarray, pixels: Pixels) -> "Signatures":
+        pixels = pixels.as_type(int)
         u = pixels.u()
         v = pixels.v()
         signals_list = image[v, u, :]

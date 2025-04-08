@@ -21,11 +21,11 @@ class HomogeneousCoordinate:
 
 
 class PixelCoordinate(NamedTuple):
-    x: int  # x coordinate on the image
-    y: int  # y coordinate on the image
+    x: float  # x coordinate on the image
+    y: float  # y coordinate on the image
 
 
-CoordinateInput: TypeAlias = PixelCoordinate | tuple[int, int] | Sequence[int]
+CoordinateInput: TypeAlias = PixelCoordinate | tuple[float, float] | Sequence[float]
 
 
 @dataclass
@@ -38,7 +38,7 @@ class Pixels:
 
     def __getitem__(self, idx) -> PixelCoordinate:
         row = self.df.iloc[idx]
-        return PixelCoordinate(x=int(row[self.coords.X]), y=int(row[self.coords.Y]))
+        return PixelCoordinate(x=row[self.coords.X], y=row[self.coords.Y])
 
     def __eq__(self, other: Any) -> bool:
         if not isinstance(other, Pixels):
@@ -83,6 +83,12 @@ class Pixels:
 
     def save_to_parquet(self, filepath: str | Path) -> None:
         self.df.to_parquet(filepath, index=True)
+
+    def as_type(self, dtype: type) -> "Pixels":
+        converted_df = self.df.copy()
+        converted_df[self.coords.X] = converted_df[self.coords.X].astype(dtype)
+        converted_df[self.coords.Y] = converted_df[self.coords.Y].astype(dtype)
+        return Pixels(converted_df)
 
 
 def validate_pixel_input_dimensions(df: pd.DataFrame):

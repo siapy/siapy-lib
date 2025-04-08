@@ -184,6 +184,16 @@ class Shape:
     def label(self) -> str:
         return self._label
 
+    @label.setter
+    def label(self, label: str) -> None:
+        if not isinstance(label, str):
+            raise InvalidTypeError(
+                input_value=label,
+                allowed_types=str,
+                message="Label must be a string",
+            )
+        self._label = label
+
     @property
     def geometry(self) -> gpd.GeoSeries:
         if self.df.empty:
@@ -277,6 +287,26 @@ class Shape:
 
     def get_pixels_within_convex_hull(self, resolution: float = 1.0) -> list[Pixels]:
         pixels: list[Pixels] = []
+
+        if self.is_point:
+            for g in self.geometry:
+                if isinstance(g, MultiPoint):
+                    points = list(g.geoms)
+                elif isinstance(g, Point):
+                    points = [g]
+                else:
+                    raise InvalidTypeError(
+                        input_value=g,
+                        allowed_types=(Point, MultiPoint),
+                        message="Geometry must be Point or MultiPoint",
+                    )
+                pixels.append(Pixels.from_iterable([(p.x, p.y) for p in points]))
+
+            return pixels
+
+        if resolution <= 0:
+            raise InvalidInputError({"resolution": resolution}, "Resolution must be positive")
+
         for hull in self.convex_hull:
             minx, miny, maxx, maxy = hull.bounds
 
