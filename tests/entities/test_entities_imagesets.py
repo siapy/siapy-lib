@@ -4,9 +4,10 @@ import pytest
 
 from siapy.core.exceptions import InvalidInputError
 from siapy.entities import SpectralImage, SpectralImageSet
+from siapy.entities.images.rasterio_lib import RasterioLibImage
 
 
-def test_from_paths_valid(configs):
+def test_spy_open_valid(configs):
     header_paths: list[str | Path] = [
         configs.image_vnir_hdr_path,
         configs.image_swir_hdr_path,
@@ -15,18 +16,29 @@ def test_from_paths_valid(configs):
         configs.image_vnir_img_path,
         configs.image_swir_img_path,
     ]
-    image_set = SpectralImageSet.from_paths(header_paths=header_paths, image_paths=image_paths)
+    image_set = SpectralImageSet.spy_open(header_paths=header_paths, image_paths=image_paths)
     assert len(image_set) == 2
 
 
-def test_from_paths_invalid(configs):
+def test_spy_open_invalid(configs):
     header_paths: list[str | Path] = [
         configs.image_vnir_hdr_path,
         configs.image_swir_hdr_path,
     ]
     image_paths: list[str | Path] = [configs.image_vnir_img_path]
     with pytest.raises(InvalidInputError):
-        SpectralImageSet.from_paths(header_paths=header_paths, image_paths=image_paths)
+        SpectralImageSet.spy_open(header_paths=header_paths, image_paths=image_paths)
+
+
+def test_rasterio_open(configs):
+    filepaths: list[str | Path] = [
+        configs.image_micasense_merged,
+        configs.image_micasense_red,
+        configs.image_micasense_blue,
+    ]
+    image_set = SpectralImageSet.rasterio_open(filepaths=filepaths)
+    assert len(image_set) == 3
+    assert all(isinstance(img.image, RasterioLibImage) for img in image_set)
 
 
 def create_spectral_image(hdr_path, img_path):
