@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.7.1](https://github.com/siapy/siapy-lib/compare/v0.7.0...v0.7.1) (2025-04-09)
+
+
+### Bug Fixes
+
+* update mkdocs.yml to enable version selector for mike plugin and correct inventories key ([44e8c85](https://github.com/siapy/siapy-lib/commit/44e8c853fef5559b2eddd7b4e834d21a92ef6d96))
+
+
+### Documentation
+
+* update documentation deployment commands to use 'mike' instead of 'mkdocs' ([1fa65b6](https://github.com/siapy/siapy-lib/commit/1fa65b6608ad60e8cf2cae163baaeb3225422490))
+
 ## [0.7.0](https://github.com/siapy/siapy-lib/compare/v0.6.0...v0.7.0) (2025-04-09)
 
 
