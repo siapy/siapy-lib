@@ -36,4 +36,7 @@ jobs:
       #     path: .cache
       #     restore-keys: |
       #       mkdocs-material-
-      - run: pdm run mkdocs gh-deploy --force
+      - name: Deploy docs
+        run: |
+          pdm run mike deploy --push --update-aliases $(pdm show --version) latest
+          pdm run mike set-default --push latest
