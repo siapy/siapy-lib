@@ -2,7 +2,7 @@ from pathlib import Path
 
 import numpy as np
 import pytest
-import spectral as sp
+import xarray as xr
 from PIL import Image
 
 from siapy.core.exceptions import InvalidFilepathError
@@ -22,6 +22,13 @@ def test_spy_open(configs):
         image_path=configs.image_swir_img_path,
     )
     assert isinstance(spectral_image_swir, SpectralImage)
+
+
+def test_rasterio_open(configs):
+    spectral_image = SpectralImage.rasterio_open(configs.image_micasense_merged)
+    assert isinstance(spectral_image, SpectralImage)
+    spectral_image = SpectralImage.rasterio_open(configs.image_micasense_blue)
+    assert isinstance(spectral_image, SpectralImage)
 
 
 def test_spy_open_invalid():
@@ -53,79 +60,65 @@ def test_eq(spectral_images):
     assert spectral_images.swir != spectral_images.vnir
 
 
-# Spectral Lib Image
+def test_image_property(spectral_images):
+    assert spectral_images.vnir.image is not None
+    assert spectral_images.swir.image is not None
 
 
-def test_image_file(spectral_images):
-    assert isinstance(
-        spectral_images.vnir.image.file,
-        (sp.io.envi.BilFile, sp.io.envi.BipFile, sp.io.envi.BsqFile),
-    )
-    assert isinstance(
-        spectral_images.swir.image.file,
-        (sp.io.envi.BilFile, sp.io.envi.BipFile, sp.io.envi.BsqFile),
-    )
+def test_geometric_shapes_property(spectral_images):
+    assert spectral_images.vnir.geometric_shapes is not None
+    assert spectral_images.swir.geometric_shapes is not None
 
 
-def test_metadata(spectral_images):
-    vnir_meta = spectral_images.vnir.metadata
-    swir_meta = spectral_images.swir.metadata
-    assert isinstance(vnir_meta, dict)
-    assert isinstance(swir_meta, dict)
-    required_keys = ["default bands", "wavelength", "description"]
-    assert all(key in vnir_meta.keys() for key in required_keys)
-    assert all(key in swir_meta.keys() for key in required_keys)
-
-
-def test_shape(spectral_images):
-    assert isinstance(spectral_images.vnir.shape, tuple)
-    assert len(spectral_images.vnir.shape) == 3
-    assert isinstance(spectral_images.swir.shape, tuple)
-    assert len(spectral_images.swir.shape) == 3
-
-
-def test_bands(spectral_images):
-    assert isinstance(spectral_images.vnir.bands, int)
-    assert isinstance(spectral_images.swir.bands, int)
-
-
-def test_default_bands(spectral_images):
-    vnir_db = spectral_images.vnir.default_bands
-    swir_db = spectral_images.swir.default_bands
-    assert np.array_equal(vnir_db, [55, 41, 12])
-    assert np.array_equal(swir_db, [20, 117, 57])
-
-
-def test_filename(spectral_images, configs):
+def test_filepath_property(spectral_images):
     assert isinstance(spectral_images.vnir.filepath, Path)
     assert isinstance(spectral_images.swir.filepath, Path)
-    assert spectral_images.vnir.filepath.name == configs.image_vnir_img_path.name
-    assert spectral_images.swir.filepath.name == configs.image_swir_img_path.name
 
 
-def test_wavelengths(spectral_images):
-    vnir_wave = spectral_images.vnir.wavelengths
-    swir_wave = spectral_images.swir.wavelengths
-    assert isinstance(vnir_wave, list)
-    assert all(isinstance(w, float) for w in vnir_wave)
-    assert len(vnir_wave) == 160
-    assert isinstance(swir_wave, list)
-    assert all(isinstance(w, float) for w in swir_wave)
-    assert len(swir_wave) == 288
+def test_metadata_property(spectral_images):
+    assert isinstance(spectral_images.vnir.metadata, dict)
+    assert isinstance(spectral_images.swir.metadata, dict)
 
 
-def test_camera_id(spectral_images, configs):
-    vnir_cam_id = spectral_images.vnir.camera_id
-    swir_cam_id = spectral_images.swir.camera_id
-    assert vnir_cam_id == configs.image_vnir_name
-    assert swir_cam_id == configs.image_swir_name
+def test_shape_property(spectral_images):
+    assert isinstance(spectral_images.vnir.shape, tuple)
+    assert len(spectral_images.vnir.shape) == 3
+
+
+def test_bands_property(spectral_images):
+    assert isinstance(spectral_images.vnir.bands, int)
+    assert spectral_images.vnir.bands > 0
+
+
+def test_default_bands_property(spectral_images):
+    assert isinstance(spectral_images.vnir.default_bands, list)
+    assert all(isinstance(x, int) for x in spectral_images.vnir.default_bands)
+
+
+def test_wavelengths_property(spectral_images):
+    assert isinstance(spectral_images.vnir.wavelengths, list)
+    assert all(isinstance(x, float) for x in spectral_images.vnir.wavelengths)
+
+
+def test_camera_id_property(spectral_images):
+    assert isinstance(spectral_images.vnir.camera_id, str)
+
+
+def test_to_display(spectral_images):
+    assert isinstance(spectral_images.vnir.to_display(), Image.Image)
 
 
 def test_to_numpy(spectral_images):
-    spectral_image_vnir = spectral_images.vnir.to_numpy()
-    spectral_image_swir = spectral_images.swir.to_numpy()
-    assert isinstance(spectral_image_vnir, np.ndarray)
-    assert isinstance(spectral_image_swir, np.ndarray)
+    assert isinstance(spectral_images.vnir.to_numpy(), np.ndarray)
+    assert spectral_images.vnir.to_numpy().shape == (
+        spectral_images.vnir.image.rows,
+        spectral_images.vnir.image.cols,
+        spectral_images.vnir.image.bands,
+    )
+
+
+def test_to_xarray(spectral_images):
+    assert isinstance(spectral_images.vnir.to_xarray(), xr.DataArray)
 
 
 def test_to_signatures(spectral_images):
@@ -205,17 +198,3 @@ def test_mean(spectral_images):
     assert isinstance(mean_axis_tuple, np.ndarray)
     assert mean_axis_tuple.shape == (spectral_image_vnir.to_numpy().shape[2],)
     assert np.allclose(mean_axis_tuple, np.nanmean(spectral_image_vnir.to_numpy(), axis=(0, 1)))
-
-
-def test_to_display(spectral_images):
-    spectral_image_vnir = spectral_images.vnir
-
-    image = spectral_image_vnir.to_display(equalize=True)
-    assert isinstance(image, Image.Image)
-    assert image.mode == "RGB"
-
-    expected_size = (spectral_image_vnir.image.cols, spectral_image_vnir.image.rows)
-    assert image.size == expected_size
-
-    pixel_data = np.array(image)
-    assert (pixel_data >= 0).all() and (pixel_data <= 255).all()

@@ -8,9 +8,12 @@ from PIL import Image
 from ..shapes import GeometricShapes, Shape
 from ..signatures import Signatures
 from .interfaces import ImageBase
+from .rasterio_lib import RasterioLibImage
 from .spectral_lib import SpectralLibImage
 
 if TYPE_CHECKING:
+    from siapy.core.types import XarrayType
+
     from ..pixels import Pixels
 
 
@@ -52,10 +55,10 @@ class SpectralImage(Generic[T]):
         image = SpectralLibImage.open(header_path=header_path, image_path=image_path)
         return SpectralImage(image)
 
-    # @classmethod
-    # def rasterio_open(cls, filepath: str | Path) -> "SpectralImage":
-    #     image = RasterioLib.open(filepath)
-    #     return cls(image)
+    @classmethod
+    def rasterio_open(cls, filepath: str | Path) -> "SpectralImage[RasterioLibImage]":
+        image = RasterioLibImage.open(filepath)
+        return SpectralImage(image)
 
     @property
     def image(self) -> T:
@@ -98,6 +101,9 @@ class SpectralImage(Generic[T]):
 
     def to_numpy(self, nan_value: float | None = None) -> np.ndarray:
         return self.image.to_numpy(nan_value)
+
+    def to_xarray(self) -> "XarrayType":
+        return self.image.to_xarray()
 
     def to_signatures(self, pixels: "Pixels") -> Signatures:
         image_arr = self.to_numpy()

@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING, Any
 
 import numpy as np
 import spectral as sp
+import xarray as xr
 from PIL import Image, ImageOps
 
 from siapy.core.exceptions import InvalidFilepathError, InvalidInputError
@@ -12,7 +13,7 @@ from siapy.core.exceptions import InvalidFilepathError, InvalidInputError
 from .interfaces import ImageBase
 
 if TYPE_CHECKING:
-    from siapy.core.types import SpectralLibType
+    from siapy.core.types import SpectralLibType, XarrayType
 
 __all__ = [
     "SpectralLibImage",
@@ -116,6 +117,20 @@ class SpectralLibImage(ImageBase):
         image_mask = np.bitwise_not(np.bool_(np.isnan(image).sum(axis=2)))
         image[~image_mask] = nan_value
         return image
+
+    def to_xarray(self) -> "XarrayType":
+        data = self._file[:, :, :]
+        xarray = xr.DataArray(
+            data,
+            dims=["y", "x", "band"],
+            coords={
+                "y": np.arange(self.rows),
+                "x": np.arange(self.cols),
+                "band": self.wavelengths,
+            },
+            attrs=self._file.metadata,
+        )
+        return xarray
 
 
 def _parse_description(description: str) -> dict[str, Any]:

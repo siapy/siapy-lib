@@ -9,7 +9,6 @@ import spectral as sp
 
 from siapy.entities import SpectralImage
 from siapy.entities.images import SpectralLibImage
-from siapy.entities.pixels import Pixels
 from siapy.entities.shapes import Shape
 from siapy.utils.images import (
     blockfy_image,
@@ -144,8 +143,7 @@ def test_merge_images_by_specter():
 
 
 def test_calculate_correction_factor_from_panel_with_label(spectral_images):
-    pixels = Pixels.from_iterable([(200, 350), (300, 400)])
-    rect = Shape.from_shape_type(shape_type="rectangle", pixels=pixels, label="reference_panel")
+    rect = Shape.from_rectangle(x_min=200, y_min=350, x_max=300, y_max=400, label="reference_panel")
     image_vnir = spectral_images.vnir
     image_vnir.geometric_shapes.append(rect)
 
@@ -159,7 +157,7 @@ def test_calculate_correction_factor_from_panel_with_label(spectral_images):
     assert panel_correction.shape == (image_vnir.bands,)
 
     a = image_vnir.to_numpy()
-    b = rect.convex_hull()
+    b = rect.get_pixels_within_convex_hull()[0].as_type(int)
     c = a[b.v(), b.u(), :]
     assert np.array_equal(
         np.full(image_vnir.bands, 0.2),

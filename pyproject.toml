@@ -44,6 +44,7 @@ dependencies = [
     "rasterio>=1.4.3",
     "xarray>=2025.1.2",
     "rioxarray>=0.18.2",
+    "shapely>=2.0.7",
 ]
 
 [dependency-groups]
@@ -108,7 +109,6 @@ ignore_missing_imports = true
 [[tool.mypy.overrides]]
 module = "geopandas.*"
 ignore_missing_imports = true
-
 
 [[tool.mypy.overrides]]
 module = "rasterio.*"

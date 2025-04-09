@@ -15,8 +15,8 @@ from siapy.entities import Pixels
 @pytest.fixture(scope="module")
 def sample_dataframe() -> pd.DataFrame:
     data = {
-        Pixels.coords.U: [1, 2],
-        Pixels.coords.V: [3, 4],
+        Pixels.coords.X: [1, 2],
+        Pixels.coords.Y: [3, 4],
         "0": [5, 6],
         "1": [7, 8],
         "image_idx": [0, 1],
