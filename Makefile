@@ -58,7 +58,7 @@ generate-docs:
 
 .PHONY: serve-docs  ## Serve the docs
 serve-docs:
-	pdm run mkdocs serve
+	pdm run mike serve
 
 .PHONY: version  ## Check project version
 version:

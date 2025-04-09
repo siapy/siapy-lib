@@ -100,6 +100,7 @@ nav:
           - Metrics: api/models/metrics.md
       - Optimizers:
           - Configs: api/optimizers/configs.md
+          - Evaluators: api/optimizers/evaluators.md
           - Optimizers: api/optimizers/optimizers.md
           - Parameters: api/optimizers/parameters.md
           - Scorers: api/optimizers/scorers.md
@@ -107,7 +108,6 @@ nav:
           - Corregistrator: api/transformations/corregistrator.md
           - Image: api/transformations/image.md
       - Utils:
-          - Evaluators: api/utils/evaluators.md
           - Images: api/utils/images.md
           - Plots: api/utils/plots.md
   - Release Notes: changelog.md
@@ -172,6 +172,7 @@ plugins:
   - mike:
       alias_type: symlink
       canonical_version: latest
+      version_selector: true
   - search
   - exclude:
       glob:
@@ -198,6 +199,6 @@ plugins:
             docstring_section_style: spacy
             show_symbol_type_heading: true
             show_symbol_type_toc: true
-          import:
+          inventories:
             - https://docs.python.org/3/objects.inv
   - external-markdown:

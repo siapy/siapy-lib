@@ -7,7 +7,7 @@ from sklearn.model_selection import KFold, train_test_split
 from sklearn.svm import SVC
 
 from siapy.core.exceptions import InvalidInputError
-from siapy.utils.evaluators import (
+from siapy.optimizers.evaluators import (
     cross_validation,
     hold_out_validation,
 )
