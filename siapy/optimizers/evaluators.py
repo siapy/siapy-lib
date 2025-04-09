@@ -12,8 +12,7 @@ from sklearn.model_selection import (
 from siapy.core import logger
 from siapy.core.exceptions import InvalidInputError
 from siapy.core.types import ArrayLike1dType, ArrayLike2dType
-
-from .validators import check_model_prediction_methods
+from siapy.utils.validators import check_model_prediction_methods
 
 __all__ = [
     "cross_validation",

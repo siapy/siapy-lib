@@ -5,8 +5,8 @@ from siapy.datasets.schemas import (
     RegressionTarget,
     TabularDatasetData,
 )
-from siapy.utils.enums import InteractiveButtonsEnum
 from siapy.utils.plots import (
+    InteractiveButtonsEnum,
     display_image_with_areas,
     display_multiple_images_with_areas,
     display_signals,

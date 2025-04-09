@@ -6,7 +6,7 @@ from sklearn import model_selection
 from sklearn.base import BaseEstimator
 
 from siapy.core.types import ArrayLike1dType, ArrayLike2dType
-from siapy.utils.evaluators import (
+from siapy.optimizers.evaluators import (
     ScorerFuncType,
     cross_validation,
     hold_out_validation,
