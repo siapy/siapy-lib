@@ -1,11 +1,10 @@
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
 
 import numpy as np
 import pandas as pd
 
-from siapy.core.exceptions import DirectInitializationError, InvalidInputError
+from siapy.core.exceptions import InvalidInputError
 
 from .pixels import Pixels
 
@@ -18,6 +17,9 @@ __all__ = [
 @dataclass
 class Signals:
     _data: pd.DataFrame
+
+    def __repr__(self) -> str:
+        return f"Signals(\n{self.df}\n)"
 
     @classmethod
     def load_from_parquet(cls, filepath: str | Path) -> "Signals":
@@ -39,50 +41,30 @@ class Signals:
 
 
 @dataclass
-class SignaturesFilter:
-    def __init__(self, pixels: Pixels, signals: Signals):
-        self.pixels = pixels
-        self.signals = signals
-
-    def build(self) -> "Signatures":
-        return Signatures._create(self.pixels, self.signals)
-
-    def rows(self, rows: list[int] | slice | list[bool]) -> "SignaturesFilter":
-        filtered_pixels_df = self.pixels.df.iloc[rows]
-        filtered_signals_df = self.signals.df.iloc[rows]
-        filtered_pixels = Pixels(pd.DataFrame(filtered_pixels_df))
-        filtered_signals = Signals(pd.DataFrame(filtered_signals_df))
-        return SignaturesFilter(filtered_pixels, filtered_signals)
-
-    def cols(self, cols: list[int] | slice | list[bool]) -> "SignaturesFilter":
-        filtered_signals_df = self.signals.df.iloc[:, cols]
-        filtered_signals = Signals(pd.DataFrame(filtered_signals_df))
-        return SignaturesFilter(self.pixels, filtered_signals)
-
-
-@dataclass
 class Signatures:
     _pixels: Pixels
     _signals: Signals
 
-    def __init__(self, *args: Any, **kwargs: Any):
-        raise DirectInitializationError(Signatures)
-
-    @classmethod
-    def _create(cls, pixels: Pixels, signals: Signals) -> "Signatures":
-        instance = object.__new__(cls)
-        instance._pixels = pixels
-        instance._signals = signals
-        return instance
+    def __repr__(self) -> str:
+        return f"Signatures(\n{self.pixels}\n{self.signals}\n)"
 
     @classmethod
     def from_array_and_pixels(cls, image: np.ndarray, pixels: Pixels) -> "Signatures":
         pixels = pixels.as_type(int)
         u = pixels.u()
         v = pixels.v()
+
+        if image.ndim != 3:
+            raise InvalidInputError(f"Expected a 3-dimensional array, but got {image.ndim}-dimensional array.")
+        if np.max(u) >= image.shape[1] or np.max(v) >= image.shape[0]:
+            raise InvalidInputError(
+                f"Pixel coordinates exceed image dimensions: "
+                f"image shape is {image.shape}, but max u={np.max(u)}, max v={np.max(v)}."
+            )
+
         signals_list = image[v, u, :]
         signals = Signals(pd.DataFrame(signals_list))
-        return cls._create(pixels, signals)
+        return cls(pixels, signals)
 
     @classmethod
     def from_dataframe(cls, dataframe: pd.DataFrame) -> "Signatures":
@@ -93,10 +75,29 @@ class Signatures:
             )
         pixels = Pixels(dataframe[[Pixels.coords.X, Pixels.coords.Y]])
         signals = Signals(dataframe.drop(columns=[Pixels.coords.X, Pixels.coords.Y]))
-        return cls._create(pixels, signals)
+        return cls(pixels, signals)
 
     @classmethod
-    def load_from_parquet(cls, filepath: str | Path) -> "Signatures":
+    def from_dataframe_multiindex(cls, df: pd.DataFrame) -> "Signatures":
+        if not isinstance(df.columns, pd.MultiIndex):
+            raise InvalidInputError(
+                type(df.columns),
+                "DataFrame must have MultiIndex columns",
+            )
+
+        pixel_data = df.xs("pixel", axis=1, level="category")
+        signal_data = df.xs("signal", axis=1, level="category")
+
+        assert isinstance(pixel_data, pd.DataFrame)
+        assert isinstance(signal_data, pd.DataFrame)
+
+        pixels = Pixels(pixel_data)
+        signals = Signals(signal_data)
+
+        return cls(pixels, signals)
+
+    @classmethod
+    def open_parquet(cls, filepath: str | Path) -> "Signatures":
         df = pd.read_parquet(filepath)
         return cls.from_dataframe(df)
 
@@ -111,11 +112,22 @@ class Signatures:
     def to_dataframe(self) -> pd.DataFrame:
         return pd.concat([self.pixels.df, self.signals.df], axis=1)
 
+    def to_dataframe_multiindex(self) -> pd.DataFrame:
+        pixel_columns = pd.MultiIndex.from_tuples(
+            [("pixel", "x"), ("pixel", "y")],
+            names=["category", "coordinate"],
+        )
+        signal_columns = pd.MultiIndex.from_tuples(
+            [("signal", col) for col in self.signals.df.columns],
+            names=["category", "channel"],
+        )
+
+        pixel_df = pd.DataFrame(self.pixels.df.values, columns=pixel_columns)
+        signal_df = pd.DataFrame(self.signals.df.values, columns=signal_columns)
+        return pd.concat([pixel_df, signal_df], axis=1)
+
     def to_numpy(self) -> np.ndarray:
         return self.to_dataframe().to_numpy()
-
-    def filter(self) -> SignaturesFilter:
-        return SignaturesFilter(self.pixels, self.signals)
 
     def save_to_parquet(self, filepath: str | Path) -> None:
         self.to_dataframe().to_parquet(filepath, index=True)
