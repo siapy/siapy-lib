@@ -1,4 +1,5 @@
 import sys
+from enum import Enum, auto
 from typing import Any
 
 import matplotlib.pyplot as plt
@@ -13,7 +14,6 @@ from siapy.core.logger import logger
 from siapy.core.types import ImageType
 from siapy.datasets.schemas import ClassificationTarget, TabularDatasetData
 from siapy.entities import Pixels
-from siapy.utils.enums import InteractiveButtonsEnum
 from siapy.utils.validators import validate_image_to_numpy_3channels
 
 __all__ = [
@@ -22,6 +22,7 @@ __all__ = [
     "display_image_with_areas",
     "display_multiple_images_with_areas",
     "display_signals",
+    "InteractiveButtonsEnum",
 ]
 
 
@@ -149,6 +150,12 @@ def display_image_with_areas(
         )
 
     plt.show()
+
+
+class InteractiveButtonsEnum(Enum):
+    SAVE = auto()
+    REPEAT = auto()
+    SKIP = auto()
 
 
 def display_multiple_images_with_areas(
