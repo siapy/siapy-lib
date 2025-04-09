@@ -36,6 +36,9 @@ class Pixels:
     def __len__(self) -> int:
         return len(self.df)
 
+    def __repr__(self) -> str:
+        return f"Pixels(\n{self.df}\n)"
+
     def __getitem__(self, idx) -> PixelCoordinate:
         row = self.df.iloc[idx]
         return PixelCoordinate(x=row[self.coords.X], y=row[self.coords.Y])

@@ -11,7 +11,7 @@ header_paths = sorted(Path(data_dir).rglob("*.hdr"))
 image_paths = sorted(Path(data_dir).rglob("*.img"))
 
 # Create a SpectralImageSet from the found paths
-imageset = SpectralImageSet.from_paths(
+imageset = SpectralImageSet.spy_open(
     header_paths=header_paths,
     image_paths=image_paths,
 )

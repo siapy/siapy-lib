@@ -32,7 +32,7 @@ class SpectralImageSet:
         return self.images[index]
 
     @classmethod
-    def from_paths(
+    def spy_open(
         cls,
         *,
         header_paths: Sequence[str | Path],
@@ -61,6 +61,19 @@ class SpectralImageSet:
                 )
             ]
         logger.info("Spectral images loaded into memory.")
+        return cls(spectral_images)
+
+    @classmethod
+    def rasterio_open(
+        cls,
+        *,
+        filepaths: Sequence[str | Path],
+    ):
+        spectral_images = [
+            SpectralImage.rasterio_open(filepath)
+            for filepath in track(filepaths, description="Loading raster images...")
+        ]
+        logger.info("Raster images loaded into memory.")
         return cls(spectral_images)
 
     @property
