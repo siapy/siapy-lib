@@ -1,5 +1,39 @@
 # Changelog
 
+## [0.7.0](https://github.com/siapy/siapy-lib/compare/v0.6.0...v0.7.0) (2025-04-09)
+
+
+### Features
+
+* add to_xarray method to ImageBase and implementations in RasterioLibImage and SpectralLibImage; enhance tests for new functionality ([0663f75](https://github.com/siapy/siapy-lib/commit/0663f75afe6c30e4f140cda8056606e8d2fa9a22))
+* enhance Pixels and Signatures classes with __repr__ methods; remove SignaturesFilter class and update related tests ([19d212f](https://github.com/siapy/siapy-lib/commit/19d212fad287ef838a8539e50eb313ac4875fdc5))
+* enhance Shape class with get_pixels from convex hull ([fefeca2](https://github.com/siapy/siapy-lib/commit/fefeca2fe004b4d71e81fa667515ae1749fa13ae))
+* introduce Shape class and ShapeGeometryEnum for geometric representations ([8e33634](https://github.com/siapy/siapy-lib/commit/8e3363446f13d0d06ac3f4ff6a0a933b76e3b025))
+* refactor shape handling; replace Shapefile with Shape and add tests ([381028d](https://github.com/siapy/siapy-lib/commit/381028d8a24ea485fb957e36e6187be575b50979))
+* shape handling and pixel coordinates ([f7d48c9](https://github.com/siapy/siapy-lib/commit/f7d48c9eb4e5607567ad257c012455ed4d066578))
+* update pixel class; add validators for initialization ([2bd2710](https://github.com/siapy/siapy-lib/commit/2bd2710dbba2e1924a7946b5fc90b2a6efb99d21))
+* update SpectralImageSet methods to use spy_open; add rasterio_o… ([ad3aaaf](https://github.com/siapy/siapy-lib/commit/ad3aaafa2b1cf0b11bb1b53b666a67092d2ec083))
+* update SpectralImageSet methods to use spy_open; add rasterio_open method and corresponding tests ([b61c2e8](https://github.com/siapy/siapy-lib/commit/b61c2e8f2315f64d9c4e7588174b4bd9067b2d0e))
+
+
+### Bug Fixes
+
+* add missing XarrayType to the public API in types.py ([eab41ee](https://github.com/siapy/siapy-lib/commit/eab41eeb033c37bb1b76ec8ce5828a1cf96cb0f4))
+* add row and column properties to RasterioLibImage class; enhance tests for new properties ([a871485](https://github.com/siapy/siapy-lib/commit/a871485f10fc368fa51c2ada85587b3d6316e9e5))
+* implement rasterio_open method in SpectralImage class; add corresponding tests ([2b0e82f](https://github.com/siapy/siapy-lib/commit/2b0e82f4ad93534710e42a6d89b80527281a8fc5))
+* update pre-commit installation command to include all hook types ([41faf02](https://github.com/siapy/siapy-lib/commit/41faf023aba8f1971afe9a4509cf3c3e8ad273dd))
+
+
+### Dependencies
+
+* update pdm.lock and add shapely dependency in pyproject.toml ([534e639](https://github.com/siapy/siapy-lib/commit/534e6396365d9ea0eeca65b5437da267418b3b15))
+
+
+### Documentation
+
+* enhance copilot instructions with additional naming conventions ([0d7600d](https://github.com/siapy/siapy-lib/commit/0d7600d5af2de6eb92bda46c6cc23439aaee15dc))
+* update documentation structure by removing obsolete shapefiles and shapes entries, and adding shape details ([5677b4f](https://github.com/siapy/siapy-lib/commit/5677b4fdd1f7710eb01067a1db50459d7254ff16))
+
 ## [0.6.0](https://github.com/siapy/siapy-lib/compare/v0.5.9...v0.6.0) (2025-03-22)
 
 
