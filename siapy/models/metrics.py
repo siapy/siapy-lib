@@ -1,7 +1,8 @@
 # cSpell:disable
-from typing import Literal, NamedTuple
+from typing import Any, Literal, NamedTuple
 
 import numpy as np
+from numpy.typing import NDArray
 from sklearn.metrics import (
     accuracy_score,
     f1_score,
@@ -12,6 +13,7 @@ from sklearn.metrics import (
     precision_score,
     r2_score,
     recall_score,
+    root_mean_squared_error,
 )
 
 from siapy.core.exceptions import InvalidInputError
@@ -22,12 +24,12 @@ __all__ = [
 ]
 
 
-def normalized_RMSE(
-    y_true: np.ndarray,
-    y_pred: np.ndarray,
+def normalized_rmse(
+    y_true: NDArray[np.floating[Any]],
+    y_pred: NDArray[np.floating[Any]],
     normalize_by: Literal["range", "mean"] = "range",
-):
-    rmse = mean_squared_error(y_true, y_pred, squared=False)
+) -> float:
+    rmse = root_mean_squared_error(y_true, y_pred)
     if normalize_by == "range":
         normalizer = np.max(y_true) - np.min(y_true)
     elif normalize_by == "mean":
@@ -37,7 +39,7 @@ def normalized_RMSE(
             input_value=normalize_by,
             message="Unknown normalizer. Possible values are: 'range' or 'mean'.",
         )
-    return rmse / normalizer
+    return float(rmse / normalizer)
 
 
 class ClassificationMetrics(NamedTuple):
@@ -54,7 +56,7 @@ class ClassificationMetrics(NamedTuple):
             f"F1: {self.f1:.2f}\n"
         )
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> dict[str, float]:
         return self._asdict()
 
 
@@ -80,19 +82,19 @@ class RegressionMetrics(NamedTuple):
             f"Normalized root mean squared error (by range): {self.nrmse_range:.2f}\n"
         )
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> dict[str, float]:
         return self._asdict()
 
 
 def calculate_classification_metrics(
-    y_true,
-    y_pred,
+    y_true: NDArray[np.floating[Any]],
+    y_pred: NDArray[np.floating[Any]],
     average: Literal["micro", "macro", "samples", "weighted", "binary"] | None = "weighted",
-):
-    accuracy = accuracy_score(y_true, y_pred)
-    precision = precision_score(y_true, y_pred, average=average)
-    recall = recall_score(y_true, y_pred, average=average)
-    f1 = f1_score(y_true, y_pred, average=average)
+) -> ClassificationMetrics:
+    accuracy = float(accuracy_score(y_true, y_pred))
+    precision = float(precision_score(y_true, y_pred, average=average))
+    recall = float(recall_score(y_true, y_pred, average=average))
+    f1 = float(f1_score(y_true, y_pred, average=average))
     return ClassificationMetrics(
         accuracy=accuracy,
         precision=precision,
@@ -101,15 +103,18 @@ def calculate_classification_metrics(
     )
 
 
-def calculate_regression_metrics(y_true, y_pred):
-    mae = mean_absolute_error(y_true, y_pred)
-    mse = mean_squared_error(y_true, y_pred, squared=True)
-    rmse = mean_squared_error(y_true, y_pred, squared=False)
-    r2 = r2_score(y_true, y_pred)
-    pe = mean_absolute_percentage_error(y_true, y_pred)
-    maxe = max_error(y_true, y_pred)
-    nrmse_mean = normalized_RMSE(y_true, y_pred, normalize_by="mean")
-    nrmse_range = normalized_RMSE(y_true, y_pred, normalize_by="range")
+def calculate_regression_metrics(
+    y_true: NDArray[np.floating[Any]],
+    y_pred: NDArray[np.floating[Any]],
+) -> RegressionMetrics:
+    mae = float(mean_absolute_error(y_true, y_pred))
+    mse = float(mean_squared_error(y_true, y_pred))
+    rmse = float(root_mean_squared_error(y_true, y_pred))
+    r2 = float(r2_score(y_true, y_pred))
+    pe = float(mean_absolute_percentage_error(y_true, y_pred))
+    maxe = float(max_error(y_true, y_pred))
+    nrmse_mean = float(normalized_rmse(y_true, y_pred, normalize_by="mean"))
+    nrmse_range = float(normalized_rmse(y_true, y_pred, normalize_by="range"))
     return RegressionMetrics(
         mae=mae,
         mse=mse,

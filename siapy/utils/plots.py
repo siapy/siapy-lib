@@ -8,6 +8,7 @@ from matplotlib.axes import Axes
 from matplotlib.lines import Line2D
 from matplotlib.path import Path
 from matplotlib.widgets import Button, LassoSelector
+from numpy.typing import NDArray
 
 from siapy.core.exceptions import InvalidInputError
 from siapy.core.logger import logger
@@ -35,7 +36,7 @@ def pixels_select_click(image: ImageType) -> Pixels:
     fig.tight_layout()
     enter_clicked = 0
 
-    def onclick(event):
+    def onclick(event: Any) -> None:
         nonlocal coordinates, fig
         logger.info(f"Pressed coordinate: X = {event.xdata}, Y = {event.ydata}")
         x_coor = round(event.xdata)
@@ -50,14 +51,14 @@ def pixels_select_click(image: ImageType) -> Pixels:
         )
         fig.canvas.draw()
 
-    def accept(event):
+    def accept(event: Any) -> None:
         nonlocal enter_clicked
         if event.key == "enter":
             logger.info("Enter clicked.")
             enter_clicked = 1
             plt.close()
 
-    def onexit(event):
+    def onexit(event: Any) -> None:
         nonlocal enter_clicked
         if not enter_clicked:
             logger.info("Exiting application.")
@@ -81,28 +82,28 @@ def pixels_select_lasso(image: ImageType, selector_props: dict[str, Any] | None 
     ax.imshow(image_display)
     fig.tight_layout()
 
-    indices = 0
-    indices_list = []
+    indices: NDArray[np.bool_] = np.array([], dtype=bool)
+    indices_list: list[NDArray[np.bool_]] = []
     enter_clicked = 0
 
-    def onselect(vertices_selected, eps=1e-8):
+    def onselect(vertices_selected: list[tuple[float, float]]) -> None:
         logger.info("Selected.")
         nonlocal indices
         path = Path(vertices_selected)
         indices = path.contains_points(pixes_all_stack)
 
-    def onrelease(_):
+    def onrelease(event: Any) -> None:
         nonlocal indices, indices_list
         indices_list.append(indices)
 
-    def onexit(event):
+    def onexit(event: Any) -> None:
         nonlocal enter_clicked
         if not enter_clicked:
             logger.info("Exiting application.")
             plt.close()
             sys.exit(0)
 
-    def accept(event):
+    def accept(event: Any) -> None:
         nonlocal enter_clicked
         if event.key == "enter":
             logger.info("Enter clicked.")
@@ -110,7 +111,7 @@ def pixels_select_lasso(image: ImageType, selector_props: dict[str, Any] | None 
             plt.close()
 
     props = selector_props if selector_props is not None else {"color": "red", "linewidth": 2, "linestyle": "-"}
-    lasso = LassoSelector(ax, onselect, props=props)  # noqa: F841
+    lasso = LassoSelector(ax, onselect, props=props)  # noqa: F841 type: ignore[reportUnusedVariable]
     fig.canvas.mpl_connect("button_release_event", onrelease)
     fig.canvas.mpl_connect("close_event", onexit)
     fig.canvas.mpl_connect("key_press_event", accept)
@@ -131,7 +132,7 @@ def display_image_with_areas(
     areas: Pixels | list[Pixels],
     *,
     color: str = "red",
-):
+) -> None:
     if not isinstance(areas, list):
         areas = [areas]
 
@@ -193,22 +194,22 @@ def display_multiple_images_with_areas(
     return None
 
 
-def interactive_buttons():
+def interactive_buttons() -> InteractiveButtonsEnum:
     flag = InteractiveButtonsEnum.REPEAT
 
-    def repeat(event):
+    def repeat(event: Any) -> None:
         nonlocal flag
         logger.info("Pressed repeat button.")
         plt.close()
         flag = InteractiveButtonsEnum.REPEAT
 
-    def save(event):
+    def save(event: Any) -> None:
         nonlocal flag
         logger.info("Pressed save button.")
         plt.close()
         flag = InteractiveButtonsEnum.SAVE
 
-    def skip(event):
+    def skip(event: Any) -> None:
         nonlocal flag
         logger.info("Pressed skip button.")
         plt.close()
@@ -240,7 +241,7 @@ def display_signals(
     tick_params_label_size: int = 12,
     legend_fontsize: int = 10,
     legend_frameon: bool = True,
-):
+) -> None:
     if not isinstance(data.target, ClassificationTarget):
         raise InvalidInputError(
             input_value=data.target,

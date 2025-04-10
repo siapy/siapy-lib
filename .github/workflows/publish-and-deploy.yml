@@ -1,0 +1,78 @@
+name: Publish to PyPI and Deploy Docs
+
+on:
+  pull_request_target:
+    branches:
+      - main
+    types:
+      - closed
+  workflow_dispatch:
+
+jobs:
+  check-pr-title:
+    if: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.merged == true }}
+    runs-on: ubuntu-latest
+    outputs:
+      is_chore_main_release: ${{ steps.check_title.outputs.is_chore_main_release }}
+    steps:
+      - name: Check PR title
+        id: check_title
+        run: |
+          if [[ "${{ github.event.pull_request.title }}" == "chore(main): release"* ]]; then
+            echo "is_chore_main_release=true" >> $GITHUB_OUTPUT
+          else
+            echo "is_chore_main_release=false" >> $GITHUB_OUTPUT
+          fi
+
+  pypi-publish:
+    needs: check-pr-title
+    if: ${{ needs.check-pr-title.outputs.is_chore_main_release == 'true' }}
+    name: Upload release to PyPI
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    outputs:
+      published: ${{ steps.publish.outputs.published }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pdm-project/setup-pdm@v4
+        with:
+          python-version: "3.12"
+          cache: true
+      - name: Publish package distributions to PyPI
+        id: publish
+        run: |
+          pdm publish
+          echo "published=true" >> $GITHUB_OUTPUT
+
+  deploy-docs:
+    needs: pypi-publish
+    if: ${{ needs.pypi-publish.outputs.published == 'true' }}
+    name: Deploy MkDocs
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup PDM
+        uses: pdm-project/setup-pdm@v4
+        with:
+          python-version: "3.12"
+          cache: true
+      - name: Install dependencies
+        run: pdm install -G docs
+      - name: Build MkDocs site
+        run: make generate-docs
+      - name: Configure Git Credentials
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+      - name: Fetch gh-pages branch
+        run: |
+          git fetch origin gh-pages:gh-pages || true
+      - name: Deploy docs
+        run: |
+          pdm run mike deploy --push --update-aliases $(pdm show --version) latest
+          pdm run mike set-default --push latest

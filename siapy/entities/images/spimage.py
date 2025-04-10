@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any, Generic, Sequence, TypeVar
 
 import numpy as np
+from numpy.typing import NDArray
 from PIL import Image
 
 from ..shapes import GeometricShapes, Shape
@@ -40,7 +41,7 @@ class SpectralImage(Generic[T]):
     def __str__(self) -> str:
         return str(self._image)
 
-    def __lt__(self, other: "SpectralImage") -> bool:
+    def __lt__(self, other: "SpectralImage[Any]") -> bool:
         return self.filepath.name < other.filepath.name
 
     def __eq__(self, other: Any) -> bool:
@@ -99,7 +100,7 @@ class SpectralImage(Generic[T]):
     def to_display(self, equalize: bool = True) -> Image.Image:
         return self.image.to_display(equalize)
 
-    def to_numpy(self, nan_value: float | None = None) -> np.ndarray:
+    def to_numpy(self, nan_value: float | None = None) -> NDArray[np.floating[Any]]:
         return self.image.to_numpy(nan_value)
 
     def to_xarray(self) -> "XarrayType":
@@ -110,14 +111,14 @@ class SpectralImage(Generic[T]):
         signatures = Signatures.from_array_and_pixels(image_arr, pixels)
         return signatures
 
-    def to_subarray(self, pixels: "Pixels") -> np.ndarray:
+    def to_subarray(self, pixels: "Pixels") -> NDArray[np.floating[Any]]:
         image_arr = self.to_numpy()
         u_max = pixels.u().max()
         u_min = pixels.u().min()
         v_max = pixels.v().max()
         v_min = pixels.v().min()
         # create new image
-        image_arr_area = np.nan * np.ones((v_max - v_min + 1, u_max - u_min + 1, self.bands))
+        image_arr_area = np.nan * np.ones((int(v_max - v_min + 1), int(u_max - u_min + 1), self.bands))
         # convert original coordinates to coordinates for new image
         v_norm = pixels.v() - v_min
         u_norm = pixels.u() - u_min
@@ -125,6 +126,6 @@ class SpectralImage(Generic[T]):
         image_arr_area[v_norm, u_norm, :] = image_arr[pixels.v(), pixels.u(), :]
         return image_arr_area
 
-    def mean(self, axis: int | tuple[int, ...] | Sequence[int] | None = None) -> float | np.ndarray:
+    def mean(self, axis: int | tuple[int, ...] | Sequence[int] | None = None) -> float | NDArray[np.floating[Any]]:
         image_arr = self.to_numpy()
         return np.nanmean(image_arr, axis=axis)

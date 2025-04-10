@@ -97,6 +97,20 @@ markers = ["manual: mark test as manual to run them only on demand."]
 
 [tool.mypy]
 mypy_path = "stubs"
+plugins = ["pydantic.mypy"]
+warn_redundant_casts = true
+disallow_untyped_defs = true
+allow_untyped_globals = false
+disallow_any_generics = false
+
+[tool.pydantic-mypy]
+init_forbid_extra = true
+init_typed = true
+warn_required_dynamic_aliases = true
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+disallow_untyped_defs = false
 
 [[tool.mypy.overrides]]
 module = "spectral"
@@ -112,6 +126,10 @@ ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
 module = "rasterio.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "mlxtend.*"
 ignore_missing_imports = true
 
 [tool.ruff]

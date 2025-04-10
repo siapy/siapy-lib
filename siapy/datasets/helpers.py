@@ -48,5 +48,5 @@ def generate_regression_target(
     return RegressionTarget(name=column_name, value=dataframe[column_name])
 
 
-def merge_signals_from_multiple_cameras(data: "TabularDatasetData"):
+def merge_signals_from_multiple_cameras(data: "TabularDatasetData") -> None:
     data.signals.copy()
