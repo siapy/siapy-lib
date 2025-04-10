@@ -1,7 +1,8 @@
 from functools import partial
-from typing import Annotated, Iterable, Literal
+from typing import Annotated, Callable, Iterable, Literal, Any
 
 import numpy as np
+from numpy.typing import NDArray
 from sklearn import model_selection
 from sklearn.base import BaseEstimator
 
@@ -19,7 +20,7 @@ __all__ = [
 
 
 class Scorer:
-    def __init__(self, scorer):
+    def __init__(self, scorer: Callable[..., float]) -> None:
         self._scorer = scorer
 
     def __call__(
@@ -39,7 +40,7 @@ class Scorer:
         cv: int
         | model_selection.BaseCrossValidator
         | model_selection._split._RepeatedSplits
-        | Iterable
+        | Iterable[int]
         | Literal["RepeatedKFold", "RepeatedStratifiedKFold"]
         | None = None,
         n_jobs: Annotated[
@@ -76,7 +77,7 @@ class Scorer:
         cls,
         scoring: str | ScorerFuncType | None = None,
         test_size: float | None = 0.2,
-        stratify: np.ndarray | None = None,
+        stratify: NDArray[np.floating[Any]] | None = None,
     ) -> "Scorer":
         scorer = partial(
             hold_out_validation,

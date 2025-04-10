@@ -46,7 +46,7 @@ class TabularDataset:
         self._check_data_entities()
         return iter(self.data_entities)
 
-    def __getitem__(self, index) -> TabularDataEntity:
+    def __getitem__(self, index: int) -> TabularDataEntity:
         self._check_data_entities()
         return self.data_entities[index]
 
@@ -58,7 +58,7 @@ class TabularDataset:
     def data_entities(self) -> list[TabularDataEntity]:
         return self._data_entities
 
-    def process_image_data(self):
+    def process_image_data(self) -> None:
         self.data_entities.clear()
         for image_idx, image in enumerate(self.image_set):
             for shape_idx, shape in enumerate(image.geometric_shapes.shapes):
@@ -77,7 +77,7 @@ class TabularDataset:
                     )
                     self.data_entities.append(entity)
 
-    def generate_dataset_data(self, mean_signatures=True) -> TabularDatasetData:
+    def generate_dataset_data(self, mean_signatures: bool = True) -> TabularDatasetData:
         self._check_data_entities()
         pixels_dfs = []
         signals_dfs = []
@@ -116,7 +116,7 @@ class TabularDataset:
             metadata=pd.concat(metadata_dfs, ignore_index=True),
         )
 
-    def _check_data_entities(self):
+    def _check_data_entities(self) -> None:
         if not self.data_entities:
             raise InvalidInputError(
                 {

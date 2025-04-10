@@ -16,7 +16,7 @@ __all__ = [
 
 @dataclass
 class SpectralImageSet:
-    def __init__(self, spectral_images: list[SpectralImage] | None = None):
+    def __init__(self, spectral_images: list[SpectralImage[Any]] | None = None):
         self._images = spectral_images if spectral_images is not None else []
 
     def __len__(self) -> int:
@@ -25,10 +25,10 @@ class SpectralImageSet:
     def __str__(self) -> str:
         return f"<{self.__class__.__name__} object with {len(self)} spectral images>"
 
-    def __iter__(self) -> Iterator[SpectralImage]:
+    def __iter__(self) -> Iterator[SpectralImage[Any]]:
         return iter(self.images)
 
-    def __getitem__(self, index) -> SpectralImage:
+    def __getitem__(self, index: int) -> SpectralImage[Any]:
         return self.images[index]
 
     @classmethod
@@ -37,7 +37,7 @@ class SpectralImageSet:
         *,
         header_paths: Sequence[str | Path],
         image_paths: Sequence[str | Path] | None = None,
-    ):
+    ) -> "SpectralImageSet":
         if image_paths is not None and len(header_paths) != len(image_paths):
             raise InvalidInputError(
                 {
@@ -68,7 +68,7 @@ class SpectralImageSet:
         cls,
         *,
         filepaths: Sequence[str | Path],
-    ):
+    ) -> "SpectralImageSet":
         spectral_images = [
             SpectralImage.rasterio_open(filepath)
             for filepath in track(filepaths, description="Loading raster images...")
@@ -77,17 +77,17 @@ class SpectralImageSet:
         return cls(spectral_images)
 
     @property
-    def images(self) -> list[SpectralImage]:
+    def images(self) -> list[SpectralImage[Any]]:
         return self._images
 
     @property
     def cameras_id(self) -> list[str]:
         return list({image.camera_id for image in self.images})
 
-    def images_by_camera_id(self, camera_id: str):
+    def images_by_camera_id(self, camera_id: str) -> list[SpectralImage[Any]]:
         ids = np.array([image.camera_id for image in self.images])
         indices = np.nonzero(ids == camera_id)[0]
         return [image for idx, image in enumerate(self.images) if idx in indices]
 
-    def sort(self, key: Any = None, reverse: bool = False):
+    def sort(self, key: Any = None, reverse: bool = False) -> None:
         self.images.sort(key=key, reverse=reverse)

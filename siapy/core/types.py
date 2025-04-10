@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 import spectral as sp
 import xarray as xr
-from numpy.typing import ArrayLike
+from numpy.typing import ArrayLike, NDArray
 from PIL.Image import Image
 
 from siapy.entities import SpectralImage, SpectralImageSet
@@ -22,7 +22,7 @@ __all__ = [
 
 SpectralLibType = sp.io.envi.BilFile | sp.io.envi.BipFile | sp.io.envi.BsqFile
 XarrayType = xr.DataArray | xr.Dataset
-ImageType = SpectralImage | np.ndarray | Image
+ImageType = SpectralImage[Any] | NDArray[np.floating[Any]] | Image
 ImageSizeType = int | tuple[int, ...]
 ImageDataType = (
     np.uint8
@@ -37,6 +37,6 @@ ImageDataType = (
     | np.int64
     | np.uint64
 )
-ImageContainerType = SpectralImage | SpectralImageSet
-ArrayLike1dType = np.ndarray | pd.Series | Sequence[Any] | ArrayLike
-ArrayLike2dType = np.ndarray | pd.DataFrame | Sequence[Any] | ArrayLike
+ImageContainerType = SpectralImage[Any] | SpectralImageSet
+ArrayLike1dType = NDArray[np.floating[Any]] | pd.Series | Sequence[Any] | ArrayLike
+ArrayLike2dType = NDArray[np.floating[Any]] | pd.DataFrame | Sequence[Any] | ArrayLike

@@ -1,6 +1,7 @@
 from typing import Annotated, Any, Callable, Iterable, Literal
 
 import numpy as np
+from numpy.typing import NDArray
 from sklearn.base import BaseEstimator
 from sklearn.metrics import get_scorer
 from sklearn.model_selection import (
@@ -31,7 +32,7 @@ def cross_validation(
     *,
     groups: ArrayLike1dType | None = None,
     scoring: str | ScorerFuncType | None = None,
-    cv: int | BaseCrossValidator | Iterable | None = None,
+    cv: int | BaseCrossValidator | Iterable[Any] | None = None,
     n_jobs: int | None = 1,
     verbose: int = 0,
     params: dict[str, Any] | None = None,
@@ -68,7 +69,7 @@ def hold_out_validation(
     test_size: float | None = 0.2,
     random_state: int | None = None,
     shuffle: bool = True,
-    stratify: np.ndarray | None = None,
+    stratify: NDArray[np.floating[Any]] | None = None,
 ) -> float:
     if X_val is not None and y_val is not None:
         x_train, x_test, y_train, y_test = X, X_val, y, y_val

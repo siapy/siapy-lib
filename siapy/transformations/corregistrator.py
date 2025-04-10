@@ -1,7 +1,8 @@
-from typing import Sequence
+from typing import Any, Sequence
 
 import matplotlib.pyplot as plt
 import numpy as np
+from numpy.typing import NDArray
 
 from siapy.entities.pixels import Pixels
 
@@ -13,7 +14,9 @@ __all__ = [
 ]
 
 
-def map_affine_approx_2d(points_ref: np.ndarray, points_mov: np.ndarray) -> np.ndarray:
+def map_affine_approx_2d(
+    points_ref: NDArray[np.floating[Any]], points_mov: NDArray[np.floating[Any]]
+) -> NDArray[np.floating[Any]]:
     """Affine transformation"""
     # U = T*X -> T = U*X'(X*X')^-1
     matx_2d = points_ref.transpose() @ points_mov @ np.linalg.inv(points_mov.transpose() @ points_mov)
@@ -25,7 +28,7 @@ def affine_matx_2d(
     trans: tuple[float, float] | Sequence[float] = (0, 0),
     rot: float = 0,
     shear: tuple[float, float] | Sequence[float] = (0, 0),
-) -> np.ndarray:
+) -> NDArray[np.floating[Any]]:
     """Create arbitrary affine transformation matrix"""
     rot = rot * np.pi / 180
     matx_scale = np.array(((scale[0], 0, 0), (0, scale[1], 0), (0, 0, 1)))
@@ -49,7 +52,7 @@ def align(
     eps: float = 1e-6,
     max_iter: int = 50,
     plot_progress: bool = False,
-) -> tuple[np.ndarray, np.ndarray]:
+) -> tuple[NDArray[np.floating[Any]], NDArray[np.floating[Any]]]:
     """Align interactive corresponding points"""
 
     points_ref = pixels_ref.df_homogenious().to_numpy()
@@ -97,7 +100,7 @@ def align(
     return matx_2d_combined, errors_np
 
 
-def transform(pixels: Pixels, transformation_matx: np.ndarray):
+def transform(pixels: Pixels, transformation_matx: NDArray[np.floating[Any]]) -> Pixels:
     """Transform pixels"""
     points_transformed = np.dot(pixels.df_homogenious().to_numpy(), transformation_matx.transpose())
     points_transformed = np.round(points_transformed[:, :2]).astype("int")

@@ -4,7 +4,7 @@ import os
 import tarfile
 from pathlib import Path
 
-import requests
+import requests  # type: ignore[import]
 
 #################################################################
 #                    TEST DATA CONFIGURATION                    #
