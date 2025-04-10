@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.2](https://github.com/siapy/siapy-lib/compare/v0.7.1...v0.7.2) (2025-04-10)
+
+
+### Bug Fixes
+
+* Refactor image handling and typing annotations across the codebase ([551dc15](https://github.com/siapy/siapy-lib/commit/551dc15992bb0c1b11c0e3084647ff67d422dafc))
+
 ## [0.7.1](https://github.com/siapy/siapy-lib/compare/v0.7.0...v0.7.1) (2025-04-09)
 
 
