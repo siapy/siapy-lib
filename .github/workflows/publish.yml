@@ -7,10 +7,20 @@ on:
     types:
       - closed
   workflow_dispatch:
+    inputs:
+      manual_publish:
+        description: "Run publish and deploy manually"
+        type: boolean
+        default: false
+        required: true
 
 jobs:
   check-pr-title:
-    if: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.merged == true }}
+    if: |
+      github.event_name == 'pull_request_target' &&
+      github.event.pull_request.merged == true ||
+      github.event_name == 'workflow_dispatch' &&
+      github.event.inputs.manual_publish == 'true'
     runs-on: ubuntu-latest
     outputs:
       is_chore_main_release: ${{ steps.check_title.outputs.is_chore_main_release }}
@@ -26,7 +36,9 @@ jobs:
 
   pypi-publish:
     needs: check-pr-title
-    if: ${{ needs.check-pr-title.outputs.is_chore_main_release == 'true' }}
+    if: |
+      needs.check-pr-title.outputs.is_chore_main_release == 'true' ||
+      github.event.inputs.manual_publish == 'true'
     name: Upload release to PyPI
     runs-on: ubuntu-latest
     permissions:
@@ -41,14 +53,10 @@ jobs:
           python-version: "3.12"
           cache: true
       - name: Publish package distributions to PyPI
-        id: publish
-        run: |
-          pdm publish
-          echo "published=true" >> $GITHUB_OUTPUT
+        run: pdm publish
 
   deploy-docs:
     needs: pypi-publish
-    if: ${{ needs.pypi-publish.outputs.published == 'true' }}
     name: Deploy MkDocs
     runs-on: ubuntu-latest
     permissions:
