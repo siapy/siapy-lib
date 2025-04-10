@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING, Any
 
 import numpy as np
 import rioxarray
+from numpy.typing import NDArray
 from PIL import Image, ImageOps
 
 from siapy.core.exceptions import InvalidFilepathError, InvalidInputError
@@ -96,7 +97,7 @@ class RasterioLibImage(ImageBase):
             image = ImageOps.equalize(image)
         return image
 
-    def to_numpy(self, nan_value: float | None = None) -> np.ndarray:
+    def to_numpy(self, nan_value: float | None = None) -> NDArray[np.floating[Any]]:
         image = np.asarray(self.file.transpose("y", "x", "band").values)
         if nan_value is not None:
             image = np.nan_to_num(image, nan=nan_value)

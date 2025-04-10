@@ -1,9 +1,12 @@
+from __future__ import annotations
+
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, ClassVar, Iterable, NamedTuple, Sequence, TypeAlias
 
 import numpy as np
 import pandas as pd
+from numpy.typing import NDArray
 
 from siapy.core.exceptions import InvalidInputError
 
@@ -39,7 +42,7 @@ class Pixels:
     def __repr__(self) -> str:
         return f"Pixels(\n{self.df}\n)"
 
-    def __getitem__(self, idx) -> PixelCoordinate:
+    def __getitem__(self, idx: int) -> PixelCoordinate:
         row = self.df.iloc[idx]
         return PixelCoordinate(x=row[self.coords.X], y=row[self.coords.Y])
 
@@ -72,13 +75,13 @@ class Pixels:
         df_homo[self.coords.H] = 1
         return df_homo
 
-    def u(self) -> pd.Series:
+    def u(self) -> "pd.Series[float]":
         return self.df[self.coords.X]
 
-    def v(self) -> pd.Series:
+    def v(self) -> "pd.Series[float]":
         return self.df[self.coords.Y]
 
-    def to_numpy(self) -> np.ndarray:
+    def to_numpy(self) -> NDArray[np.floating[Any]]:
         return self.df.to_numpy()
 
     def to_list(self) -> list[PixelCoordinate]:
@@ -94,7 +97,7 @@ class Pixels:
         return Pixels(converted_df)
 
 
-def validate_pixel_input_dimensions(df: pd.DataFrame):
+def validate_pixel_input_dimensions(df: pd.DataFrame) -> None:
     if df.shape[1] != 2:
         raise InvalidInputError(
             message="Invalid input dimensions: expected 2 columns (u, v), got",

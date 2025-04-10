@@ -1,10 +1,11 @@
 from enum import Enum
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Any
 
 import geopandas as gpd
 import numpy as np
 import pandas as pd
+from numpy.typing import NDArray
 from shapely.geometry import LineString, MultiLineString, MultiPoint, MultiPolygon, Point, Polygon
 from shapely.geometry.base import BaseGeometry
 from shapely.prepared import prep as shapely_prep
@@ -282,7 +283,7 @@ class Shape:
     def to_file(self, filepath: str | Path, driver: str = "ESRI Shapefile") -> None:
         self._geodataframe.to_file(filepath, driver=driver)
 
-    def to_numpy(self) -> np.ndarray:
+    def to_numpy(self) -> NDArray[np.floating[Any]]:
         return self.df.to_numpy()
 
     def get_pixels_within_convex_hull(self, resolution: float = 1.0) -> list[Pixels]:

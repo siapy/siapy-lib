@@ -1,5 +1,3 @@
-from pathlib import Path
-
 import pytest
 
 from siapy.core.exceptions import InvalidInputError
@@ -8,11 +6,11 @@ from siapy.entities.images.rasterio_lib import RasterioLibImage
 
 
 def test_spy_open_valid(configs):
-    header_paths: list[str | Path] = [
+    header_paths = [
         configs.image_vnir_hdr_path,
         configs.image_swir_hdr_path,
     ]
-    image_paths: list[str | Path] = [
+    image_paths = [
         configs.image_vnir_img_path,
         configs.image_swir_img_path,
     ]
@@ -21,17 +19,17 @@ def test_spy_open_valid(configs):
 
 
 def test_spy_open_invalid(configs):
-    header_paths: list[str | Path] = [
+    header_paths = [
         configs.image_vnir_hdr_path,
         configs.image_swir_hdr_path,
     ]
-    image_paths: list[str | Path] = [configs.image_vnir_img_path]
+    image_paths = [configs.image_vnir_img_path]
     with pytest.raises(InvalidInputError):
         SpectralImageSet.spy_open(header_paths=header_paths, image_paths=image_paths)
 
 
 def test_rasterio_open(configs):
-    filepaths: list[str | Path] = [
+    filepaths = [
         configs.image_micasense_merged,
         configs.image_micasense_red,
         configs.image_micasense_blue,

@@ -1,6 +1,6 @@
 from typing import Annotated, Literal
 
-from mlxtend.feature_selection import SequentialFeatureSelector  # type: ignore
+from mlxtend.feature_selection import SequentialFeatureSelector
 from pydantic import BaseModel, ConfigDict
 from sklearn.linear_model import Ridge, RidgeClassifier
 from sklearn.pipeline import Pipeline, make_pipeline
@@ -79,7 +79,7 @@ def feature_selector_factory(
         scoring=scoring,
         cv=cv,
         n_jobs=n_jobs,
-        pre_dispatch=pre_dispatch,  # type: ignore
+        pre_dispatch=pre_dispatch,  # type: ignore # noqa
     )
     return make_pipeline(RobustScaler(), sfs, memory=None)
 

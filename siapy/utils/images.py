@@ -4,6 +4,7 @@ from typing import Annotated, Any
 
 import numpy as np
 import spectral as sp
+from numpy.typing import NDArray
 
 from siapy.core import logger
 from siapy.core.exceptions import InvalidInputError
@@ -25,7 +26,7 @@ __all__ = [
 
 
 def save_image(
-    image: Annotated[np.ndarray, "The image to save."],
+    image: Annotated[NDArray[np.floating[Any]], "The image to save."],
     save_path: Annotated[str | Path, "Header file (with '.hdr' extension) name with path."],
     *,
     metadata: Annotated[
@@ -40,7 +41,7 @@ def save_image(
         type[ImageDataType],
         "The numpy data type with which to store the image.",
     ] = np.float32,
-):
+) -> None:
     if isinstance(save_path, str):
         save_path = Path(save_path)
     if metadata is None:
@@ -58,7 +59,7 @@ def save_image(
 
 
 def create_image(
-    image: Annotated[np.ndarray, "The image to save."],
+    image: Annotated[NDArray[np.floating[Any]], "The image to save."],
     save_path: Annotated[str | Path, "Header file (with '.hdr' extension) name with path."],
     *,
     metadata: Annotated[
@@ -73,7 +74,7 @@ def create_image(
         type[ImageDataType],
         "The numpy data type with which to store the image.",
     ] = np.float32,
-) -> SpectralImage:
+) -> SpectralImage[Any]:
     if isinstance(save_path, str):
         save_path = Path(save_path)
     if metadata is None:
@@ -98,8 +99,8 @@ def create_image(
 
 def merge_images_by_specter(
     *,
-    image_original: Annotated[SpectralImage, "Original image."],
-    image_to_merge: Annotated[SpectralImage, "Image which will be merged onto original image."],
+    image_original: Annotated[SpectralImage[Any], "Original image."],
+    image_to_merge: Annotated[SpectralImage[Any], "Image which will be merged onto original image."],
     save_path: Annotated[str | Path, "Header file (with '.hdr' extension) name with path."],
     overwrite: Annotated[
         bool,
@@ -113,7 +114,7 @@ def merge_images_by_specter(
         bool,
         "Whether to automatically extract metadata images.",
     ] = True,
-):
+) -> SpectralImage[Any]:
     image_original_np = image_original.to_numpy()
     image_to_merge_np = image_to_merge.to_numpy()
 
@@ -160,11 +161,11 @@ def merge_images_by_specter(
 
 
 def convert_radiance_image_to_reflectance(
-    image: SpectralImage,
-    panel_correction: np.ndarray,
+    image: SpectralImage[Any],
+    panel_correction: NDArray[np.floating[Any]],
     save_path: Annotated[str | Path | None, "Header file (with '.hdr' extension) name with path."] = None,
     **kwargs: Any,
-) -> np.ndarray | SpectralImage:
+) -> NDArray[np.floating[Any]] | SpectralImage[Any]:
     image_ref_np = image.to_numpy() * panel_correction
     if save_path is None:
         return image_ref_np
@@ -178,10 +179,10 @@ def convert_radiance_image_to_reflectance(
 
 
 def calculate_correction_factor_from_panel(
-    image: SpectralImage,
+    image: SpectralImage[Any],
     panel_reference_reflectance: float,
     panel_shape_label: str | None = None,
-) -> np.ndarray:
+) -> NDArray[np.floating[Any]]:
     if panel_shape_label:
         panel_shape = image.geometric_shapes.get_by_name(panel_shape_label)
         if not panel_shape:
@@ -216,7 +217,7 @@ def blockfy_image(
     image: ImageType,
     p: Annotated[int, "block row size"],
     q: Annotated[int, "block column size"],
-) -> list[np.ndarray]:
+) -> list[NDArray[np.floating[Any]]]:
     image_np = validate_image_to_numpy(image)
     # Calculate how many blocks can cover the entire image
     bpr = (image_np.shape[0] - 1) // p + 1  # blocks per row
@@ -246,7 +247,7 @@ def blockfy_image(
     return image_slices
 
 
-def calculate_image_background_percentage(image: ImageType):
+def calculate_image_background_percentage(image: ImageType) -> float:
     image_np = validate_image_to_numpy(image)
     # Check where any of bands include nan values (axis=2) to get positions of background
     mask_nan = np.any(np.isnan(image_np), axis=2)

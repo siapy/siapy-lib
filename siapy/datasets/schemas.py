@@ -31,7 +31,7 @@ class Target(BaseModel, ABC):
 
     @classmethod
     @abstractmethod
-    def from_iterable(cls, data: Iterable) -> "Target": ...
+    def from_iterable(cls, data: Iterable[Any]) -> "Target": ...
 
     @abstractmethod
     def to_dict(self) -> dict[str, Any]: ...
@@ -57,7 +57,7 @@ class ClassificationTarget(Target):
         return len(self.label)
 
     @classmethod
-    def from_iterable(cls, data: Iterable) -> "ClassificationTarget":
+    def from_iterable(cls, data: Iterable[Any]) -> "ClassificationTarget":
         label = pd.DataFrame(data, columns=["label"])
         return generate_classification_target(label, "label")
 
@@ -98,7 +98,7 @@ class RegressionTarget(Target):
         return len(self.value)
 
     @classmethod
-    def from_iterable(cls, data: Iterable) -> "RegressionTarget":
+    def from_iterable(cls, data: Iterable[Any]) -> "RegressionTarget":
         value = pd.DataFrame(data, columns=["value"])
         return generate_regression_target(value, "value")
 

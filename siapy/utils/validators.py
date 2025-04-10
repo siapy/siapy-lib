@@ -1,4 +1,7 @@
+from typing import Any
+
 import numpy as np
+from numpy.typing import NDArray
 from PIL.Image import Image
 from sklearn.base import BaseEstimator
 
@@ -18,7 +21,7 @@ __all__ = [
 ]
 
 
-def validate_image_to_numpy_3channels(image: ImageType) -> np.ndarray:
+def validate_image_to_numpy_3channels(image: ImageType) -> NDArray[np.floating[Any]]:
     if isinstance(image, SpectralImage):
         image_display = np.array(image.to_display())
     elif isinstance(image, Image):
@@ -33,7 +36,7 @@ def validate_image_to_numpy_3channels(image: ImageType) -> np.ndarray:
     return image_display
 
 
-def validate_image_to_numpy(image: ImageType) -> np.ndarray:
+def validate_image_to_numpy(image: ImageType) -> NDArray[np.floating[Any]]:
     if isinstance(image, SpectralImage):
         image_np = image.to_numpy()
     elif isinstance(image, Image):
@@ -65,7 +68,7 @@ def validate_image_size(output_size: ImageSizeType) -> tuple[int, int]:
     return output_size
 
 
-def check_model_prediction_methods(model: BaseEstimator):
+def check_model_prediction_methods(model: BaseEstimator) -> None:
     required_methods = ["fit", "predict", "score"]
     for method in required_methods:
         if not hasattr(model, method):

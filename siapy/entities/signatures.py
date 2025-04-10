@@ -1,8 +1,10 @@
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Any
 
 import numpy as np
 import pandas as pd
+from numpy.typing import NDArray
 
 from siapy.core.exceptions import InvalidInputError
 
@@ -30,10 +32,10 @@ class Signals:
     def df(self) -> pd.DataFrame:
         return self._data
 
-    def to_numpy(self) -> np.ndarray:
+    def to_numpy(self) -> NDArray[np.floating[Any]]:
         return self.df.to_numpy()
 
-    def mean(self) -> np.ndarray:
+    def mean(self) -> NDArray[np.floating[Any]]:
         return np.nanmean(self.to_numpy(), axis=0)
 
     def save_to_parquet(self, filepath: str | Path) -> None:
@@ -49,7 +51,7 @@ class Signatures:
         return f"Signatures(\n{self.pixels}\n{self.signals}\n)"
 
     @classmethod
-    def from_array_and_pixels(cls, image: np.ndarray, pixels: Pixels) -> "Signatures":
+    def from_array_and_pixels(cls, image: NDArray[np.floating[Any]], pixels: Pixels) -> "Signatures":
         pixels = pixels.as_type(int)
         u = pixels.u()
         v = pixels.v()
@@ -126,7 +128,7 @@ class Signatures:
         signal_df = pd.DataFrame(self.signals.df.values, columns=signal_columns)
         return pd.concat([pixel_df, signal_df], axis=1)
 
-    def to_numpy(self) -> np.ndarray:
+    def to_numpy(self) -> NDArray[np.floating[Any]]:
         return self.to_dataframe().to_numpy()
 
     def save_to_parquet(self, filepath: str | Path) -> None:
