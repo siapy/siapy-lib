@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import Any, Iterable
 
 import numpy as np
 import pandas as pd
@@ -31,6 +31,11 @@ class Signals:
         if isinstance(df_slice, pd.Series):
             df_slice = df_slice.to_frame().T
         return Signals(df_slice)
+
+    @classmethod
+    def from_iterable(cls, iterable: Iterable) -> "Signals":
+        df = pd.DataFrame(iterable)
+        return cls(df)
 
     @classmethod
     def load_from_parquet(cls, filepath: str | Path) -> "Signals":
