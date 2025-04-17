@@ -45,7 +45,7 @@ def test_tabular_process_image_data(spectral_tabular_dataset):
 def test_tabular_generate_dataset(spectral_tabular_dataset):
     data = spectral_tabular_dataset.dataset_data
     assert isinstance(data, TabularDatasetData)
-    assert not data.pixels.empty
-    assert not data.signals.empty
+    assert not data.signatures.pixels.df.empty
+    assert not data.signatures.signals.df.empty
     assert not data.metadata.empty
     assert data.target is None
