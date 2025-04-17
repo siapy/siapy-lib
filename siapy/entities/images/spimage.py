@@ -36,10 +36,7 @@ class SpectralImage(Generic[T]):
         self._geometric_shapes = GeometricShapes(self, geometric_shapes)
 
     def __repr__(self) -> str:
-        return repr(self._image)
-
-    def __str__(self) -> str:
-        return str(self._image)
+        return f"SpectralImage(\n{self.image}\n)"
 
     def __lt__(self, other: "SpectralImage[Any]") -> bool:
         return self.filepath.name < other.filepath.name
@@ -80,6 +77,14 @@ class SpectralImage(Generic[T]):
     @property
     def shape(self) -> tuple[int, int, int]:
         return self.image.shape
+
+    @property
+    def width(self) -> int:
+        return self.shape[1]
+
+    @property
+    def height(self) -> int:
+        return self.shape[0]
 
     @property
     def bands(self) -> int:

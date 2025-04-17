@@ -1,6 +1,7 @@
+from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
-from typing import Optional, Any
+from typing import Any, Optional
 
 import geopandas as gpd
 import numpy as np
@@ -38,6 +39,7 @@ class ShapeGeometryEnum(Enum):
     MULTIPOLYGON = "multipolygon"
 
 
+@dataclass
 class Shape:
     """
     Unified shape class that can be created from shapefiles or programmatically.
@@ -64,6 +66,9 @@ class Shape:
             self._geodataframe = gpd.GeoDataFrame(geometry=[geometry])
         else:
             raise ConfigurationError("Must provide either geometry or geodataframe")
+
+    def __repr__(self) -> str:
+        return f"Shape(label='{self.label}', geometry_type={self.shape_type})"
 
     def __len__(self) -> int:
         return len(self.df)
