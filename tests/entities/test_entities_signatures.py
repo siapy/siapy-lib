@@ -297,3 +297,35 @@ def test_signatures_reset_index():
     assert np.array_equal(reset_signatures.pixels.df["y"].values, signatures.pixels.df["y"].values)
     assert np.array_equal(reset_signatures.signals.df["A"].values, signatures.signals.df["A"].values)
     assert np.array_equal(reset_signatures.signals.df["B"].values, signatures.signals.df["B"].values)
+
+
+def test_signatures_copy():
+    # Create original Signatures object
+    pixels_df = pd.DataFrame({"x": [0, 1, 2], "y": [3, 4, 5]})
+    signals_df = pd.DataFrame({"A": [10, 20, 30], "B": [40, 50, 60]})
+    pixels = Pixels(pixels_df)
+    signals = Signals(signals_df)
+    original = Signatures(pixels, signals)
+
+    # Create a copy
+    copied = original.copy()
+
+    # Verify the copy is a new object but with equal data
+    assert copied is not original
+    assert copied.pixels is not original.pixels
+    assert copied.signals is not original.signals
+    assert copied.pixels.df is not original.pixels.df
+    assert copied.signals.df is not original.signals.df
+
+    # Verify the data is the same
+    pd.testing.assert_frame_equal(copied.pixels.df, original.pixels.df)
+    pd.testing.assert_frame_equal(copied.signals.df, original.signals.df)
+
+    # Modify the copy and verify the original is unchanged
+    copied.pixels.df.loc[0, "x"] = 999
+    copied.signals.df.loc[0, "A"] = 888
+
+    assert original.pixels.df.loc[0, "x"] == 0  # Original should be unchanged
+    assert original.signals.df.loc[0, "A"] == 10  # Original should be unchanged
+    assert copied.pixels.df.loc[0, "x"] == 999  # Copy should be changed
+    assert copied.signals.df.loc[0, "A"] == 888  # Copy should be changed

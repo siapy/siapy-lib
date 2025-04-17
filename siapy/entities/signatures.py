@@ -176,6 +176,11 @@ class Signatures:
     def save_to_parquet(self, filepath: str | Path) -> None:
         self.to_dataframe().to_parquet(filepath, index=True)
 
+    def copy(self) -> "Signatures":
+        pixels_df = self.pixels.df.copy()
+        signals_df = self.signals.df.copy()
+        return Signatures(Pixels(pixels_df), Signals(signals_df))
+
 
 def validate_inputs(pixels: Pixels, signals: Signals) -> None:
     if len(pixels) != len(signals):
