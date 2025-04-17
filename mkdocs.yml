@@ -96,11 +96,10 @@ nav:
           - Features: api/features/features.md
           - Helpers: api/features/helpers.md
           - Spectral Indices: api/features/spectral_indices.md
-      - Models:
-          - Metrics: api/models/metrics.md
       - Optimizers:
           - Configs: api/optimizers/configs.md
           - Evaluators: api/optimizers/evaluators.md
+          - Metrics: api/models/metrics.md
           - Optimizers: api/optimizers/optimizers.md
           - Parameters: api/optimizers/parameters.md
           - Scorers: api/optimizers/scorers.md

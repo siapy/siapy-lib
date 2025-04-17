@@ -1,10 +1,12 @@
 from abc import ABC, abstractmethod
-from typing import Any, Iterable
+from dataclasses import dataclass
+from typing import Any, Iterable, Optional
 
 import pandas as pd
 from pydantic import BaseModel, ConfigDict
 
 from siapy.core.exceptions import InvalidInputError
+from siapy.entities import Signatures
 
 from .helpers import generate_classification_target, generate_regression_target
 
@@ -88,7 +90,7 @@ class ClassificationTarget(Target):
 
 class RegressionTarget(Target):
     value: pd.Series
-    name: str
+    name: str = "value"
 
     def __getitem__(self, indices: Any) -> "RegressionTarget":
         value = self.value.iloc[indices]
@@ -105,7 +107,7 @@ class RegressionTarget(Target):
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "RegressionTarget":
         value = pd.Series(data["value"], name="value")
-        name = data["name"]
+        name = data["name"] if "name" in data else "value"
         return cls(value=value, name=name)
 
     def to_dict(self) -> dict[str, Any]:
@@ -121,42 +123,38 @@ class RegressionTarget(Target):
         return RegressionTarget(value=self.value.reset_index(drop=True), name=self.name)
 
 
-class TabularDatasetData(BaseModel):
-    model_config = ConfigDict(arbitrary_types_allowed=True)
-    pixels: pd.DataFrame
-    signals: pd.DataFrame
+@dataclass
+class TabularDatasetData:
+    signatures: Signatures
     metadata: pd.DataFrame
     target: Target | None = None
 
-    def __init__(self, *args: Any, **kwargs: Any):
-        super().__init__(*args, **kwargs)
-        self._validate_lengths()
+    def __len__(self) -> int:
+        return len(self.signatures)
 
-    def __setattr__(self, name: str, value: Any) -> None:
-        super().__setattr__(name, value)
-        if name in self.model_fields.keys():
-            self._validate_lengths()
+    def __repr__(self) -> str:
+        return f"TabularDatasetData(signatures={self.signatures}, metadata={self.metadata}, target={self.target})"
 
     def __getitem__(self, indices: Any) -> "TabularDatasetData":
-        pixels = self.pixels.iloc[indices]
-        signals = self.signals.iloc[indices]
+        signatures = self.signatures[indices]
         metadata = self.metadata.iloc[indices]
+        if isinstance(metadata, pd.Series):
+            metadata = pd.DataFrame(metadata).T
         target = None if self.target is None else self.target.__getitem__(indices)
-        return TabularDatasetData(pixels=pixels, signals=signals, metadata=metadata, target=target)
+        return TabularDatasetData(signatures=signatures, metadata=metadata, target=target)
 
-    def __len__(self) -> int:
-        return len(self.pixels)
+    def __post_init__(self) -> None:
+        self._validate_lengths()
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "TabularDatasetData":
-        pixels = pd.DataFrame(data["pixels"])
-        signals = pd.DataFrame(data["signals"])
+        signatures = Signatures.from_dict({"pixels": data["pixels"], "signals": data["signals"]})
         metadata = pd.DataFrame(data["metadata"])
         target = TabularDatasetData.target_from_dict(data.get("target", None))
-        return cls(pixels=pixels, signals=signals, metadata=metadata, target=target)
+        return cls(signatures=signatures, metadata=metadata, target=target)
 
     @staticmethod
-    def target_from_dict(data: dict[str, Any] | None) -> Target | None:
+    def target_from_dict(data: dict[str, Any] | None = None) -> Optional[Target]:
         if data is None:
             return None
 
@@ -172,14 +170,13 @@ class TabularDatasetData(BaseModel):
             raise InvalidInputError(data, "Invalid target dict.")
 
     def _validate_lengths(self) -> None:
-        if not (len(self.pixels) == len(self.signals) == len(self.metadata)):
+        if len(self.signatures) != len(self.metadata):
             raise InvalidInputError(
                 {
-                    "pixels_length": len(self.pixels),
-                    "signals_length": len(self.signals),
+                    "signatures_length": len(self.signatures),
                     "metadata_length": len(self.metadata),
                 },
-                "Lengths of pixels, signals, and metadata must be equal",
+                "Lengths of signatures and metadata must be equal",
             )
         if self.target is not None and len(self.target) != len(self):
             raise InvalidInputError(
@@ -190,25 +187,77 @@ class TabularDatasetData(BaseModel):
                 "Target length must be equal to the length of the dataset.",
             )
 
+    def set_attributes(
+        self,
+        *,
+        signatures: Signatures | None = None,
+        metadata: pd.DataFrame | None = None,
+        target: Target | None = None,
+    ) -> "TabularDatasetData":
+        current_data = self.copy()
+        signatures = signatures if signatures is not None else current_data.signatures
+        metadata = metadata if metadata is not None else current_data.metadata
+        target = target if target is not None else current_data.target
+        return TabularDatasetData(signatures=signatures, metadata=metadata, target=target)
+
     def to_dict(self) -> dict[str, Any]:
+        signatures_dict = self.signatures.to_dict()
         return {
-            "pixels": self.pixels.to_dict(),
-            "signals": self.signals.to_dict(),
+            "pixels": signatures_dict["pixels"],
+            "signals": signatures_dict["signals"],
             "metadata": self.metadata.to_dict(),
             "target": self.target.to_dict() if self.target is not None else None,
         }
 
     def to_dataframe(self) -> pd.DataFrame:
-        combined_df = pd.concat([self.pixels, self.signals, self.metadata], axis=1)
+        combined_df = pd.concat([self.signatures.to_dataframe(), self.metadata], axis=1)
         if self.target is not None:
             target_series = self.target.to_dataframe()
             combined_df = pd.concat([combined_df, target_series], axis=1)
         return combined_df
 
+    def to_dataframe_multiindex(self) -> pd.DataFrame:
+        signatures_df = self.signatures.to_dataframe_multiindex()
+
+        metadata_columns = pd.MultiIndex.from_tuples(
+            [("metadata", col) for col in self.metadata.columns], names=["category", "field"]
+        )
+        metadata_df = pd.DataFrame(self.metadata.values, columns=metadata_columns)
+
+        combined_df = pd.concat([signatures_df, metadata_df], axis=1)
+
+        if self.target is not None:
+            target_df = self.target.to_dataframe()
+            if isinstance(self.target, ClassificationTarget):
+                target_columns = pd.MultiIndex.from_tuples(
+                    [("target", col) for col in target_df.columns],
+                    names=["category", "field"],
+                )
+            elif isinstance(self.target, RegressionTarget):
+                target_columns = pd.MultiIndex.from_tuples(
+                    [("target", self.target.name)],
+                    names=["category", "field"],
+                )
+            else:
+                raise InvalidInputError(
+                    self.target,
+                    "Invalid target type. Expected ClassificationTarget or RegressionTarget.",
+                )
+            target_df = pd.DataFrame(target_df.values, columns=target_columns)
+            combined_df = pd.concat([combined_df, target_df], axis=1)
+
+        return combined_df
+
     def reset_index(self) -> "TabularDatasetData":
         return TabularDatasetData(
-            pixels=self.pixels.reset_index(drop=True),
-            signals=self.signals.reset_index(drop=True),
+            signatures=self.signatures.reset_index(),
             metadata=self.metadata.reset_index(drop=True),
             target=self.target.reset_index() if self.target is not None else None,
+        )
+
+    def copy(self) -> "TabularDatasetData":
+        return TabularDatasetData(
+            signatures=self.signatures.copy(),
+            metadata=self.metadata.copy(),
+            target=self.target.model_copy() if self.target is not None else None,
         )

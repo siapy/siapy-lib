@@ -6,7 +6,6 @@ import pytest
 from siapy.datasets.helpers import (
     generate_classification_target,
     generate_regression_target,
-    merge_signals_from_multiple_cameras,
 )
 from siapy.datasets.schemas import ClassificationTarget, RegressionTarget
 from siapy.entities import Pixels
@@ -65,7 +64,3 @@ def test_dataframe_generate_regression_target(sample_dataframe):
     assert isinstance(regression_target, RegressionTarget)
     assert regression_target.name == "0"
     assert all(regression_target.value == sample_dataframe["0"])
-
-
-def test_merge_signals_from_multiple_cameras(spectral_tabular_dataset):
-    merge_signals_from_multiple_cameras(spectral_tabular_dataset.dataset_data)

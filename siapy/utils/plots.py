@@ -248,7 +248,7 @@ def display_signals(
             message="The target must be an instance of ClassificationTarget.",
         )
 
-    signals = data.signals.copy()
+    signals = data.signatures.signals.df.copy()
     target = data.target.model_copy()
     y_data_encoded = target.value
     classes = list(target.encoding.to_dict().values())

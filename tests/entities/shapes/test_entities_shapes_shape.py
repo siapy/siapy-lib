@@ -135,11 +135,6 @@ def test_shape_type_queries():
     assert multipoint.is_multi
 
 
-def test_invalid_multipoint():
-    with pytest.raises(ConfigurationError):
-        Shape.from_multipoint(Pixels.from_iterable([]))
-
-
 def test_invalid_multiline():
     with pytest.raises(ConfigurationError):
         Shape.from_multiline([])

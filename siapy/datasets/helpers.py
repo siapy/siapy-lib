@@ -49,4 +49,5 @@ def generate_regression_target(
 
 
 def merge_signals_from_multiple_cameras(data: "TabularDatasetData") -> None:
-    data.signals.copy()
+    # TODO: Implement the function to merge signals from multiple cameras
+    pass
