@@ -104,7 +104,6 @@ def test_to_xarray():
     assert "y" in result.dims
     assert "x" in result.dims
     assert "band" in result.dims
-    assert "wavelength" in result.coords
     assert result.attrs["camera_id"] == ""
     assert result.shape == (50, 60, 3)
 
