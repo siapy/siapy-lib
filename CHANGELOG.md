@@ -1,5 +1,34 @@
 # Changelog
 
+## [0.8.0](https://github.com/siapy/siapy-lib/compare/v0.7.2...v0.8.0) (2025-04-18)
+
+
+### Features
+
+* add copy method for Signatures class with deep copy functionality ([12bca2f](https://github.com/siapy/siapy-lib/commit/12bca2f37f9b42591d6fc2791f66d4a57adcddef))
+* add MockImage class and corresponding tests; integrate with SpectralImage ([ff6d2f2](https://github.com/siapy/siapy-lib/commit/ff6d2f274f413316402f39973967d4cdbf00c845))
+* enhance get_signatures_within_convex_hull function to include points intersecting with the hull; add comprehensive tests for various shapes ([8fa14ea](https://github.com/siapy/siapy-lib/commit/8fa14ea22e7f31893a5e913bb2e65cf7818fcba9))
+* implement get_signatures_within_convex_hull function and add tests ([05c603c](https://github.com/siapy/siapy-lib/commit/05c603cff255b502af037a01bfa05fa9f4333654))
+* implement length and item access methods for Signals and Signatures classes ([447c3c2](https://github.com/siapy/siapy-lib/commit/447c3c2ce47e5110a3ab60a29141145afe341174))
+* refactor get_signatures_within_convex_hull function and update related tests; improve signature extraction logic ([9a25824](https://github.com/siapy/siapy-lib/commit/9a258240b30852bfc942d175b9bd38c7c047a283))
+
+
+### Bug Fixes
+
+* correct index assertion in test_geometric_shapes_index_with_start_stop ([82c51f4](https://github.com/siapy/siapy-lib/commit/82c51f43f4f5b34a4c73e415c15ad67f1a3fb3f6))
+* remove unnecessary wavelength coordinate assertion in test_to_xarray ([16e1bd1](https://github.com/siapy/siapy-lib/commit/16e1bd134b8bca315813effcd838f27740024d53))
+* update xarray output tests to validate new coordinate structure ([0e20fc6](https://github.com/siapy/siapy-lib/commit/0e20fc6110707f5276218610b4013fdea6dd36ea))
+
+
+### Dependencies
+
+* pdm update ([fca230a](https://github.com/siapy/siapy-lib/commit/fca230ae4a8872306c157e51cd1b51eb3311c8a2))
+
+
+### Documentation
+
+* add documentation for Helpers and Mock Image; update mkdocs navigation ([a78fc78](https://github.com/siapy/siapy-lib/commit/a78fc784a7dc06a5416da998676dfb0eb669c270))
+
 ## [0.7.2](https://github.com/siapy/siapy-lib/compare/v0.7.1...v0.7.2) (2025-04-10)
 
 
