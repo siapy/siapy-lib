@@ -29,36 +29,30 @@ def get_signatures_within_convex_hull(image: SpectralImage, shape: Shape) -> Sig
                 signals.append(image_xarr.sel(x=p.x, y=p.y, method="nearest").values)
                 pixels.append((p.x, p.y))
 
-    for hull in shape.convex_hull:
-        # Get bounds of hull
-        minx, miny, maxx, maxy = hull.bounds
+    else:
+        for hull in shape.convex_hull:
+            minx, miny, maxx, maxy = hull.bounds
 
-        # Get X and Y coordinates from the image within bounds
-        x_coords = image_xarr.x.where((image_xarr.x >= minx) & (image_xarr.x <= maxx), drop=True).values
-        y_coords = image_xarr.y.where((image_xarr.y >= miny) & (image_xarr.y <= maxy), drop=True).values
+            x_coords = image_xarr.x[(image_xarr.x >= minx) & (image_xarr.x <= maxx)].values
+            y_coords = image_xarr.y[(image_xarr.y >= miny) & (image_xarr.y <= maxy)].values
 
-        # Skip if no coordinates found within bounds
-        if len(x_coords) == 0 or len(y_coords) == 0:
-            continue
+            if len(x_coords) == 0 or len(y_coords) == 0:
+                continue
 
-        # Create a prepared geometry for faster contains check
-        prepared_hull = shapely_prep(hull)
+            # Create a prepared geometry for faster contains check
+            prepared_hull = shapely_prep(hull)
 
-        # Iterate through all points in the bounding box
-        for x in x_coords:
-            for y in y_coords:
-                point = Point(x, y)
-
-                # Check if point is inside the hull
-                if prepared_hull.contains(point):
-                    try:
-                        # Extract the spectral signature at this point
-                        signal = image_xarr.sel(x=x, y=y).values
-                        signals.append(signal)
-                        pixels.append((x, y))
-                    except (KeyError, IndexError):
-                        # Skip points that can't be indexed in the array
-                        continue
+            for x in x_coords:
+                for y in y_coords:
+                    point = Point(x, y)
+                    # Check if point is: inside the hull or intersects with the hull
+                    if prepared_hull.contains(point) or prepared_hull.intersects(point):
+                        try:
+                            signal = image_xarr.sel(x=x, y=y).values
+                            signals.append(signal)
+                            pixels.append((x, y))
+                        except (KeyError, IndexError):
+                            continue
 
     return Signatures(
         Pixels.from_iterable(pixels),
