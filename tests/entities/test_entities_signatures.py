@@ -42,6 +42,14 @@ def test_signals_getitem():
     assert list_signals.df.equals(pd.DataFrame([[1, 2, 4]], columns=signals_df.columns))
 
 
+def test_signals_from_iterable():
+    data_list = [[1, 2, 3], [4, 5, 6]]
+    signals = Signals.from_iterable(data_list)
+    assert isinstance(signals, Signals)
+    assert len(signals) == 2
+    assert signals.df.equals(pd.DataFrame(data_list))
+
+
 def test_signals_to_numpy():
     df = pd.DataFrame({"A": [1, 2, 3]})
     signals = Signals(df)

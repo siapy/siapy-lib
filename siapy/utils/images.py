@@ -10,6 +10,7 @@ from siapy.core import logger
 from siapy.core.exceptions import InvalidInputError
 from siapy.core.types import ImageDataType, ImageType
 from siapy.entities import SpectralImage
+from siapy.entities.helpers import get_signatures_within_convex_hull
 from siapy.entities.images import SpectralLibImage
 from siapy.transformations.image import rescale
 from siapy.utils.validators import validate_image_to_numpy
@@ -195,8 +196,7 @@ def calculate_correction_factor_from_panel(
                 input_value={"panel_shape": panel_shape},
                 message="Panel shape label must refer to a single shape.",
             )
-        pixels_hull = panel_shape.get_pixels_within_convex_hull()[0].as_type(int)
-        panel_signatures = image.to_signatures(pixels_hull)
+        panel_signatures = get_signatures_within_convex_hull(image, panel_shape)[0]
         panel_radiance_mean = panel_signatures.signals.mean()
 
     else:

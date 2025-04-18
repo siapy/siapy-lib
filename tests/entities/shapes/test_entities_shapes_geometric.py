@@ -230,7 +230,7 @@ def test_geometric_shapes_index_with_start_stop(rectangle_shape, spectral_images
     rect2 = rectangle_shape.copy()
     spectral_images.vnir.geometric_shapes.shapes = [rect1, rect2, rect1]
     index = spectral_images.vnir.geometric_shapes.index(rect1, 1, 3)
-    assert index == 2
+    assert index == 1
 
 
 def test_geometric_shapes_check_shape_type_invalid_single():

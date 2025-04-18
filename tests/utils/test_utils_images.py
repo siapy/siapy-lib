@@ -8,6 +8,7 @@ import pytest
 import spectral as sp
 
 from siapy.entities import SpectralImage
+from siapy.entities.helpers import get_signatures_within_convex_hull
 from siapy.entities.images import SpectralLibImage
 from siapy.entities.shapes import Shape
 from siapy.utils.images import (
@@ -157,8 +158,8 @@ def test_calculate_correction_factor_from_panel_with_label(spectral_images):
     assert panel_correction.shape == (image_vnir.bands,)
 
     a = image_vnir.to_numpy()
-    b = rect.get_pixels_within_convex_hull()[0].as_type(int)
-    c = a[b.v(), b.u(), :]
+    pixels = get_signatures_within_convex_hull(image_vnir, rect)[0].pixels
+    c = a[pixels.v(), pixels.u(), :]
     assert np.array_equal(
         np.full(image_vnir.bands, 0.2),
         np.round(c.mean(axis=0) * panel_correction, 2),
