@@ -93,8 +93,9 @@ class MockImage(ImageBase):
             self._array,
             dims=["y", "x", "band"],
             coords={
-                "band": np.arange(self._array.shape[2]),
-                "wavelength": ("band", self.wavelengths),
+                "band": self.wavelengths,
+                "x": np.arange(self.shape[1]),
+                "y": np.arange(self.shape[0]),
             },
             attrs={
                 "camera_id": self.camera_id,

@@ -107,3 +107,7 @@ def test_to_xarray():
     assert "wavelength" in result.coords
     assert result.attrs["camera_id"] == ""
     assert result.shape == (50, 60, 3)
+
+    np.testing.assert_array_equal(result.coords["band"].values, mock_img.wavelengths)
+    np.testing.assert_array_equal(result.coords["x"].values, np.arange(mock_img.shape[1]))
+    np.testing.assert_array_equal(result.coords["y"].values, np.arange(mock_img.shape[0]))
