@@ -11,8 +11,13 @@ def test_get_signatures_within_convex_hull(configs):
     point_shape = Shape.open_shapefile(configs.shapefile_point)
     buffer_shape = Shape.open_shapefile(configs.shapefile_buffer)
     raster.geometric_shapes.shapes = [point_shape, buffer_shape]
-    get_signatures_within_convex_hull(raster, point_shape)
-    get_signatures_within_convex_hull(raster, buffer_shape)
+    signatures_point = get_signatures_within_convex_hull(raster, point_shape)
+    signatures_buffer = get_signatures_within_convex_hull(raster, buffer_shape)
+
+    assert len(signatures_point) == 17
+    assert all([len(sp) == 1 for sp in signatures_point])
+    assert len(signatures_buffer) == 17
+    assert all([len(sb) > 1 for sb in signatures_buffer])
 
 
 @pytest.mark.manual
@@ -21,7 +26,7 @@ def test_convex_hull_visualization():
     shape = Shape.from_line(points)
 
     image_mock = SpectralImage.from_numpy(np.zeros((30, 30, 3)))
-    signatures_within = get_signatures_within_convex_hull(image_mock, shape)
+    signatures_within = get_signatures_within_convex_hull(image_mock, shape)[0]
     display_image_with_areas(image_mock, signatures_within.pixels, color="red")
 
 
@@ -30,7 +35,7 @@ def test_get_signatures_within_rectangular_shape():
     image_mock = SpectralImage.from_numpy(image_data)
 
     shape = Shape.from_rectangle(10, 21, 12, 23)
-    signatures = get_signatures_within_convex_hull(image_mock, shape)
+    signatures = get_signatures_within_convex_hull(image_mock, shape)[0]
 
     pixels_list = signatures.pixels.to_list()
     expected_points = [[u, v] for u in range(10, 13) for v in range(21, 24)]
@@ -49,7 +54,7 @@ def test_get_signatures_within_point_shape():
     points = [[10, 15], [12, 23]]
     shape = Shape.from_multipoint(Pixels.from_iterable(points))
 
-    signatures = get_signatures_within_convex_hull(image_mock, shape)
+    signatures = get_signatures_within_convex_hull(image_mock, shape)[0]
 
     pixels_list = signatures.pixels.as_type(int).to_list()
     assert len(pixels_list) == 2
@@ -67,7 +72,7 @@ def test_get_signatures_within_triangle_shape():
     points = Pixels.from_iterable([(2, 1), (3, 3), (2, 3)])
     shape = Shape.from_polygon(points)
 
-    signatures = get_signatures_within_convex_hull(image_mock, shape)
+    signatures = get_signatures_within_convex_hull(image_mock, shape)[0]
 
     # Expected points in the triangle
     expected_points = [[2, 1], [2, 2], [2, 3], [3, 3]]
@@ -86,7 +91,7 @@ def test_get_signatures_within_complex_shape():
     points = Pixels.from_iterable([(0, 0), (2, 0), (2, 1), (1, 1), (1, 2), (0, 2)])
     shape = Shape.from_polygon(points)
 
-    signatures = get_signatures_within_convex_hull(image_mock, shape)
+    signatures = get_signatures_within_convex_hull(image_mock, shape)[0]
 
     # The convex hull should fill in the "L" shape
     # Expected points in the 3x3 grid

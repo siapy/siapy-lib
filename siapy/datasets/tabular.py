@@ -9,6 +9,7 @@ from siapy.core.exceptions import InvalidInputError
 from siapy.core.types import ImageContainerType
 from siapy.datasets.schemas import TabularDatasetData
 from siapy.entities import Signatures, SpectralImage, SpectralImageSet
+from siapy.entities.helpers import get_signatures_within_convex_hull
 
 __all__ = [
     "TabularDataset",
@@ -62,9 +63,8 @@ class TabularDataset:
         self.data_entities.clear()
         for image_idx, image in enumerate(self.image_set):
             for shape_idx, shape in enumerate(image.geometric_shapes.shapes):
-                convex_hulls = shape.get_pixels_within_convex_hull()
-                for geometry_idx, pixels in enumerate(convex_hulls):
-                    signatures = image.to_signatures(pixels)
+                signatures_hull = get_signatures_within_convex_hull(image, shape)
+                for geometry_idx, signatures in enumerate(signatures_hull):
                     entity = TabularDataEntity(
                         image_idx=image_idx,
                         shape_idx=shape_idx,
