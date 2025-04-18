@@ -87,20 +87,21 @@ nav:
               - Interfaces: api/entities/images/interfaces.md
               - Rasterio Library: api/entities/images/rasterio_lib.md
               - Spectral Library: api/entities/images/spectral_lib.md
+              - Mock Image: api/entities/images/mock.md
               - Spectral Images: api/entities/images/spimage.md
           - Shape: api/entities/shapes/shape.md
           - Image Sets: api/entities/imagesets.md
           - Pixels: api/entities/pixels.md
           - Signatures: api/entities/signatures.md
+          - Helpers: api/entities/helpers.md
       - Features:
           - Features: api/features/features.md
           - Helpers: api/features/helpers.md
           - Spectral Indices: api/features/spectral_indices.md
-      - Models:
-          - Metrics: api/models/metrics.md
       - Optimizers:
           - Configs: api/optimizers/configs.md
           - Evaluators: api/optimizers/evaluators.md
+          - Metrics: api/optimizers/metrics.md
           - Optimizers: api/optimizers/optimizers.md
           - Parameters: api/optimizers/parameters.md
           - Scorers: api/optimizers/scorers.md

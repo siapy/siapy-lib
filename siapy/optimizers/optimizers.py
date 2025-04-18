@@ -46,9 +46,9 @@ class TabularOptimizer:
         data: TabularDatasetData,
         data_val: TabularDatasetData | None = None,
     ) -> "TabularOptimizer":
-        signals = data.signals
+        signals = data.signatures.signals.df
         target = data.target
-        signals_val = data_val.signals if data_val else None
+        signals_val = data_val.signatures.signals.df if data_val else None
         target_val = data_val.target if data_val else None
 
         if target is None:

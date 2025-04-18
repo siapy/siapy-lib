@@ -1,6 +1,7 @@
+from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
-from typing import Optional, Any
+from typing import Any, Optional
 
 import geopandas as gpd
 import numpy as np
@@ -8,7 +9,6 @@ import pandas as pd
 from numpy.typing import NDArray
 from shapely.geometry import LineString, MultiLineString, MultiPoint, MultiPolygon, Point, Polygon
 from shapely.geometry.base import BaseGeometry
-from shapely.prepared import prep as shapely_prep
 
 from siapy.core.exceptions import ConfigurationError, InvalidFilepathError, InvalidInputError, InvalidTypeError
 from siapy.entities.pixels import PixelCoordinate, Pixels
@@ -38,6 +38,7 @@ class ShapeGeometryEnum(Enum):
     MULTIPOLYGON = "multipolygon"
 
 
+@dataclass
 class Shape:
     """
     Unified shape class that can be created from shapefiles or programmatically.
@@ -64,6 +65,9 @@ class Shape:
             self._geodataframe = gpd.GeoDataFrame(geometry=[geometry])
         else:
             raise ConfigurationError("Must provide either geometry or geodataframe")
+
+    def __repr__(self) -> str:
+        return f"Shape(label='{self.label}', geometry_type={self.shape_type})"
 
     def __len__(self) -> int:
         return len(self.df)
@@ -285,50 +289,3 @@ class Shape:
 
     def to_numpy(self) -> NDArray[np.floating[Any]]:
         return self.df.to_numpy()
-
-    def get_pixels_within_convex_hull(self, resolution: float = 1.0) -> list[Pixels]:
-        pixels: list[Pixels] = []
-
-        if self.is_point:
-            for g in self.geometry:
-                if isinstance(g, MultiPoint):
-                    points = list(g.geoms)
-                elif isinstance(g, Point):
-                    points = [g]
-                else:
-                    raise InvalidTypeError(
-                        input_value=g,
-                        allowed_types=(Point, MultiPoint),
-                        message="Geometry must be Point or MultiPoint",
-                    )
-                pixels.append(Pixels.from_iterable([(p.x, p.y) for p in points]))
-
-            return pixels
-
-        if resolution <= 0:
-            raise InvalidInputError({"resolution": resolution}, "Resolution must be positive")
-
-        for hull in self.convex_hull:
-            minx, miny, maxx, maxy = hull.bounds
-
-            u_min = np.ceil(minx / resolution) * resolution
-            v_min = np.ceil(miny / resolution) * resolution
-            u_max = np.floor(maxx / resolution) * resolution
-            v_max = np.floor(maxy / resolution) * resolution
-
-            # Creating a prepared geometry improves performance for contains checks
-            hull_prep = shapely_prep(hull)
-
-            u_values = np.arange(u_min, u_max + resolution / 2, resolution)
-            v_values = np.arange(v_min, v_max + resolution / 2, resolution)
-
-            contained_points = []
-            for u in u_values:
-                for v in v_values:
-                    point = Point(u, v)
-                    if hull_prep.contains(point) or hull_prep.intersects(point):
-                        contained_points.append((u, v))
-
-            pixels.append(Pixels.from_iterable(contained_points))
-
-        return pixels

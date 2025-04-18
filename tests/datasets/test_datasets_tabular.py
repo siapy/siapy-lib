@@ -1,6 +1,6 @@
 from siapy.datasets.schemas import TabularDatasetData
-from siapy.datasets.tabular import TabularDataEntity
-from siapy.entities import SpectralImageSet
+from siapy.datasets.tabular import TabularDataEntity, TabularDataset
+from siapy.entities import Shape, SpectralImage, SpectralImageSet
 
 
 def test_tabular_len(spectral_tabular_dataset):
@@ -45,7 +45,18 @@ def test_tabular_process_image_data(spectral_tabular_dataset):
 def test_tabular_generate_dataset(spectral_tabular_dataset):
     data = spectral_tabular_dataset.dataset_data
     assert isinstance(data, TabularDatasetData)
-    assert not data.pixels.empty
-    assert not data.signals.empty
+    assert not data.signatures.pixels.df.empty
+    assert not data.signatures.signals.df.empty
     assert not data.metadata.empty
     assert data.target is None
+
+
+def test_tabular_rasterio(configs):
+    raster = SpectralImage.rasterio_open(configs.image_micasense_merged)
+    point = Shape.open_shapefile(configs.shapefile_point)
+    buffer = Shape.open_shapefile(configs.shapefile_buffer)
+    raster.geometric_shapes.shapes = [point, buffer]
+    dataset = TabularDataset(raster)
+    dataset.process_image_data()
+    data = dataset.generate_dataset_data()
+    assert isinstance(data, TabularDatasetData)

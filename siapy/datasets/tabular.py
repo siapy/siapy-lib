@@ -9,6 +9,7 @@ from siapy.core.exceptions import InvalidInputError
 from siapy.core.types import ImageContainerType
 from siapy.datasets.schemas import TabularDatasetData
 from siapy.entities import Signatures, SpectralImage, SpectralImageSet
+from siapy.entities.helpers import get_signatures_within_convex_hull
 
 __all__ = [
     "TabularDataset",
@@ -62,9 +63,8 @@ class TabularDataset:
         self.data_entities.clear()
         for image_idx, image in enumerate(self.image_set):
             for shape_idx, shape in enumerate(image.geometric_shapes.shapes):
-                convex_hulls = shape.get_pixels_within_convex_hull()
-                for geometry_idx, pixels in enumerate(convex_hulls):
-                    signatures = image.to_signatures(pixels)
+                signatures_hull = get_signatures_within_convex_hull(image, shape)
+                for geometry_idx, signatures in enumerate(signatures_hull):
                     entity = TabularDataEntity(
                         image_idx=image_idx,
                         shape_idx=shape_idx,
@@ -79,8 +79,7 @@ class TabularDataset:
 
     def generate_dataset_data(self, mean_signatures: bool = True) -> TabularDatasetData:
         self._check_data_entities()
-        pixels_dfs = []
-        signals_dfs = []
+        signatures_dfs = []
         metadata_dfs = []
         for entity in self.data_entities:
             signatures_df = entity.signatures.to_dataframe().dropna()
@@ -104,17 +103,13 @@ class TabularDataset:
                 "Sanity check failed! The columns in metadata_df do not match MetaDataEntity fields."
             )
 
-            signatures = Signatures.from_dataframe(signatures_df)
-
-            pixels_dfs.append(signatures.pixels.df)
-            signals_dfs.append(signatures.signals.df)
+            signatures_dfs.append(signatures_df)
             metadata_dfs.append(metadata_df)
 
-        return TabularDatasetData(
-            pixels=pd.concat(pixels_dfs, ignore_index=True),
-            signals=pd.concat(signals_dfs, ignore_index=True),
-            metadata=pd.concat(metadata_dfs, ignore_index=True),
-        )
+        signatures_concat = pd.concat(signatures_dfs, ignore_index=True)
+        metadata_concat = pd.concat(metadata_dfs, ignore_index=True)
+        signatures = Signatures.from_dataframe(signatures_concat)
+        return TabularDatasetData(signatures=signatures, metadata=metadata_concat)
 
     def _check_data_entities(self) -> None:
         if not self.data_entities:

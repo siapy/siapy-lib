@@ -50,8 +50,8 @@ def test_display_multiple_images_with_areas(spectral_images, corresponding_pixel
 def test_display_signals():
     data = {
         "pixels": {
-            "0": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            "1": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            "x": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            "y": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         },
         "signals": {
             "0": [1, 2, 3, 1, 1, 5, 7, 6, 7, 8],

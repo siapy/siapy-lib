@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 from numpy.typing import NDArray
 
-from siapy.core.exceptions import InvalidInputError
+from siapy.core.exceptions import InvalidInputError, InvalidTypeError
 
 __all__ = [
     "Pixels",
@@ -42,9 +42,11 @@ class Pixels:
     def __repr__(self) -> str:
         return f"Pixels(\n{self.df}\n)"
 
-    def __getitem__(self, idx: int) -> PixelCoordinate:
-        row = self.df.iloc[idx]
-        return PixelCoordinate(x=row[self.coords.X], y=row[self.coords.Y])
+    def __getitem__(self, indices: Any) -> "Pixels":
+        df_slice = self.df.iloc[indices]
+        if isinstance(df_slice, pd.Series):
+            df_slice = df_slice.to_frame().T
+        return Pixels(df_slice)
 
     def __eq__(self, other: Any) -> bool:
         if not isinstance(other, Pixels):
@@ -76,6 +78,7 @@ class Pixels:
         return df_homo
 
     def u(self) -> "pd.Series[float]":
+        # TODO: change to u -> x
         return self.df[self.coords.X]
 
     def v(self) -> "pd.Series[float]":
@@ -96,13 +99,31 @@ class Pixels:
         converted_df[self.coords.Y] = converted_df[self.coords.Y].astype(dtype)
         return Pixels(converted_df)
 
+    def get_coordinate(self, idx: int) -> PixelCoordinate:
+        row = self.df.iloc[idx]
+        return PixelCoordinate(x=row[self.coords.X], y=row[self.coords.Y])
 
-def validate_pixel_input_dimensions(df: pd.DataFrame) -> None:
+
+def validate_pixel_input_dimensions(df: pd.DataFrame | pd.Series) -> None:
+    if isinstance(df, pd.Series):
+        raise InvalidTypeError(
+            input_value=df,
+            allowed_types=pd.DataFrame,
+            message="Expected a DataFrame, but got a Series.",
+        )
+
+    if df.empty:
+        raise InvalidInputError(
+            message="Input DataFrame is empty.",
+            input_value=df,
+        )
+
     if df.shape[1] != 2:
         raise InvalidInputError(
-            message="Invalid input dimensions: expected 2 columns (u, v), got",
+            message="Invalid input dimensions: expected 2 columns (x, y), got",
             input_value=df.shape[1],
         )
+
     if sorted(df.columns) != sorted([HomogeneousCoordinate.X, HomogeneousCoordinate.Y]):
         raise InvalidInputError(
             message=f"Invalid column names: expected ['{HomogeneousCoordinate.X}', '{HomogeneousCoordinate.Y}'], got",

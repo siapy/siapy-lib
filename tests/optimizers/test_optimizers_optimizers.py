@@ -1,10 +1,12 @@
 import optuna
+import pandas as pd
 import pytest
 from sklearn.base import BaseEstimator
 from sklearn.svm import SVR
 
 from siapy.core.exceptions import InvalidInputError
 from siapy.datasets.schemas import RegressionTarget
+from siapy.entities import Signatures
 from siapy.optimizers.configs import OptimizeStudyConfig, TabularOptimizerConfig
 from siapy.optimizers.optimizers import TabularOptimizer
 from siapy.optimizers.parameters import TrialParameters
@@ -14,15 +16,15 @@ from siapy.optimizers.scorers import Scorer
 def test_tabular_optimizer_from_tabular_dataset_data_valid(
     spectral_tabular_dataset,
 ):
-    data = spectral_tabular_dataset.dataset_data.model_copy()
-    data.target = RegressionTarget(name="test", value=data.pixels["x"])
+    data = spectral_tabular_dataset.dataset_data.copy()
+    data.target = RegressionTarget(name="test", value=data.signatures.pixels.df["x"])
     model = SVR()
     configs = TabularOptimizerConfig()
     optimizer = TabularOptimizer.from_tabular_dataset_data(model=model, configs=configs, data=data)
     assert isinstance(optimizer, TabularOptimizer)
     assert optimizer.model == model
     assert optimizer.configs == configs
-    assert optimizer.X.equals(data.signals)
+    assert optimizer.X.equals(data.signatures.signals.df)
     assert list(optimizer.y) == list(data.target.value)
 
 
@@ -39,9 +41,9 @@ def test_tabular_optimizer_from_tabular_dataset_data_invalid(
 def test_tabular_optimizer_with_validation_data_without_targets(
     spectral_tabular_dataset,
 ):
-    data = spectral_tabular_dataset.dataset_data.model_copy()
-    data_val = spectral_tabular_dataset.dataset_data.model_copy()
-    target = RegressionTarget(name="test", value=data.pixels["x"])
+    data = spectral_tabular_dataset.dataset_data.copy()
+    data_val = spectral_tabular_dataset.dataset_data.copy()
+    target = RegressionTarget(name="test", value=data.signatures.pixels.df["x"])
     data.target = target
     model = SVR()
     configs = TabularOptimizerConfig()
@@ -50,26 +52,29 @@ def test_tabular_optimizer_with_validation_data_without_targets(
 
 
 def test_tabular_optimizer_with_validation_data(spectral_tabular_dataset):
-    data = spectral_tabular_dataset.dataset_data.model_copy()
-    data_val = spectral_tabular_dataset.dataset_data.model_copy()
-    data.target = RegressionTarget(name="test", value=data.pixels["x"])
-    data_val.target = RegressionTarget(name="test_val", value=data_val.pixels["y"])
+    data = spectral_tabular_dataset.dataset_data.copy()
+    data_val = spectral_tabular_dataset.dataset_data.copy()
+    data.target = RegressionTarget(name="test", value=data.signatures.pixels.df["x"])
+    data_val.target = RegressionTarget(name="test_val", value=data_val.signatures.pixels.df["y"])
     model = SVR()
     configs = TabularOptimizerConfig()
     optimizer = TabularOptimizer.from_tabular_dataset_data(model=model, configs=configs, data=data, data_val=data_val)
     assert isinstance(optimizer, TabularOptimizer)
     assert optimizer.model == model
     assert optimizer.configs == configs
-    assert optimizer.X.equals(data.signals)
+    assert optimizer.X.equals(data.signatures.signals.df)
     assert list(optimizer.y) == list(data.target.value)
-    assert optimizer.X_val.equals(data_val.signals)
+    assert optimizer.X_val.equals(data_val.signatures.signals.df)
     assert list(optimizer.y_val) == list(data_val.target.value)
 
 
 def test_tabular_optimizer_run(spectral_tabular_dataset):
-    data = spectral_tabular_dataset.dataset_data.model_copy()
-    data.signals = data.signals.iloc[:, :10]
-    data.target = RegressionTarget(name="test", value=data.pixels["x"])
+    data = spectral_tabular_dataset.dataset_data.copy()
+    signals = data.signatures.signals.df.iloc[:, :10]
+    pixels = data.signatures.pixels.df
+    data = data.set_attributes(signatures=Signatures.from_dataframe(pd.concat([pixels, signals], axis=1)))
+
+    data.target = RegressionTarget(name="test", value=data.signatures.pixels.df["x"])
     model = SVR()
     study_config = OptimizeStudyConfig(n_trials=3, timeout=3000)
     trial_parameters = TrialParameters.from_dict({"int_parameters": [{"name": "C", "low": 1, "high": 100}]})
@@ -94,8 +99,8 @@ def test_tabular_optimizer_run(spectral_tabular_dataset):
 def test_tabular_optimizer_get_best_model_no_best_trial(
     spectral_tabular_dataset,
 ):
-    data = spectral_tabular_dataset.dataset_data.model_copy()
-    data.target = RegressionTarget(name="test", value=data.pixels["x"])
+    data = spectral_tabular_dataset.dataset_data.copy()
+    data.target = RegressionTarget(name="test", value=data.signatures.pixels.df["x"])
     model = SVR()
     configs = TabularOptimizerConfig()
     optimizer = TabularOptimizer.from_tabular_dataset_data(model=model, configs=configs, data=data)
@@ -106,8 +111,8 @@ def test_tabular_optimizer_get_best_model_no_best_trial(
 def test_tabular_optimizer_trial_params_no_trial_parameters(
     spectral_tabular_dataset,
 ):
-    data = spectral_tabular_dataset.dataset_data.model_copy()
-    data.target = RegressionTarget(name="test", value=data.pixels["x"])
+    data = spectral_tabular_dataset.dataset_data.copy()
+    data.target = RegressionTarget(name="test", value=data.signatures.pixels.df["x"])
     model = SVR()
     configs = TabularOptimizerConfig()
     optimizer = TabularOptimizer.from_tabular_dataset_data(model=model, configs=configs, data=data)
@@ -117,8 +122,8 @@ def test_tabular_optimizer_trial_params_no_trial_parameters(
 
 
 def test_tabular_optimizer_scorer_no_scorer_defined(spectral_tabular_dataset):
-    data = spectral_tabular_dataset.dataset_data.model_copy()
-    data.target = RegressionTarget(name="test", value=data.pixels["x"])
+    data = spectral_tabular_dataset.dataset_data.copy()
+    data.target = RegressionTarget(name="test", value=data.signatures.pixels.df["x"])
     model = SVR()
     configs = TabularOptimizerConfig()
     optimizer = TabularOptimizer.from_tabular_dataset_data(model=model, configs=configs, data=data)
