@@ -9,6 +9,7 @@ from PIL import Image
 from ..shapes import GeometricShapes, Shape
 from ..signatures import Signatures
 from .interfaces import ImageBase
+from .mock import MockImage
 from .rasterio_lib import RasterioLibImage
 from .spectral_lib import SpectralLibImage
 
@@ -56,6 +57,11 @@ class SpectralImage(Generic[T]):
     @classmethod
     def rasterio_open(cls, filepath: str | Path) -> "SpectralImage[RasterioLibImage]":
         image = RasterioLibImage.open(filepath)
+        return SpectralImage(image)
+
+    @classmethod
+    def from_numpy(cls, array: NDArray[np.floating[Any]]) -> "SpectralImage[MockImage]":
+        image = MockImage.open(array)
         return SpectralImage(image)
 
     @property

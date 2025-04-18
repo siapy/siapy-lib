@@ -31,6 +31,13 @@ def test_rasterio_open(configs):
     assert isinstance(spectral_image, SpectralImage)
 
 
+def test_from_numpy():
+    rng = np.random.default_rng(1)
+    array = rng.random((100, 100, 3), dtype=np.float32)
+    spectral_image = SpectralImage.from_numpy(array)
+    assert isinstance(spectral_image, SpectralImage)
+
+
 def test_spy_open_invalid():
     with pytest.raises(InvalidFilepathError):
         SpectralImage.spy_open(header_path="invalid_header_path")
