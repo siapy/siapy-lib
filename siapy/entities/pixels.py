@@ -77,11 +77,10 @@ class Pixels:
         df_homo[self.coords.H] = 1
         return df_homo
 
-    def u(self) -> "pd.Series[float]":
-        # TODO: change to u -> x
+    def x(self) -> "pd.Series[float]":
         return self.df[self.coords.X]
 
-    def v(self) -> "pd.Series[float]":
+    def y(self) -> "pd.Series[float]":
         return self.df[self.coords.Y]
 
     def to_numpy(self) -> NDArray[np.floating[Any]]:

@@ -86,14 +86,14 @@ def test_u():
     df = pd.DataFrame(iterable, columns=[Pixels.coords.X, Pixels.coords.Y])
     pixels = Pixels(df)
     expected_x = pd.Series([1, 3, 5], name=Pixels.coords.X)
-    assert pixels.u().equals(expected_x)
+    assert pixels.x().equals(expected_x)
 
 
 def test_v():
     df = pd.DataFrame(iterable, columns=[Pixels.coords.X, Pixels.coords.Y])
     pixels = Pixels(df)
     expected_y = pd.Series([2, 4, 6], name=Pixels.coords.Y)
-    assert pixels.v().equals(expected_y)
+    assert pixels.y().equals(expected_y)
 
 
 def test_to_numpy():

@@ -159,7 +159,7 @@ def test_calculate_correction_factor_from_panel_with_label(spectral_images):
 
     a = image_vnir.to_numpy()
     pixels = get_signatures_within_convex_hull(image_vnir, rect)[0].pixels
-    c = a[pixels.v(), pixels.u(), :]
+    c = a[pixels.y(), pixels.x(), :]
     assert np.array_equal(
         np.full(image_vnir.bands, 0.2),
         np.round(c.mean(axis=0) * panel_correction, 2),
