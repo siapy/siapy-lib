@@ -87,8 +87,8 @@ class Signatures:
     @classmethod
     def from_array_and_pixels(cls, image: NDArray[np.floating[Any]], pixels: Pixels) -> "Signatures":
         pixels = pixels.as_type(int)
-        u = pixels.u()
-        v = pixels.v()
+        u = pixels.x()
+        v = pixels.y()
 
         if image.ndim != 3:
             raise InvalidInputError(f"Expected a 3-dimensional array, but got {image.ndim}-dimensional array.")

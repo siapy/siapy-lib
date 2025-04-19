@@ -142,8 +142,8 @@ def display_image_with_areas(
 
     for pixels in areas:
         ax.scatter(
-            pixels.u(),
-            pixels.v(),
+            pixels.x(),
+            pixels.y(),
             lw=0,
             marker="o",
             c=color,
@@ -180,8 +180,8 @@ def display_multiple_images_with_areas(
 
         for pixels in selected_areas:
             ax.scatter(
-                pixels.u(),
-                pixels.v(),
+                pixels.x(),
+                pixels.y(),
                 lw=0,
                 marker="o",
                 c=color,
