@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.1](https://github.com/siapy/siapy-lib/compare/v0.8.0...v0.8.1) (2025-04-19)
+
+
+### Documentation
+
+* update imageset initialization method in README ([7c579b4](https://github.com/siapy/siapy-lib/commit/7c579b422b6d66597079f84553d7dc7c0eb2f689))
+
 ## [0.8.0](https://github.com/siapy/siapy-lib/compare/v0.7.2...v0.8.0) (2025-04-18)
 
 
