@@ -8,7 +8,12 @@ import pytest
 
 from siapy.core.exceptions import InvalidInputError, InvalidTypeError
 from siapy.entities import Pixels
-from siapy.entities.pixels import HomogeneousCoordinate, PixelCoordinate, validate_pixel_input_dimensions
+from siapy.entities.pixels import (
+    HomogeneousCoordinate,
+    PixelCoordinate,
+    validate_pixel_input,
+    validate_pixel_input_dimensions,
+)
 
 iterable = [(1, 2), (3, 4), (5, 6)]
 iterable_homo = [(1, 2, 1), (3, 4, 1), (5, 6, 1)]
@@ -208,3 +213,52 @@ def test_as_type():
     assert isinstance(float_pixels.get_coordinate(0).y, float)
     assert float_pixels.get_coordinate(0).x == 1.0
     assert float_pixels.get_coordinate(0).y == 2.0
+
+
+def test_validate_pixel_input():
+    # Test with valid Pixels instance
+    original_pixels = Pixels.from_iterable(iterable)
+    result_pixels = validate_pixel_input(original_pixels)
+    assert result_pixels is original_pixels  # Should return same instance
+
+    # Test with valid DataFrame
+    valid_df = pd.DataFrame(iterable, columns=[HomogeneousCoordinate.X, HomogeneousCoordinate.Y])
+    result_df_pixels = validate_pixel_input(valid_df)
+    assert isinstance(result_df_pixels, Pixels)
+    assert result_df_pixels.df.equals(valid_df)
+
+    # Test with valid numpy array
+    valid_array = np.array(iterable)
+    result_array_pixels = validate_pixel_input(valid_array)
+    assert isinstance(result_array_pixels, Pixels)
+    assert np.array_equal(result_array_pixels.to_numpy(), valid_array)
+
+    # Test with valid list of tuples
+    valid_list = [(1.0, 2.0), (3.0, 4.0)]
+    result_list_pixels = validate_pixel_input(valid_list)
+    assert isinstance(result_list_pixels, Pixels)
+    assert result_list_pixels.to_list() == [list(coord) for coord in valid_list]
+
+    # Test with invalid numpy array dimensions
+    invalid_array_3d = np.array([[[1, 2], [3, 4]], [[5, 6], [7, 8]]])
+    with pytest.raises(InvalidInputError) as exc_info:
+        validate_pixel_input(invalid_array_3d)
+    assert "NumPy array must be 2D" in str(exc_info.value)
+
+    invalid_array_cols = np.array([[1, 2, 3], [4, 5, 6]])
+    with pytest.raises(InvalidInputError) as exc_info:
+        validate_pixel_input(invalid_array_cols)
+    assert "shape (n, 2)" in str(exc_info.value)
+
+    # Test with unsupported type
+    with pytest.raises(InvalidTypeError) as exc_info:
+        validate_pixel_input(123)
+    assert "Unsupported input type" in str(exc_info.value)
+
+    # Test with invalid DataFrame (wrong columns)
+    invalid_df = pd.DataFrame(iterable, columns=["a", "b"])
+    with pytest.raises(InvalidInputError) as exc_info:
+        validate_pixel_input(invalid_df)
+    assert "Invalid column names" in str(exc_info.value)
+
+    # TODO: test for iterable incorrect

@@ -13,6 +13,9 @@ from siapy.core.exceptions import InvalidInputError, InvalidTypeError
 __all__ = [
     "Pixels",
     "PixelCoordinate",
+    "CoordinateInput",
+    "HomogeneousCoordinate",
+    "validate_pixel_input",
 ]
 
 
@@ -127,4 +130,43 @@ def validate_pixel_input_dimensions(df: pd.DataFrame | pd.Series) -> None:
         raise InvalidInputError(
             message=f"Invalid column names: expected ['{HomogeneousCoordinate.X}', '{HomogeneousCoordinate.Y}'], got",
             input_value=sorted(df.columns),
+        )
+
+
+def validate_pixel_input(input_data: Pixels | pd.DataFrame | Iterable[CoordinateInput]) -> Pixels:
+    """Validates and converts various input types to Pixels object."""
+    try:
+        if isinstance(input_data, Pixels):
+            return input_data
+
+        if isinstance(input_data, pd.DataFrame):
+            validate_pixel_input_dimensions(input_data)
+            return Pixels(input_data)
+
+        if isinstance(input_data, np.ndarray):
+            if input_data.ndim != 2 or input_data.shape[1] != 2:
+                raise InvalidInputError(
+                    input_value=input_data.shape,
+                    message=f"NumPy array must be 2D with shape (n, 2), got shape {input_data.shape}",
+                )
+            return Pixels(pd.DataFrame(input_data, columns=[HomogeneousCoordinate.X, HomogeneousCoordinate.Y]))
+
+        if isinstance(input_data, Iterable):
+            return Pixels.from_iterable(input_data)  # type: ignore
+
+        raise InvalidTypeError(
+            input_value=input_data,
+            allowed_types=(Pixels, pd.DataFrame, np.ndarray, Iterable),
+            message=f"Unsupported input type: {type(input_data).__name__}",
+        )
+
+    except Exception as e:
+        if isinstance(e, (InvalidTypeError, InvalidInputError)):
+            raise
+
+        raise InvalidInputError(
+            input_value=input_data,
+            message=f"Failed to convert input to Pixels: {str(e)}"
+            f"\nExpected a Pixels instance or an iterable (e.g. list, np.array, tuple, pd.DataFrame)."
+            f"\nThe input must contain 2D coordinates with x and y values.",
         )
