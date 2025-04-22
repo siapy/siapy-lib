@@ -6,9 +6,10 @@ import numpy as np
 import pandas as pd
 from numpy.typing import NDArray
 
+from siapy.core import logger
 from siapy.core.exceptions import InvalidInputError
 
-from .pixels import Pixels
+from .pixels import CoordinateInput, Pixels, validate_pixel_input
 
 __all__ = [
     "Signatures",
@@ -58,8 +59,8 @@ class Signals:
 
 @dataclass
 class Signatures:
-    _pixels: Pixels
-    _signals: Signals
+    pixels: Pixels
+    signals: Signals
 
     def __repr__(self) -> str:
         return f"Signatures(\n{self.pixels}\n{self.signals}\n)"
@@ -85,20 +86,26 @@ class Signatures:
         return cls(pixels, signals)
 
     @classmethod
-    def from_array_and_pixels(cls, image: NDArray[np.floating[Any]], pixels: Pixels) -> "Signatures":
-        pixels = pixels.as_type(int)
-        u = pixels.x()
-        v = pixels.y()
+    def from_array_and_pixels(
+        cls, array: NDArray[np.floating[Any]], pixels: Pixels | pd.DataFrame | Iterable[CoordinateInput]
+    ) -> "Signatures":
+        pixels = validate_pixel_input(pixels)
+        if pd.api.types.is_float_dtype(pixels.df.dtypes.x) or pd.api.types.is_float_dtype(pixels.df.dtypes.y):
+            logger.warning("Pixel DataFrame contains float values. Converting to integers.")
+            pixels = pixels.as_type(int)
 
-        if image.ndim != 3:
-            raise InvalidInputError(f"Expected a 3-dimensional array, but got {image.ndim}-dimensional array.")
-        if np.max(u) >= image.shape[1] or np.max(v) >= image.shape[0]:
+        x = pixels.x()
+        y = pixels.y()
+
+        if array.ndim != 3:
+            raise InvalidInputError(f"Expected a 3-dimensional array, but got {array.ndim}-dimensional array.")
+        if np.max(x) >= array.shape[1] or np.max(y) >= array.shape[0]:
             raise InvalidInputError(
                 f"Pixel coordinates exceed image dimensions: "
-                f"image shape is {image.shape}, but max u={np.max(u)}, max v={np.max(v)}."
+                f"image shape is {array.shape}, but max u={np.max(x)}, max v={np.max(y)}."
             )
 
-        signals_list = image[v, u, :]
+        signals_list = array[y, x, :]
         signals = Signals(pd.DataFrame(signals_list))
         validate_inputs(pixels, signals)
         return cls(pixels, signals)
@@ -138,14 +145,6 @@ class Signatures:
     def open_parquet(cls, filepath: str | Path) -> "Signatures":
         df = pd.read_parquet(filepath)
         return cls.from_dataframe(df)
-
-    @property
-    def pixels(self) -> Pixels:
-        return self._pixels
-
-    @property
-    def signals(self) -> Signals:
-        return self._signals
 
     def to_dataframe(self) -> pd.DataFrame:
         return pd.concat([self.pixels.df, self.signals.df], axis=1)
