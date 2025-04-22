@@ -1,13 +1,13 @@
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any, Iterable, Sequence
 
 import numpy as np
 import pandas as pd
 from numpy.typing import NDArray
 
 from siapy.core import logger
-from siapy.core.exceptions import InvalidInputError
+from siapy.core.exceptions import InvalidInputError, InvalidTypeError
 
 from .pixels import CoordinateInput, Pixels, validate_pixel_input
 
@@ -55,6 +55,46 @@ class Signals:
 
     def save_to_parquet(self, filepath: str | Path) -> None:
         self.df.to_parquet(filepath, index=True)
+
+
+def validate_signal_input(input_data: Signals | pd.DataFrame | Iterable[Sequence[float]]) -> Signals:
+    """Validates and converts various input types to Signals object."""
+    try:
+        if isinstance(input_data, Signals):
+            return input_data
+
+        if isinstance(input_data, pd.DataFrame):
+            return Signals(input_data)
+
+        if isinstance(input_data, np.ndarray):
+            if input_data.ndim not in (1, 2):
+                raise InvalidInputError(
+                    input_value=input_data.shape,
+                    message=f"NumPy array must be 1D or 2D, got shape {input_data.shape}",
+                )
+            if input_data.ndim == 1:
+                input_data = input_data.reshape(1, -1)  # Reshape 1D array to 2D if needed
+            return Signals(pd.DataFrame(input_data))
+
+        if isinstance(input_data, Iterable):
+            return Signals.from_iterable(input_data)
+
+        raise InvalidTypeError(
+            input_value=input_data,
+            allowed_types=(Signals, pd.DataFrame, np.ndarray, Iterable),
+            message=f"Unsupported input type: {type(input_data).__name__}",
+        )
+
+    except Exception as e:
+        if isinstance(e, (InvalidTypeError, InvalidInputError)):
+            raise
+
+        raise InvalidInputError(
+            input_value=input_data,
+            message=f"Failed to convert input to Signals: {str(e)}"
+            f"\nExpected a Signals instance or an iterable (e.g. list, np.array, pd.DataFrame)."
+            f"\nThe input must contain spectral signal values.",
+        )
 
 
 @dataclass
@@ -107,6 +147,17 @@ class Signatures:
 
         signals_list = array[y, x, :]
         signals = Signals(pd.DataFrame(signals_list))
+        validate_inputs(pixels, signals)
+        return cls(pixels, signals)
+
+    @classmethod
+    def from_signals_and_pixels(
+        cls,
+        signals: Signals | pd.DataFrame | Iterable[Sequence[float]],
+        pixels: Pixels | pd.DataFrame | Iterable[CoordinateInput],
+    ) -> "Signatures":
+        pixels = validate_pixel_input(pixels)
+        signals = validate_signal_input(signals)
         validate_inputs(pixels, signals)
         return cls(pixels, signals)
 

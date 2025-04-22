@@ -6,9 +6,9 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from siapy.core.exceptions import InvalidInputError
+from siapy.core.exceptions import InvalidInputError, InvalidTypeError
 from siapy.entities import Pixels, Signatures
-from siapy.entities.signatures import Signals
+from siapy.entities.signatures import Signals, validate_signal_input
 
 ## Signals
 
@@ -76,6 +76,56 @@ def test_signals_save_and_load_to_parquet():
         loaded_signals = Signals.load_from_parquet(parquet_file)
         assert isinstance(loaded_signals, Signals)
         assert loaded_signals.df.equals(signals.df)
+
+
+def test_validate_signal_input():
+    # Test with Signals instance
+    signals_df = pd.DataFrame([[1, 2, 3], [4, 5, 6]])
+    signals_obj = Signals(signals_df)
+    result = validate_signal_input(signals_obj)
+    assert result is signals_obj
+
+    # Test with DataFrame
+    df = pd.DataFrame([[7, 8, 9], [10, 11, 12]])
+    result = validate_signal_input(df)
+    assert isinstance(result, Signals)
+    assert result.df.equals(df)
+
+    # Test with numpy array (2D)
+    arr_2d = np.array([[13, 14, 15], [16, 17, 18]])
+    result = validate_signal_input(arr_2d)
+    assert isinstance(result, Signals)
+    assert np.array_equal(result.to_numpy(), arr_2d)
+
+    # Test with numpy array (1D)
+    arr_1d = np.array([19, 20, 21])
+    result = validate_signal_input(arr_1d)
+    assert isinstance(result, Signals)
+    assert result.to_numpy().shape[0] == 1
+    assert np.array_equal(result.to_numpy()[0], arr_1d)
+
+    # Test with list of lists
+    list_data = [[22, 23, 24], [25, 26, 27]]
+    result = validate_signal_input(list_data)
+    assert isinstance(result, Signals)
+    assert np.array_equal(result.to_numpy(), np.array(list_data))
+
+    # Test with invalid numpy array (3D)
+    arr_3d = np.zeros((2, 3, 4))
+    with pytest.raises(InvalidInputError, match="NumPy array must be 1D or 2D"):
+        validate_signal_input(arr_3d)
+
+    # Test with invalid input type
+    with pytest.raises(InvalidTypeError, match="Unsupported input type"):
+        validate_signal_input(123)
+
+    # Test with invalid iterable that raises during conversion
+    class BadIterable:
+        def __iter__(self):
+            raise ValueError("Bad iterable")
+
+    with pytest.raises(InvalidInputError, match="Failed to convert input to Signals"):
+        validate_signal_input(BadIterable())
 
 
 ## Signatures
@@ -206,6 +256,46 @@ def test_signatures_from_array_and_pixels_coordinate_bounds():
     image = np.zeros((2, 2, 2))
     with pytest.raises(InvalidInputError, match="Pixel coordinates exceed image dimensions"):
         Signatures.from_array_and_pixels(image, pixels)
+
+
+def test_signatures_from_signals_and_pixels():
+    # Test with Pixels and Signals objects
+    pixels_df = pd.DataFrame({"x": [0, 1, 2], "y": [3, 4, 5]})
+    signals_df = pd.DataFrame({"A": [10, 20, 30], "B": [40, 50, 60]})
+    pixels = Pixels(pixels_df)
+    signals = Signals(signals_df)
+
+    signatures = Signatures.from_signals_and_pixels(signals, pixels)
+    assert isinstance(signatures, Signatures)
+    assert signatures.pixels == pixels
+    assert signatures.signals.df.equals(signals.df)
+
+    # Test with DataFrames
+    signatures = Signatures.from_signals_and_pixels(signals_df, pixels_df)
+    assert isinstance(signatures, Signatures)
+    assert signatures.pixels.df.equals(pixels_df)
+    assert signatures.signals.df.equals(signals_df)
+
+    # Test with numpy arrays
+    pixels_array = np.array([[0, 3], [1, 4], [2, 5]])
+    signals_array = np.array([[10, 40], [20, 50], [30, 60]])
+    signatures = Signatures.from_signals_and_pixels(signals_array, pixels_array)
+    assert isinstance(signatures, Signatures)
+    assert np.array_equal(signatures.pixels.df.values, pixels_array)
+    assert np.array_equal(signatures.signals.df.values, signals_array)
+
+    # Test with lists
+    pixels_list = [[0, 3], [1, 4], [2, 5]]
+    signals_list = [[10, 40], [20, 50], [30, 60]]
+    signatures = Signatures.from_signals_and_pixels(signals_list, pixels_list)
+    assert isinstance(signatures, Signatures)
+    assert signatures.pixels.to_list() == pixels_list
+    assert np.array_equal(signatures.signals.df.values, np.array(signals_list))
+
+    # Test with mismatched lengths (should raise error)
+    signals_short = [[10, 40]]
+    with pytest.raises(InvalidInputError):
+        Signatures.from_signals_and_pixels(signals_short, pixels_list)
 
 
 def test_signatures_from_dataframe():
