@@ -13,7 +13,7 @@ from siapy.entities import SpectralImage
 from siapy.entities.helpers import get_signatures_within_convex_hull
 from siapy.entities.images import SpectralLibImage
 from siapy.transformations.image import rescale
-from siapy.utils.validators import validate_image_to_numpy
+from siapy.entities.images.validators import validate_image_to_numpy
 
 __all__ = [
     "save_image",

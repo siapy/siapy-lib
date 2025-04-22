@@ -89,6 +89,7 @@ nav:
               - Spectral Library: api/entities/images/spectral_lib.md
               - Mock Image: api/entities/images/mock.md
               - Spectral Images: api/entities/images/spimage.md
+              - Validators: api/entities/images/validators.md
           - Shape: api/entities/shapes/shape.md
           - Image Sets: api/entities/imagesets.md
           - Pixels: api/entities/pixels.md

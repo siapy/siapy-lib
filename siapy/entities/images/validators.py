@@ -3,13 +3,8 @@ from typing import Any
 import numpy as np
 from numpy.typing import NDArray
 from PIL.Image import Image
-from sklearn.base import BaseEstimator
 
-from siapy.core.exceptions import (
-    InvalidInputError,
-    InvalidTypeError,
-    MethodNotImplementedError,
-)
+from siapy.core.exceptions import InvalidInputError, InvalidTypeError
 from siapy.core.types import ImageSizeType, ImageType
 from siapy.entities import SpectralImage
 
@@ -17,7 +12,6 @@ __all__ = [
     "validate_image_to_numpy_3channels",
     "validate_image_to_numpy",
     "validate_image_size",
-    "check_model_prediction_methods",
 ]
 
 
@@ -66,10 +60,3 @@ def validate_image_size(output_size: ImageSizeType) -> tuple[int, int]:
             message="Argument output_size tuple must have 2 elements and contain only integers.",
         )
     return output_size
-
-
-def check_model_prediction_methods(model: BaseEstimator) -> None:
-    required_methods = ["fit", "predict", "score"]
-    for method in required_methods:
-        if not hasattr(model, method):
-            raise MethodNotImplementedError(model.__class__.__name__, method)
