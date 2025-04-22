@@ -1,11 +1,13 @@
 from dataclasses import dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Generic, Sequence, TypeVar
+from typing import TYPE_CHECKING, Any, Generic, Iterable, Sequence, TypeVar
 
 import numpy as np
+import pandas as pd
 from numpy.typing import NDArray
 from PIL import Image
 
+from ..pixels import CoordinateInput, Pixels, validate_pixel_input
 from ..shapes import GeometricShapes, Shape
 from ..signatures import Signatures
 from .interfaces import ImageBase
@@ -15,8 +17,6 @@ from .spectral_lib import SpectralLibImage
 
 if TYPE_CHECKING:
     from siapy.core.types import XarrayType
-
-    from ..pixels import Pixels
 
 
 __all__ = [
@@ -117,24 +117,26 @@ class SpectralImage(Generic[T]):
     def to_xarray(self) -> "XarrayType":
         return self.image.to_xarray()
 
-    def to_signatures(self, pixels: "Pixels") -> Signatures:
+    def to_signatures(self, pixels: Pixels | pd.DataFrame | Iterable[CoordinateInput]) -> Signatures:
+        pixels = validate_pixel_input(pixels)
         image_arr = self.to_numpy()
         signatures = Signatures.from_array_and_pixels(image_arr, pixels)
         return signatures
 
-    def to_subarray(self, pixels: "Pixels") -> NDArray[np.floating[Any]]:
+    def to_subarray(self, pixels: Pixels | pd.DataFrame | Iterable[CoordinateInput]) -> NDArray[np.floating[Any]]:
+        pixels = validate_pixel_input(pixels)
         image_arr = self.to_numpy()
-        u_max = pixels.x().max()
-        u_min = pixels.x().min()
-        v_max = pixels.y().max()
-        v_min = pixels.y().min()
+        x_max = pixels.x().max()
+        x_min = pixels.x().min()
+        y_max = pixels.y().max()
+        y_min = pixels.y().min()
         # create new image
-        image_arr_area = np.nan * np.ones((int(v_max - v_min + 1), int(u_max - u_min + 1), self.bands))
+        image_arr_area = np.nan * np.ones((int(y_max - y_min + 1), int(x_max - x_min + 1), self.bands))
         # convert original coordinates to coordinates for new image
-        v_norm = pixels.y() - v_min
-        u_norm = pixels.x() - u_min
+        y_norm = pixels.y() - y_min
+        x_norm = pixels.x() - x_min
         # write values from original image to new image
-        image_arr_area[v_norm, u_norm, :] = image_arr[pixels.y(), pixels.x(), :]
+        image_arr_area[y_norm, x_norm, :] = image_arr[pixels.y(), pixels.x(), :]
         return image_arr_area
 
     def mean(self, axis: int | tuple[int, ...] | Sequence[int] | None = None) -> float | NDArray[np.floating[Any]]:
