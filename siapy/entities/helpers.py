@@ -5,8 +5,6 @@ from shapely.prepared import prep as shapely_prep
 
 from siapy.core.exceptions import InvalidTypeError
 from siapy.entities import Shape, Signatures, SpectralImage
-from siapy.entities.pixels import Pixels
-from siapy.entities.signatures import Signals
 
 
 def get_signatures_within_convex_hull(image: SpectralImage, shape: Shape) -> list[Signatures]:
@@ -31,7 +29,7 @@ def get_signatures_within_convex_hull(image: SpectralImage, shape: Shape) -> lis
                 signals.append(image_xarr.sel(x=p.x, y=p.y, method="nearest").values)
                 pixels.append((p.x, p.y))
 
-            signatures.append(Signatures(Pixels.from_iterable(pixels), Signals.from_iterable(signals)))
+            signatures.append(Signatures.from_signals_and_pixels(signals, pixels))
 
     else:
         for hull in shape.convex_hull:
@@ -59,6 +57,6 @@ def get_signatures_within_convex_hull(image: SpectralImage, shape: Shape) -> lis
                     signals.append(signal)
                     pixels.append((x, y))
 
-            signatures.append(Signatures(Pixels.from_iterable(pixels), Signals.from_iterable(signals)))
+            signatures.append(Signatures.from_signals_and_pixels(signals, pixels))
 
     return signatures

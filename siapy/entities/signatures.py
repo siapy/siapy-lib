@@ -153,7 +153,7 @@ class Signatures:
     @classmethod
     def from_signals_and_pixels(
         cls,
-        signals: Signals | pd.DataFrame | Iterable[Sequence[float]],
+        signals: Signals | pd.DataFrame | Iterable[Any],
         pixels: Pixels | pd.DataFrame | Iterable[CoordinateInput],
     ) -> "Signatures":
         pixels = validate_pixel_input(pixels)
