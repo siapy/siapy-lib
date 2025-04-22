@@ -6,7 +6,7 @@ from siapy.core.exceptions import (
     InvalidInputError,
     InvalidTypeError,
 )
-from siapy.entities.images.validators import (
+from siapy.utils.image_validators import (
     validate_image_size,
     validate_image_to_numpy,
     validate_image_to_numpy_3channels,

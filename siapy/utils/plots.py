@@ -15,7 +15,7 @@ from siapy.core.logger import logger
 from siapy.core.types import ImageType
 from siapy.datasets.schemas import ClassificationTarget, TabularDatasetData
 from siapy.entities import Pixels
-from siapy.entities.images.validators import validate_image_to_numpy_3channels
+from siapy.utils.image_validators import validate_image_to_numpy_3channels
 
 __all__ = [
     "pixels_select_click",

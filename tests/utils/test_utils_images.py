@@ -8,7 +8,7 @@ import pytest
 import spectral as sp
 
 from siapy.entities import SpectralImage
-from siapy.entities.helpers import get_signatures_within_convex_hull
+from siapy.utils.signatures import get_signatures_within_convex_hull
 from siapy.entities.images import SpectralLibImage
 from siapy.entities.shapes import Shape
 from siapy.utils.images import (

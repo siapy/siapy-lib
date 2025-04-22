@@ -10,10 +10,10 @@ from siapy.core import logger
 from siapy.core.exceptions import InvalidInputError
 from siapy.core.types import ImageDataType, ImageType
 from siapy.entities import SpectralImage
-from siapy.entities.helpers import get_signatures_within_convex_hull
+from siapy.utils.signatures import get_signatures_within_convex_hull
 from siapy.entities.images import SpectralLibImage
 from siapy.transformations.image import rescale
-from siapy.entities.images.validators import validate_image_to_numpy
+from siapy.utils.image_validators import validate_image_to_numpy
 
 __all__ = [
     "save_image",

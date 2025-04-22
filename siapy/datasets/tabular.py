@@ -9,7 +9,7 @@ from siapy.core.exceptions import InvalidInputError
 from siapy.core.types import ImageContainerType
 from siapy.datasets.schemas import TabularDatasetData
 from siapy.entities import Signatures, SpectralImage, SpectralImageSet
-from siapy.entities.helpers import get_signatures_within_convex_hull
+from siapy.utils.signatures import get_signatures_within_convex_hull
 
 __all__ = [
     "TabularDataset",
