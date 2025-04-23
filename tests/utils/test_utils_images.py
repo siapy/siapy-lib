@@ -7,11 +7,13 @@ import numpy as np
 import pytest
 import spectral as sp
 
+from siapy.core.exceptions import InvalidInputError
 from siapy.entities import SpectralImage
 from siapy.entities.images import SpectralLibImage
 from siapy.entities.shapes import Shape
 from siapy.utils.images import (
     blockfy_image,
+    calculate_correction_factor,
     calculate_correction_factor_from_panel,
     calculate_image_background_percentage,
     convert_radiance_image_to_reflectance,
@@ -142,6 +144,21 @@ def test_merge_images_by_specter():
             auto_metadata_extraction=False,
         )
         assert save_path.exists()
+
+
+def test_calculate_correction_factor():
+    # Test with valid values
+    panel_radiance_mean = np.array([0.2, 0.3, 0.4])
+    panel_reference_reflectance = 0.5
+    correction_factor = calculate_correction_factor(panel_radiance_mean, panel_reference_reflectance)
+    expected = np.array([2.5, 1.6666667, 1.25])
+    np.testing.assert_array_almost_equal(correction_factor, expected)
+
+    # Test with invalid values
+    with pytest.raises(InvalidInputError):
+        calculate_correction_factor(panel_radiance_mean, -0.1)
+    with pytest.raises(InvalidInputError):
+        calculate_correction_factor(panel_radiance_mean, 1.1)
 
 
 def test_calculate_correction_factor_from_panel_with_label(spectral_images):

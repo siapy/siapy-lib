@@ -20,6 +20,7 @@ __all__ = [
     "spy_create_image",
     "spy_merge_images_by_specter",
     "convert_radiance_image_to_reflectance",
+    "calculate_correction_factor",
     "calculate_correction_factor_from_panel",
     "blockfy_image",
     "calculate_image_background_percentage",
@@ -27,7 +28,7 @@ __all__ = [
 
 
 def spy_save_image(
-    image: Annotated[NDArray[np.floating[Any]], "The image to save."],
+    image: Annotated[ImageType, "The image to save."],
     save_path: Annotated[str | Path, "Header file (with '.hdr' extension) name with path."],
     *,
     metadata: Annotated[
@@ -43,6 +44,7 @@ def spy_save_image(
         "The numpy data type with which to store the image.",
     ] = np.float32,
 ) -> None:
+    image_np = validate_image_to_numpy(image)
     if isinstance(save_path, str):
         save_path = Path(save_path)
     if metadata is None:
@@ -51,7 +53,7 @@ def spy_save_image(
     os.makedirs(save_path.parent, exist_ok=True)
     sp.envi.save_image(
         hdr_file=save_path,
-        image=image,
+        image=image_np,
         dtype=dtype,
         force=overwrite,
         metadata=metadata,
@@ -60,7 +62,7 @@ def spy_save_image(
 
 
 def spy_create_image(
-    image: Annotated[NDArray[np.floating[Any]], "The image to save."],
+    image: Annotated[ImageType, "The image to save."],
     save_path: Annotated[str | Path, "Header file (with '.hdr' extension) name with path."],
     *,
     metadata: Annotated[
@@ -76,13 +78,14 @@ def spy_create_image(
         "The numpy data type with which to store the image.",
     ] = np.float32,
 ) -> SpectralImage[Any]:
+    image_np = validate_image_to_numpy(image)
     if isinstance(save_path, str):
         save_path = Path(save_path)
     if metadata is None:
         metadata = {
-            "lines": image.shape[0],
-            "samples": image.shape[1],
-            "bands": image.shape[2],
+            "lines": image_np.shape[0],
+            "samples": image_np.shape[1],
+            "bands": image_np.shape[2],
         }
 
     os.makedirs(save_path.parent, exist_ok=True)
@@ -93,15 +96,15 @@ def spy_create_image(
         force=overwrite,
     )
     mmap = spectral_image.open_memmap(writable=True)
-    mmap[:, :, :] = image
+    mmap[:, :, :] = image_np
     logger.info(f"Image created as:  {save_path}")
     return SpectralImage(SpectralLibImage(spectral_image))
 
 
 def spy_merge_images_by_specter(
     *,
-    image_original: Annotated[SpectralImage[Any], "Original image."],
-    image_to_merge: Annotated[SpectralImage[Any], "Image which will be merged onto original image."],
+    image_original: Annotated[ImageType, "Original image."],
+    image_to_merge: Annotated[ImageType, "Image which will be merged onto original image."],
     save_path: Annotated[str | Path, "Header file (with '.hdr' extension) name with path."],
     overwrite: Annotated[
         bool,
@@ -116,15 +119,19 @@ def spy_merge_images_by_specter(
         "Whether to automatically extract metadata images.",
     ] = True,
 ) -> SpectralImage[Any]:
-    image_original_np = image_original.to_numpy()
-    image_to_merge_np = image_to_merge.to_numpy()
+    image_original_np = validate_image_to_numpy(image_original)
+    image_to_merge_np = validate_image_to_numpy(image_to_merge)
 
     metadata = {
-        "lines": image_original.shape[0],
-        "samples": image_original.shape[1],
-        "bands": image_original.shape[2] + image_to_merge.shape[2],
+        "lines": image_original_np.shape[0],
+        "samples": image_original_np.shape[1],
+        "bands": image_original_np.shape[2] + image_to_merge_np.shape[2],
     }
-    if auto_metadata_extraction:
+    if (
+        auto_metadata_extraction
+        and isinstance(image_original, SpectralImage)
+        and isinstance(image_to_merge, SpectralImage)
+    ):
         original_meta = image_original.metadata
         merged_meta = image_to_merge.metadata
         metadata_ext = {}
@@ -162,18 +169,34 @@ def spy_merge_images_by_specter(
 
 
 def convert_radiance_image_to_reflectance(
-    image: SpectralImage[Any],
+    image: ImageType,
     panel_correction: NDArray[np.floating[Any]],
-) -> NDArray[np.floating[Any]] | SpectralImage[Any]:
-    return image.to_numpy() * panel_correction
+) -> NDArray[np.floating[Any]]:
+    image_np = validate_image_to_numpy(image)
+    return image_np * panel_correction
+
+
+def calculate_correction_factor(
+    panel_radiance_mean: NDArray[np.floating[Any]],
+    panel_reference_reflectance: float,
+) -> NDArray[np.floating[Any]]:
+    if not (0 <= panel_reference_reflectance <= 1):
+        raise InvalidInputError(
+            input_value={"panel_reference_reflectance": panel_reference_reflectance},
+            message="Panel reference reflectance must be between 0 and 1.",
+        )
+
+    panel_reflectance_mean = np.full(panel_radiance_mean.shape, panel_reference_reflectance)
+    panel_correction = panel_reflectance_mean / panel_radiance_mean
+    return panel_correction
 
 
 def calculate_correction_factor_from_panel(
-    image: SpectralImage[Any],
+    image: ImageType,
     panel_reference_reflectance: float,
     panel_shape_label: str | None = None,
 ) -> NDArray[np.floating[Any]]:
-    if panel_shape_label:
+    if panel_shape_label and isinstance(image, SpectralImage):
         panel_shape = image.geometric_shapes.get_by_name(panel_shape_label)
         if not panel_shape:
             raise InvalidInputError(
@@ -189,17 +212,19 @@ def calculate_correction_factor_from_panel(
         panel_radiance_mean = panel_signatures.signals.mean()
 
     else:
-        temp_mean = image.mean(axis=(0, 1))
+        image_np = validate_image_to_numpy(image)
+        temp_mean = image_np.mean(axis=(0, 1))
         if not isinstance(temp_mean, np.ndarray):
             raise InvalidInputError(
-                input_value={"image": image},
+                input_value={"image": image_np},
                 message=f"Expected image.mean(axis=(0, 1)) to return np.ndarray, but got {type(temp_mean).__name__}.",
             )
         panel_radiance_mean = temp_mean
 
-    panel_reflectance_mean = np.full(image.bands, panel_reference_reflectance)
-    panel_correction = panel_reflectance_mean / panel_radiance_mean
-    return panel_correction
+    return calculate_correction_factor(
+        panel_radiance_mean=panel_radiance_mean,
+        panel_reference_reflectance=panel_reference_reflectance,
+    )
 
 
 def blockfy_image(
