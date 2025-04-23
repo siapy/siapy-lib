@@ -5,11 +5,12 @@ from tempfile import TemporaryDirectory
 
 import numpy as np
 import pytest
+import rioxarray  # noqa
 import spectral as sp
 
 from siapy.core.exceptions import InvalidInputError
 from siapy.entities import SpectralImage
-from siapy.entities.images import SpectralLibImage
+from siapy.entities.images import RasterioLibImage, SpectralLibImage
 from siapy.entities.shapes import Shape
 from siapy.utils.images import (
     blockfy_image,
@@ -17,11 +18,15 @@ from siapy.utils.images import (
     calculate_correction_factor_from_panel,
     calculate_image_background_percentage,
     convert_radiance_image_to_reflectance,
+    rasterio_create_image,
+    rasterio_save_image,
     spy_create_image,
     spy_merge_images_by_specter,
     spy_save_image,
 )
 from siapy.utils.signatures import get_signatures_within_convex_hull
+
+# Spectral
 
 
 @pytest.mark.manual
@@ -144,6 +149,109 @@ def test_merge_images_by_specter():
             auto_metadata_extraction=False,
         )
         assert save_path.exists()
+
+
+# Rasterio
+
+
+def test_rasterio_save_image():
+    with TemporaryDirectory() as tmpdir:
+        image = np.random.default_rng().random((100, 100, 3))
+        save_path = Path(tmpdir, "test_image.tif")
+        rasterio_save_image(image, save_path)
+        assert save_path.exists()
+        loaded = SpectralImage.rasterio_open(filepath=save_path)
+        np.testing.assert_array_almost_equal(loaded.to_numpy(), image.astype("float32"))
+
+
+def test_rasterio_save_image_overwrite_argument():
+    with TemporaryDirectory() as tmpdir:
+        image = np.random.default_rng().random((100, 100, 3))
+        save_path = Path(tmpdir, "test_image.tif")
+        rasterio_save_image(image, save_path)
+        with pytest.raises(InvalidInputError):
+            rasterio_save_image(image, save_path, overwrite=False)
+        rasterio_save_image(image, save_path, overwrite=True)
+
+
+def test_rasterio_save_image_metadata_argument():
+    with TemporaryDirectory() as tmpdir:
+        image = np.random.default_rng().random((100, 100, 3))
+        metadata = {"description": "test image", "wavelength": [1.0, 2.0, 3.0]}
+        save_path = Path(tmpdir, "test_image.tif")
+        rasterio_save_image(image, save_path, metadata=metadata)
+        loaded = rioxarray.open_rasterio(save_path)
+        assert "description" in loaded.attrs
+        assert loaded.attrs["description"] == "test image"
+        assert "wavelength" in loaded.attrs
+
+
+def test_rasterio_save_image_dtype_argument():
+    with TemporaryDirectory() as tmpdir:
+        image = np.random.default_rng().random((100, 100, 3))
+        save_path = Path(tmpdir, "test_image.tif")
+        dtype = np.uint8
+        rasterio_save_image(image, save_path, dtype=dtype)
+        loaded = rioxarray.open_rasterio(save_path)
+        assert loaded.dtype == np.dtype(dtype)
+
+
+def test_rasterio_save_image_with_kwargs():
+    with TemporaryDirectory() as tmpdir:
+        image = np.random.default_rng().random((100, 100, 3))
+        save_path = Path(tmpdir, "test_image.tif")
+        rasterio_save_image(image, save_path, compress="lzw")
+        assert save_path.exists()
+
+
+def test_rasterio_create_image():
+    with TemporaryDirectory() as tmpdir:
+        image = np.random.default_rng().random((100, 100, 3))
+        save_path = Path(tmpdir, "test_image.tif")
+
+        result = rasterio_create_image(image, save_path)
+
+        assert isinstance(result, SpectralImage)
+        assert save_path.exists()
+
+        # Check the image data
+        image_data = result.to_numpy()
+        np.testing.assert_array_almost_equal(image_data, image.astype("float32"))
+
+        # Verify it's using RasterioLibImage backend
+        assert isinstance(result.image, RasterioLibImage)
+
+
+def test_rasterio_create_image_overwrite_argument():
+    with TemporaryDirectory() as tmpdir:
+        image = np.random.default_rng().random((100, 100, 3))
+        save_path = Path(tmpdir, "test_image.tif")
+        rasterio_create_image(image, save_path)
+        with pytest.raises(InvalidInputError):
+            rasterio_create_image(image, save_path, overwrite=False)
+
+
+def test_rasterio_create_image_metadata_argument():
+    with TemporaryDirectory() as tmpdir:
+        image = np.random.default_rng().random((100, 100, 3))
+        metadata = {"description": "test image", "wavelength": [11.0, 12.0, 13.0]}
+        save_path = Path(tmpdir, "test_image.tif")
+        result = rasterio_create_image(image, save_path, metadata=metadata)
+        assert "description" in result.metadata
+        assert result.metadata["description"] == "test image"
+        # assert result.to_xarray().band.values == [11.0, 12.0, 13.0]
+
+
+def test_rasterio_create_image_with_kwargs():
+    with TemporaryDirectory() as tmpdir:
+        image = np.random.default_rng().random((100, 100, 3))
+        save_path = Path(tmpdir, "test_image.tif")
+        result = rasterio_create_image(image, save_path, compress="lzw")
+        assert isinstance(result, SpectralImage)
+        assert save_path.exists()
+
+
+# Other
 
 
 def test_calculate_correction_factor():

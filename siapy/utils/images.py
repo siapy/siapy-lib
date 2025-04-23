@@ -3,14 +3,16 @@ from pathlib import Path
 from typing import Annotated, Any
 
 import numpy as np
+import rioxarray  # noqa  # activate the rio accessor
 import spectral as sp
+import xarray as xr
 from numpy.typing import NDArray
 
 from siapy.core import logger
 from siapy.core.exceptions import InvalidInputError
 from siapy.core.types import ImageDataType, ImageType
 from siapy.entities import SpectralImage
-from siapy.entities.images import SpectralLibImage
+from siapy.entities.images import RasterioLibImage, SpectralLibImage
 from siapy.transformations.image import rescale
 from siapy.utils.image_validators import validate_image_to_numpy
 from siapy.utils.signatures import get_signatures_within_convex_hull
@@ -19,6 +21,8 @@ __all__ = [
     "spy_save_image",
     "spy_create_image",
     "spy_merge_images_by_specter",
+    "rasterio_save_image",
+    "rasterio_create_image",
     "convert_radiance_image_to_reflectance",
     "calculate_correction_factor",
     "calculate_correction_factor_from_panel",
@@ -166,6 +170,83 @@ def spy_merge_images_by_specter(
         overwrite=overwrite,
         dtype=dtype,
     )
+
+
+def rasterio_save_image(
+    image: ImageType,
+    save_path: str | Path,
+    *,
+    metadata: Annotated[dict[str, Any] | None, "A dict containing additional metadata."] = None,
+    overwrite: Annotated[
+        bool, "If the file exists and set to True, it will be overwritten; otherwise an exception will be raised."
+    ] = True,
+    dtype: Annotated[type[ImageDataType], "The numpy data type with which to store the image."] = np.float32,
+    **kwargs: Annotated[dict[str, Any], "Additional keyword arguments for rioxarray."],
+) -> None:
+    """Save an image using rioxarray."""
+    image_np = validate_image_to_numpy(image)
+    if isinstance(save_path, str):
+        save_path = Path(save_path)
+    if metadata is None:
+        metadata = {}
+
+    os.makedirs(save_path.parent, exist_ok=True)
+
+    if save_path.exists() and not overwrite:
+        raise InvalidInputError(
+            input_value={"save_path": save_path},
+            message=f"File {save_path} already exists and overwrite=False.",
+        )
+
+    wavelengths = metadata.get("wavelength", [])
+    if not wavelengths:
+        wavelengths = np.arange(image_np.shape[2])
+
+    xarray = xr.DataArray(
+        data=image_np.transpose(2, 0, 1).astype(dtype),
+        dims=["band", "y", "x"],
+        coords={
+            "y": np.arange(image_np.shape[0]),
+            "x": np.arange(image_np.shape[1]),
+            "band": wavelengths,
+        },
+        attrs=metadata,
+    )
+
+    xarray.rio.to_raster(save_path, **kwargs)
+    logger.info(f"Image saved with rasterio as: {save_path}")
+
+
+def rasterio_create_image(
+    image: Annotated[ImageType, "The image to use."],
+    save_path: Annotated[str | Path, "File name with path."],
+    *,
+    metadata: Annotated[dict[str, Any] | None, "A dict containing additional metadata."] = None,
+    overwrite: Annotated[
+        bool, "If the file exists and set to True, it will be overwritten; otherwise an exception will be raised."
+    ] = True,
+    dtype: Annotated[type[ImageDataType], "The numpy data type with which to store the image."] = np.float32,
+    **kwargs: Annotated[dict[str, Any], "Additional keyword arguments for rioxarray."],
+) -> SpectralImage[Any]:
+    """Create and save an image using rioxarray, then return a SpectralImage object."""
+    image_np = validate_image_to_numpy(image)
+    if isinstance(save_path, str):
+        save_path = Path(save_path)
+
+    if metadata is None:
+        metadata = {}
+
+    # Save the image first
+    rasterio_save_image(
+        image=image_np,
+        save_path=save_path,
+        metadata=metadata,
+        overwrite=overwrite,
+        dtype=dtype,
+        **kwargs,
+    )
+    logger.info(f"Image created as: {save_path}")
+    return SpectralImage(RasterioLibImage.open(save_path))
 
 
 def convert_radiance_image_to_reflectance(
