@@ -10,15 +10,15 @@ from siapy.core import logger
 from siapy.core.exceptions import InvalidInputError
 from siapy.core.types import ImageDataType, ImageType
 from siapy.entities import SpectralImage
-from siapy.utils.signatures import get_signatures_within_convex_hull
 from siapy.entities.images import SpectralLibImage
 from siapy.transformations.image import rescale
 from siapy.utils.image_validators import validate_image_to_numpy
+from siapy.utils.signatures import get_signatures_within_convex_hull
 
 __all__ = [
-    "save_image",
-    "create_image",
-    "merge_images_by_specter",
+    "spy_save_image",
+    "spy_create_image",
+    "spy_merge_images_by_specter",
     "convert_radiance_image_to_reflectance",
     "calculate_correction_factor_from_panel",
     "blockfy_image",
@@ -26,7 +26,7 @@ __all__ = [
 ]
 
 
-def save_image(
+def spy_save_image(
     image: Annotated[NDArray[np.floating[Any]], "The image to save."],
     save_path: Annotated[str | Path, "Header file (with '.hdr' extension) name with path."],
     *,
@@ -59,7 +59,7 @@ def save_image(
     logger.info(f"Image saved as:  {save_path}")
 
 
-def create_image(
+def spy_create_image(
     image: Annotated[NDArray[np.floating[Any]], "The image to save."],
     save_path: Annotated[str | Path, "Header file (with '.hdr' extension) name with path."],
     *,
@@ -98,7 +98,7 @@ def create_image(
     return SpectralImage(SpectralLibImage(spectral_image))
 
 
-def merge_images_by_specter(
+def spy_merge_images_by_specter(
     *,
     image_original: Annotated[SpectralImage[Any], "Original image."],
     image_to_merge: Annotated[SpectralImage[Any], "Image which will be merged onto original image."],
@@ -152,7 +152,7 @@ def merge_images_by_specter(
     image_to_merge_np = image_to_merge_np.astype(image_original_np.dtype)
     image_merged = np.concatenate((image_original_np, image_to_merge_np), axis=2)
 
-    return create_image(
+    return spy_create_image(
         image=image_merged,
         save_path=save_path,
         metadata=metadata,
@@ -164,19 +164,8 @@ def merge_images_by_specter(
 def convert_radiance_image_to_reflectance(
     image: SpectralImage[Any],
     panel_correction: NDArray[np.floating[Any]],
-    save_path: Annotated[str | Path | None, "Header file (with '.hdr' extension) name with path."] = None,
-    **kwargs: Any,
 ) -> NDArray[np.floating[Any]] | SpectralImage[Any]:
-    image_ref_np = image.to_numpy() * panel_correction
-    if save_path is None:
-        return image_ref_np
-
-    return create_image(
-        image=image_ref_np,
-        save_path=save_path,
-        metadata=image.metadata,
-        **kwargs,
-    )
+    return image.to_numpy() * panel_correction
 
 
 def calculate_correction_factor_from_panel(

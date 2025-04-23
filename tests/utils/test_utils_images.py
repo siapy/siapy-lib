@@ -8,7 +8,6 @@ import pytest
 import spectral as sp
 
 from siapy.entities import SpectralImage
-from siapy.utils.signatures import get_signatures_within_convex_hull
 from siapy.entities.images import SpectralLibImage
 from siapy.entities.shapes import Shape
 from siapy.utils.images import (
@@ -16,10 +15,11 @@ from siapy.utils.images import (
     calculate_correction_factor_from_panel,
     calculate_image_background_percentage,
     convert_radiance_image_to_reflectance,
-    create_image,
-    merge_images_by_specter,
-    save_image,
+    spy_create_image,
+    spy_merge_images_by_specter,
+    spy_save_image,
 )
+from siapy.utils.signatures import get_signatures_within_convex_hull
 
 
 @pytest.mark.manual
@@ -27,7 +27,7 @@ def test_save_image_manual(spectral_images):
     image = spectral_images.vnir_np
     with TemporaryDirectory() as tmpdir:
         save_path = Path(tmpdir, "test_image.hdr")
-        save_image(image, save_path)
+        spy_save_image(image, save_path)
         assert save_path.exists()
 
 
@@ -37,7 +37,7 @@ def test_merge_images_by_specter_manual(spectral_images):
     swir = spectral_images.swir
     with TemporaryDirectory() as tmpdir:
         save_path = Path(tmpdir, "test_image.hdr")
-        merge_images_by_specter(
+        spy_merge_images_by_specter(
             image_original=vnir,
             image_to_merge=swir,
             save_path=save_path,
@@ -49,7 +49,7 @@ def test_save_image():
     with TemporaryDirectory() as tmpdir:
         image = np.random.default_rng().random((100, 100))
         save_path = Path(tmpdir, "test_image.hdr")
-        save_image(image, save_path)
+        spy_save_image(image, save_path)
         assert save_path.exists()
 
 
@@ -57,9 +57,9 @@ def test_save_image_overwrite_argument():
     with TemporaryDirectory() as tmpdir:
         image = np.random.default_rng().random((100, 100))
         save_path = Path(tmpdir, "test_image.hdr")
-        save_image(image, save_path)
+        spy_save_image(image, save_path)
         with pytest.raises(sp.io.envi.EnviException):
-            save_image(image, save_path, overwrite=False)
+            spy_save_image(image, save_path, overwrite=False)
 
 
 def test_save_image_metadata_argument():
@@ -67,7 +67,7 @@ def test_save_image_metadata_argument():
         image = np.random.default_rng().random((100, 100))
         metadata = {"description": "test"}
         save_path = Path(tmpdir, "test_image.hdr")
-        save_image(image, save_path, metadata=metadata)
+        spy_save_image(image, save_path, metadata=metadata)
         image_disc = SpectralImage.spy_open(header_path=save_path)
         assert image_disc.metadata["description"] == "test"
 
@@ -77,7 +77,7 @@ def test_save_image_dtype_argument():
         image = np.random.default_rng().random((100, 100))
         save_path = Path(tmpdir, "test_image.hdr")
         dtype = np.uint16
-        save_image(image, save_path, dtype=dtype)
+        spy_save_image(image, save_path, dtype=dtype)
         image_disc = SpectralImage.spy_open(header_path=save_path)
         assert image_disc.image.file.dtype == np.dtype(dtype)
 
@@ -86,7 +86,7 @@ def test_save_image_path_argument():
     with TemporaryDirectory() as tmpdir:
         image = np.random.default_rng().random((100, 100))
         save_path_str = os.path.join(tmpdir, "test_image.hdr")
-        save_image(image, save_path_str)
+        spy_save_image(image, save_path_str)
         assert Path(save_path_str).exists()
 
 
@@ -94,18 +94,19 @@ def test_create_image():
     with TemporaryDirectory() as tmpdir:
         image = np.random.default_rng().random((100, 100, 3))
         save_path = Path(tmpdir, "test_image.hdr")
-        result = create_image(image, save_path)
+        result = spy_create_image(image, save_path)
         assert isinstance(result, SpectralImage)
         assert save_path.exists()
+        assert np.array_equal(result.to_numpy(), image.astype("float32"))
 
 
 def test_create_image_overwrite_argument():
     with TemporaryDirectory() as tmpdir:
         image = np.random.default_rng().random((100, 100, 3))
         save_path = Path(tmpdir, "test_image.hdr")
-        create_image(image, save_path)
+        spy_create_image(image, save_path)
         with pytest.raises(Exception):
-            create_image(image, save_path, overwrite=False)
+            spy_create_image(image, save_path, overwrite=False)
 
 
 def test_create_image_dtype_argument():
@@ -113,7 +114,7 @@ def test_create_image_dtype_argument():
         image = np.random.default_rng().random((100, 100, 3))
         save_path = Path(tmpdir, "test_image.hdr")
         dtype = np.uint8
-        result = create_image(image, save_path, dtype=dtype)
+        result = spy_create_image(image, save_path, dtype=dtype)
         assert result.image.file.dtype == np.dtype(dtype)
 
 
@@ -134,7 +135,7 @@ def test_merge_images_by_specter():
 
     with TemporaryDirectory() as tmpdir:
         save_path = Path(tmpdir, "test_image_merged.hdr")
-        merge_images_by_specter(
+        spy_merge_images_by_specter(
             image_original=mock_vnir,
             image_to_merge=mock_swir,
             save_path=save_path,
@@ -176,32 +177,12 @@ def test_calculate_correction_factor_from_panel_without_label(spectral_images):
     assert np.array_equal(direct_panel_calculation, panel_correction)
 
 
-def test_convert_radiance_image_to_reflectance_without_saving(spectral_images):
+def test_convert_radiance_image_to_reflectance(spectral_images):
     image_vnir = spectral_images.vnir
     panel_correction = np.random.default_rng().random(image_vnir.bands)
-
-    result = convert_radiance_image_to_reflectance(image=image_vnir, panel_correction=panel_correction, save_path=None)
+    result = convert_radiance_image_to_reflectance(image=image_vnir, panel_correction=panel_correction)
     assert isinstance(result, np.ndarray)
     assert np.array_equal(result, image_vnir.to_numpy() * panel_correction)
-
-
-def test_convert_radiance_image_to_reflectance_with_saving(spectral_images, tmp_path):
-    image_vnir = spectral_images.vnir
-    panel_correction = np.random.default_rng().random(image_vnir.bands)
-
-    with TemporaryDirectory() as tmpdir:
-        save_path = Path(tmpdir, "test_image.hdr")
-        result = convert_radiance_image_to_reflectance(
-            image=image_vnir,
-            panel_correction=panel_correction,
-            save_path=save_path,
-        )
-        assert save_path.exists()
-        assert isinstance(result, SpectralImage)
-        assert np.array_equal(
-            result.to_numpy(),
-            np.array(image_vnir.to_numpy() * panel_correction).astype("float32"),
-        )
 
 
 def test_calculate_image_background_percentage_mixed_background():
