@@ -33,6 +33,13 @@ class Signals:
             df_slice = df_slice.to_frame().T
         return Signals(df_slice)
 
+    def __array__(self, dtype: np.dtype | None = None) -> NDArray[np.floating[Any]]:
+        """Convert this signals object to a numpy array when requested by NumPy."""
+        array = self.to_numpy()
+        if dtype is not None:
+            return array.astype(dtype)
+        return array
+
     @classmethod
     def from_iterable(cls, iterable: Iterable) -> "Signals":
         df = pd.DataFrame(iterable)
@@ -50,8 +57,8 @@ class Signals:
     def to_numpy(self) -> NDArray[np.floating[Any]]:
         return self.df.to_numpy()
 
-    def mean(self) -> NDArray[np.floating[Any]]:
-        return np.nanmean(self.to_numpy(), axis=0)
+    def average_signal(self, axis: int | tuple[int, ...] | Sequence[int] | None = 0) -> NDArray[np.floating[Any]]:
+        return np.nanmean(self.to_numpy(), axis=axis)
 
     def save_to_parquet(self, filepath: str | Path) -> None:
         self.df.to_parquet(filepath, index=True)
@@ -214,8 +221,8 @@ class Signatures:
         signal_df = pd.DataFrame(self.signals.df.values, columns=signal_columns)
         return pd.concat([pixel_df, signal_df], axis=1)
 
-    def to_numpy(self) -> NDArray[np.floating[Any]]:
-        return self.to_dataframe().to_numpy()
+    def to_numpy(self) -> tuple[NDArray[np.floating[Any]], NDArray[np.floating[Any]]]:
+        return self.pixels.to_numpy(), self.signals.to_numpy()
 
     def to_dict(self) -> dict[str, Any]:
         return {

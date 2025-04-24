@@ -72,6 +72,13 @@ class Shape:
     def __len__(self) -> int:
         return len(self.df)
 
+    def __array__(self, dtype: np.dtype | None = None) -> NDArray[np.floating[Any]]:
+        """Convert this shape object to a numpy array when requested by NumPy."""
+        array = self.to_numpy()
+        if dtype is not None:
+            return array.astype(dtype)
+        return array
+
     @classmethod
     def open_shapefile(cls, filepath: str | Path, label: str = "") -> "Shape":
         filepath = Path(filepath)

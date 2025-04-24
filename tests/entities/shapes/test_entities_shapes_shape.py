@@ -38,6 +38,15 @@ def test_shape_initialization_errors():
         Shape(geometry=point, geo_dataframe=gpd.GeoDataFrame())
 
 
+def test_shape_array_interface():
+    shape = Shape.from_rectangle(0, 0, 2, 2, label="test_shape")
+
+    # Test implicit conversion to numpy array
+    array = np.asarray(shape)
+    assert isinstance(array, np.ndarray)
+    assert np.array_equal(array, shape.to_numpy())
+
+
 def test_basic_shape_creation():
     point = Shape.from_point(1.0, 2.0, label="test_point")
     assert point.is_point

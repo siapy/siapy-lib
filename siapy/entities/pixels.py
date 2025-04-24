@@ -56,6 +56,13 @@ class Pixels:
             return False
         return self.df.equals(other.df)
 
+    def __array__(self, dtype: np.dtype | None = None) -> NDArray[np.floating[Any]]:
+        """Convert this pixels object to a numpy array when requested by NumPy."""
+        array = self.to_numpy()
+        if dtype is not None:
+            return array.astype(dtype)
+        return array
+
     def __post_init__(self) -> None:
         validate_pixel_input_dimensions(self._data)
 

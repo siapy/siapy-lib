@@ -298,7 +298,7 @@ def test_calculate_correction_factor_from_panel_without_label(spectral_images):
         image=image_vnir,
         panel_reference_reflectance=0.3,
     )
-    direct_panel_calculation = np.full(image_vnir.bands, 0.3) / image_vnir.mean(axis=(0, 1))
+    direct_panel_calculation = np.full(image_vnir.bands, 0.3) / image_vnir.average_intensity(axis=(0, 1))
     assert np.array_equal(direct_panel_calculation, panel_correction)
 
 

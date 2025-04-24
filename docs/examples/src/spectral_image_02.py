@@ -23,7 +23,7 @@ image_np = image.to_numpy(nan_value=0.0)
 print("Image shape:", image_np.shape)
 
 # Calculate mean
-mean_val = image.mean(axis=(0, 1))
+mean_val = image.average_intensity(axis=(0, 1))
 print("Mean value per band:", mean_val)
 
 # Create a Pixels object from an iterable with pixels coordinates

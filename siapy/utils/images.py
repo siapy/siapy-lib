@@ -290,7 +290,7 @@ def calculate_correction_factor_from_panel(
                 message="Panel shape label must refer to a single shape.",
             )
         panel_signatures = get_signatures_within_convex_hull(image, panel_shape)[0]
-        panel_radiance_mean = panel_signatures.signals.mean()
+        panel_radiance_mean = panel_signatures.signals.average_signal()
 
     else:
         image_np = validate_image_to_numpy(image)

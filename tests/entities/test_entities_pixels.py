@@ -24,6 +24,26 @@ def test_len():
     assert len(pixels) == 3
 
 
+def test_array_interface():
+    pixels = Pixels.from_iterable([(1, 2), (3, 4), (5, 6)])
+
+    # Test implicit conversion to numpy array
+    array = np.asarray(pixels)
+    assert isinstance(array, np.ndarray)
+    assert array.shape == (3, 2)
+    assert np.array_equal(array, pixels.to_numpy())
+
+    # Test with dtype conversion
+    int_array = np.asarray(pixels, dtype=np.int32)
+    assert int_array.dtype == np.int32
+    assert np.array_equal(int_array, pixels.to_numpy().astype(np.int32))
+
+    # Test numpy operations
+    mean_coords = np.mean(pixels, axis=0)
+    expected_mean = np.mean(pixels.to_numpy(), axis=0)
+    assert np.array_equal(mean_coords, expected_mean)
+
+
 def test_getitem():
     pixels = Pixels.from_iterable(iterable)
 

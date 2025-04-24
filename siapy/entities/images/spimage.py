@@ -47,6 +47,13 @@ class SpectralImage(Generic[T]):
             return NotImplemented
         return self.filepath.name == other.filepath.name and self._image == other._image
 
+    def __array__(self, dtype: np.dtype | None = None) -> NDArray[np.floating[Any]]:
+        """Convert this spectral image to a numpy array when requested by NumPy."""
+        array = self.to_numpy()
+        if dtype is not None:
+            return array.astype(dtype)
+        return array
+
     @classmethod
     def spy_open(
         cls, *, header_path: str | Path, image_path: str | Path | None = None
@@ -139,6 +146,8 @@ class SpectralImage(Generic[T]):
         image_arr_area[y_norm, x_norm, :] = image_arr[pixels.y(), pixels.x(), :]
         return image_arr_area
 
-    def mean(self, axis: int | tuple[int, ...] | Sequence[int] | None = None) -> float | NDArray[np.floating[Any]]:
+    def average_intensity(
+        self, axis: int | tuple[int, ...] | Sequence[int] | None = None
+    ) -> float | NDArray[np.floating[Any]]:
         image_arr = self.to_numpy()
         return np.nanmean(image_arr, axis=axis)
