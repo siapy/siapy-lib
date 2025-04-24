@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.9.0](https://github.com/siapy/siapy-lib/compare/v0.8.1...v0.9.0) (2025-04-24)
+
+
+### Features
+
+* add rasterio image handling functions for saving and creating images with metadata support ([7e0841e](https://github.com/siapy/siapy-lib/commit/7e0841ec8a56213ff5a8110a70a2891a7f6cebc6))
+* add validate_signal_input function and from_signals_and_pixels method for improved input handling ([aaa4378](https://github.com/siapy/siapy-lib/commit/aaa4378e35bfa8ef2a5925ce13e09bcb415e9dba))
+
 ## [0.8.1](https://github.com/siapy/siapy-lib/compare/v0.8.0...v0.8.1) (2025-04-19)
 
 
