@@ -1,14 +1,15 @@
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any, Iterable, Sequence
 
 import numpy as np
 import pandas as pd
 from numpy.typing import NDArray
 
-from siapy.core.exceptions import InvalidInputError
+from siapy.core import logger
+from siapy.core.exceptions import InvalidInputError, InvalidTypeError
 
-from .pixels import Pixels
+from .pixels import CoordinateInput, Pixels, validate_pixel_input
 
 __all__ = [
     "Signatures",
@@ -32,6 +33,13 @@ class Signals:
             df_slice = df_slice.to_frame().T
         return Signals(df_slice)
 
+    def __array__(self, dtype: np.dtype | None = None) -> NDArray[np.floating[Any]]:
+        """Convert this signals object to a numpy array when requested by NumPy."""
+        array = self.to_numpy()
+        if dtype is not None:
+            return array.astype(dtype)
+        return array
+
     @classmethod
     def from_iterable(cls, iterable: Iterable) -> "Signals":
         df = pd.DataFrame(iterable)
@@ -49,17 +57,57 @@ class Signals:
     def to_numpy(self) -> NDArray[np.floating[Any]]:
         return self.df.to_numpy()
 
-    def mean(self) -> NDArray[np.floating[Any]]:
-        return np.nanmean(self.to_numpy(), axis=0)
+    def average_signal(self, axis: int | tuple[int, ...] | Sequence[int] | None = 0) -> NDArray[np.floating[Any]]:
+        return np.nanmean(self.to_numpy(), axis=axis)
 
     def save_to_parquet(self, filepath: str | Path) -> None:
         self.df.to_parquet(filepath, index=True)
 
 
+def validate_signal_input(input_data: Signals | pd.DataFrame | Iterable[Sequence[float]]) -> Signals:
+    """Validates and converts various input types to Signals object."""
+    try:
+        if isinstance(input_data, Signals):
+            return input_data
+
+        if isinstance(input_data, pd.DataFrame):
+            return Signals(input_data)
+
+        if isinstance(input_data, np.ndarray):
+            if input_data.ndim not in (1, 2):
+                raise InvalidInputError(
+                    input_value=input_data.shape,
+                    message=f"NumPy array must be 1D or 2D, got shape {input_data.shape}",
+                )
+            if input_data.ndim == 1:
+                input_data = input_data.reshape(1, -1)  # Reshape 1D array to 2D if needed
+            return Signals(pd.DataFrame(input_data))
+
+        if isinstance(input_data, Iterable):
+            return Signals.from_iterable(input_data)
+
+        raise InvalidTypeError(
+            input_value=input_data,
+            allowed_types=(Signals, pd.DataFrame, np.ndarray, Iterable),
+            message=f"Unsupported input type: {type(input_data).__name__}",
+        )
+
+    except Exception as e:
+        if isinstance(e, (InvalidTypeError, InvalidInputError)):
+            raise
+
+        raise InvalidInputError(
+            input_value=input_data,
+            message=f"Failed to convert input to Signals: {str(e)}"
+            f"\nExpected a Signals instance or an iterable (e.g. list, np.array, pd.DataFrame)."
+            f"\nThe input must contain spectral signal values.",
+        )
+
+
 @dataclass
 class Signatures:
-    _pixels: Pixels
-    _signals: Signals
+    pixels: Pixels
+    signals: Signals
 
     def __repr__(self) -> str:
         return f"Signatures(\n{self.pixels}\n{self.signals}\n)"
@@ -85,21 +133,38 @@ class Signatures:
         return cls(pixels, signals)
 
     @classmethod
-    def from_array_and_pixels(cls, image: NDArray[np.floating[Any]], pixels: Pixels) -> "Signatures":
-        pixels = pixels.as_type(int)
-        u = pixels.x()
-        v = pixels.y()
+    def from_array_and_pixels(
+        cls, array: NDArray[np.floating[Any]], pixels: Pixels | pd.DataFrame | Iterable[CoordinateInput]
+    ) -> "Signatures":
+        pixels = validate_pixel_input(pixels)
+        if pd.api.types.is_float_dtype(pixels.df.dtypes.x) or pd.api.types.is_float_dtype(pixels.df.dtypes.y):
+            logger.warning("Pixel DataFrame contains float values. Converting to integers.")
+            pixels = pixels.as_type(int)
 
-        if image.ndim != 3:
-            raise InvalidInputError(f"Expected a 3-dimensional array, but got {image.ndim}-dimensional array.")
-        if np.max(u) >= image.shape[1] or np.max(v) >= image.shape[0]:
+        x = pixels.x()
+        y = pixels.y()
+
+        if array.ndim != 3:
+            raise InvalidInputError(f"Expected a 3-dimensional array, but got {array.ndim}-dimensional array.")
+        if np.max(x) >= array.shape[1] or np.max(y) >= array.shape[0]:
             raise InvalidInputError(
                 f"Pixel coordinates exceed image dimensions: "
-                f"image shape is {image.shape}, but max u={np.max(u)}, max v={np.max(v)}."
+                f"image shape is {array.shape}, but max u={np.max(x)}, max v={np.max(y)}."
             )
 
-        signals_list = image[v, u, :]
+        signals_list = array[y, x, :]
         signals = Signals(pd.DataFrame(signals_list))
+        validate_inputs(pixels, signals)
+        return cls(pixels, signals)
+
+    @classmethod
+    def from_signals_and_pixels(
+        cls,
+        signals: Signals | pd.DataFrame | Iterable[Any],
+        pixels: Pixels | pd.DataFrame | Iterable[CoordinateInput],
+    ) -> "Signatures":
+        pixels = validate_pixel_input(pixels)
+        signals = validate_signal_input(signals)
         validate_inputs(pixels, signals)
         return cls(pixels, signals)
 
@@ -139,14 +204,6 @@ class Signatures:
         df = pd.read_parquet(filepath)
         return cls.from_dataframe(df)
 
-    @property
-    def pixels(self) -> Pixels:
-        return self._pixels
-
-    @property
-    def signals(self) -> Signals:
-        return self._signals
-
     def to_dataframe(self) -> pd.DataFrame:
         return pd.concat([self.pixels.df, self.signals.df], axis=1)
 
@@ -164,8 +221,8 @@ class Signatures:
         signal_df = pd.DataFrame(self.signals.df.values, columns=signal_columns)
         return pd.concat([pixel_df, signal_df], axis=1)
 
-    def to_numpy(self) -> NDArray[np.floating[Any]]:
-        return self.to_dataframe().to_numpy()
+    def to_numpy(self) -> tuple[NDArray[np.floating[Any]], NDArray[np.floating[Any]]]:
+        return self.pixels.to_numpy(), self.signals.to_numpy()
 
     def to_dict(self) -> dict[str, Any]:
         return {

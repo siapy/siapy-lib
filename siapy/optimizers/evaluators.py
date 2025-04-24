@@ -11,9 +11,11 @@ from sklearn.model_selection import (
 )
 
 from siapy.core import logger
-from siapy.core.exceptions import InvalidInputError
+from siapy.core.exceptions import (
+    InvalidInputError,
+    MethodNotImplementedError,
+)
 from siapy.core.types import ArrayLike1dType, ArrayLike2dType
-from siapy.utils.validators import check_model_prediction_methods
 
 __all__ = [
     "cross_validation",
@@ -21,6 +23,13 @@ __all__ = [
 ]
 
 ScorerFuncType = Callable[[BaseEstimator, ArrayLike2dType, ArrayLike1dType], float]
+
+
+def check_model_prediction_methods(model: BaseEstimator) -> None:
+    required_methods = ["fit", "predict", "score"]
+    for method in required_methods:
+        if not hasattr(model, method):
+            raise MethodNotImplementedError(model.__class__.__name__, method)
 
 
 def cross_validation(

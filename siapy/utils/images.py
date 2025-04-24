@@ -3,31 +3,36 @@ from pathlib import Path
 from typing import Annotated, Any
 
 import numpy as np
+import rioxarray  # noqa  # activate the rio accessor
 import spectral as sp
+import xarray as xr
 from numpy.typing import NDArray
 
 from siapy.core import logger
 from siapy.core.exceptions import InvalidInputError
 from siapy.core.types import ImageDataType, ImageType
 from siapy.entities import SpectralImage
-from siapy.entities.helpers import get_signatures_within_convex_hull
-from siapy.entities.images import SpectralLibImage
+from siapy.entities.images import RasterioLibImage, SpectralLibImage
 from siapy.transformations.image import rescale
-from siapy.utils.validators import validate_image_to_numpy
+from siapy.utils.image_validators import validate_image_to_numpy
+from siapy.utils.signatures import get_signatures_within_convex_hull
 
 __all__ = [
-    "save_image",
-    "create_image",
-    "merge_images_by_specter",
+    "spy_save_image",
+    "spy_create_image",
+    "spy_merge_images_by_specter",
+    "rasterio_save_image",
+    "rasterio_create_image",
     "convert_radiance_image_to_reflectance",
+    "calculate_correction_factor",
     "calculate_correction_factor_from_panel",
     "blockfy_image",
     "calculate_image_background_percentage",
 ]
 
 
-def save_image(
-    image: Annotated[NDArray[np.floating[Any]], "The image to save."],
+def spy_save_image(
+    image: Annotated[ImageType, "The image to save."],
     save_path: Annotated[str | Path, "Header file (with '.hdr' extension) name with path."],
     *,
     metadata: Annotated[
@@ -43,6 +48,7 @@ def save_image(
         "The numpy data type with which to store the image.",
     ] = np.float32,
 ) -> None:
+    image_np = validate_image_to_numpy(image)
     if isinstance(save_path, str):
         save_path = Path(save_path)
     if metadata is None:
@@ -51,7 +57,7 @@ def save_image(
     os.makedirs(save_path.parent, exist_ok=True)
     sp.envi.save_image(
         hdr_file=save_path,
-        image=image,
+        image=image_np,
         dtype=dtype,
         force=overwrite,
         metadata=metadata,
@@ -59,8 +65,8 @@ def save_image(
     logger.info(f"Image saved as:  {save_path}")
 
 
-def create_image(
-    image: Annotated[NDArray[np.floating[Any]], "The image to save."],
+def spy_create_image(
+    image: Annotated[ImageType, "The image to save."],
     save_path: Annotated[str | Path, "Header file (with '.hdr' extension) name with path."],
     *,
     metadata: Annotated[
@@ -76,13 +82,14 @@ def create_image(
         "The numpy data type with which to store the image.",
     ] = np.float32,
 ) -> SpectralImage[Any]:
+    image_np = validate_image_to_numpy(image)
     if isinstance(save_path, str):
         save_path = Path(save_path)
     if metadata is None:
         metadata = {
-            "lines": image.shape[0],
-            "samples": image.shape[1],
-            "bands": image.shape[2],
+            "lines": image_np.shape[0],
+            "samples": image_np.shape[1],
+            "bands": image_np.shape[2],
         }
 
     os.makedirs(save_path.parent, exist_ok=True)
@@ -93,15 +100,15 @@ def create_image(
         force=overwrite,
     )
     mmap = spectral_image.open_memmap(writable=True)
-    mmap[:, :, :] = image
+    mmap[:, :, :] = image_np
     logger.info(f"Image created as:  {save_path}")
     return SpectralImage(SpectralLibImage(spectral_image))
 
 
-def merge_images_by_specter(
+def spy_merge_images_by_specter(
     *,
-    image_original: Annotated[SpectralImage[Any], "Original image."],
-    image_to_merge: Annotated[SpectralImage[Any], "Image which will be merged onto original image."],
+    image_original: Annotated[ImageType, "Original image."],
+    image_to_merge: Annotated[ImageType, "Image which will be merged onto original image."],
     save_path: Annotated[str | Path, "Header file (with '.hdr' extension) name with path."],
     overwrite: Annotated[
         bool,
@@ -116,15 +123,19 @@ def merge_images_by_specter(
         "Whether to automatically extract metadata images.",
     ] = True,
 ) -> SpectralImage[Any]:
-    image_original_np = image_original.to_numpy()
-    image_to_merge_np = image_to_merge.to_numpy()
+    image_original_np = validate_image_to_numpy(image_original)
+    image_to_merge_np = validate_image_to_numpy(image_to_merge)
 
     metadata = {
-        "lines": image_original.shape[0],
-        "samples": image_original.shape[1],
-        "bands": image_original.shape[2] + image_to_merge.shape[2],
+        "lines": image_original_np.shape[0],
+        "samples": image_original_np.shape[1],
+        "bands": image_original_np.shape[2] + image_to_merge_np.shape[2],
     }
-    if auto_metadata_extraction:
+    if (
+        auto_metadata_extraction
+        and isinstance(image_original, SpectralImage)
+        and isinstance(image_to_merge, SpectralImage)
+    ):
         original_meta = image_original.metadata
         merged_meta = image_to_merge.metadata
         metadata_ext = {}
@@ -152,7 +163,7 @@ def merge_images_by_specter(
     image_to_merge_np = image_to_merge_np.astype(image_original_np.dtype)
     image_merged = np.concatenate((image_original_np, image_to_merge_np), axis=2)
 
-    return create_image(
+    return spy_create_image(
         image=image_merged,
         save_path=save_path,
         metadata=metadata,
@@ -161,30 +172,112 @@ def merge_images_by_specter(
     )
 
 
-def convert_radiance_image_to_reflectance(
-    image: SpectralImage[Any],
-    panel_correction: NDArray[np.floating[Any]],
-    save_path: Annotated[str | Path | None, "Header file (with '.hdr' extension) name with path."] = None,
-    **kwargs: Any,
-) -> NDArray[np.floating[Any]] | SpectralImage[Any]:
-    image_ref_np = image.to_numpy() * panel_correction
-    if save_path is None:
-        return image_ref_np
+def rasterio_save_image(
+    image: ImageType,
+    save_path: str | Path,
+    *,
+    metadata: Annotated[dict[str, Any] | None, "A dict containing additional metadata."] = None,
+    overwrite: Annotated[
+        bool, "If the file exists and set to True, it will be overwritten; otherwise an exception will be raised."
+    ] = True,
+    dtype: Annotated[type[ImageDataType], "The numpy data type with which to store the image."] = np.float32,
+    **kwargs: Annotated[dict[str, Any], "Additional keyword arguments for rioxarray."],
+) -> None:
+    """Save an image using rioxarray."""
+    image_np = validate_image_to_numpy(image)
+    if isinstance(save_path, str):
+        save_path = Path(save_path)
+    if metadata is None:
+        metadata = {}
 
-    return create_image(
-        image=image_ref_np,
+    os.makedirs(save_path.parent, exist_ok=True)
+
+    if save_path.exists() and not overwrite:
+        raise InvalidInputError(
+            input_value={"save_path": save_path},
+            message=f"File {save_path} already exists and overwrite=False.",
+        )
+
+    wavelengths = metadata.get("wavelength", [])
+    if not wavelengths:
+        wavelengths = np.arange(image_np.shape[2])
+
+    xarray = xr.DataArray(
+        data=image_np.transpose(2, 0, 1).astype(dtype),
+        dims=["band", "y", "x"],
+        coords={
+            "y": np.arange(image_np.shape[0]),
+            "x": np.arange(image_np.shape[1]),
+            "band": wavelengths,
+        },
+        attrs=metadata,
+    )
+
+    xarray.rio.to_raster(save_path, **kwargs)
+    logger.info(f"Image saved with rasterio as: {save_path}")
+
+
+def rasterio_create_image(
+    image: Annotated[ImageType, "The image to use."],
+    save_path: Annotated[str | Path, "File name with path."],
+    *,
+    metadata: Annotated[dict[str, Any] | None, "A dict containing additional metadata."] = None,
+    overwrite: Annotated[
+        bool, "If the file exists and set to True, it will be overwritten; otherwise an exception will be raised."
+    ] = True,
+    dtype: Annotated[type[ImageDataType], "The numpy data type with which to store the image."] = np.float32,
+    **kwargs: Annotated[dict[str, Any], "Additional keyword arguments for rioxarray."],
+) -> SpectralImage[Any]:
+    """Create and save an image using rioxarray, then return a SpectralImage object."""
+    image_np = validate_image_to_numpy(image)
+    if isinstance(save_path, str):
+        save_path = Path(save_path)
+
+    if metadata is None:
+        metadata = {}
+
+    # Save the image first
+    rasterio_save_image(
+        image=image_np,
         save_path=save_path,
-        metadata=image.metadata,
+        metadata=metadata,
+        overwrite=overwrite,
+        dtype=dtype,
         **kwargs,
     )
+    logger.info(f"Image created as: {save_path}")
+    return SpectralImage(RasterioLibImage.open(save_path))
+
+
+def convert_radiance_image_to_reflectance(
+    image: ImageType,
+    panel_correction: NDArray[np.floating[Any]],
+) -> NDArray[np.floating[Any]]:
+    image_np = validate_image_to_numpy(image)
+    return image_np * panel_correction
+
+
+def calculate_correction_factor(
+    panel_radiance_mean: NDArray[np.floating[Any]],
+    panel_reference_reflectance: float,
+) -> NDArray[np.floating[Any]]:
+    if not (0 <= panel_reference_reflectance <= 1):
+        raise InvalidInputError(
+            input_value={"panel_reference_reflectance": panel_reference_reflectance},
+            message="Panel reference reflectance must be between 0 and 1.",
+        )
+
+    panel_reflectance_mean = np.full(panel_radiance_mean.shape, panel_reference_reflectance)
+    panel_correction = panel_reflectance_mean / panel_radiance_mean
+    return panel_correction
 
 
 def calculate_correction_factor_from_panel(
-    image: SpectralImage[Any],
+    image: ImageType,
     panel_reference_reflectance: float,
     panel_shape_label: str | None = None,
 ) -> NDArray[np.floating[Any]]:
-    if panel_shape_label:
+    if panel_shape_label and isinstance(image, SpectralImage):
         panel_shape = image.geometric_shapes.get_by_name(panel_shape_label)
         if not panel_shape:
             raise InvalidInputError(
@@ -197,20 +290,22 @@ def calculate_correction_factor_from_panel(
                 message="Panel shape label must refer to a single shape.",
             )
         panel_signatures = get_signatures_within_convex_hull(image, panel_shape)[0]
-        panel_radiance_mean = panel_signatures.signals.mean()
+        panel_radiance_mean = panel_signatures.signals.average_signal()
 
     else:
-        temp_mean = image.mean(axis=(0, 1))
+        image_np = validate_image_to_numpy(image)
+        temp_mean = image_np.mean(axis=(0, 1))
         if not isinstance(temp_mean, np.ndarray):
             raise InvalidInputError(
-                input_value={"image": image},
+                input_value={"image": image_np},
                 message=f"Expected image.mean(axis=(0, 1)) to return np.ndarray, but got {type(temp_mean).__name__}.",
             )
         panel_radiance_mean = temp_mean
 
-    panel_reflectance_mean = np.full(image.bands, panel_reference_reflectance)
-    panel_correction = panel_reflectance_mean / panel_radiance_mean
-    return panel_correction
+    return calculate_correction_factor(
+        panel_radiance_mean=panel_radiance_mean,
+        panel_reference_reflectance=panel_reference_reflectance,
+    )
 
 
 def blockfy_image(

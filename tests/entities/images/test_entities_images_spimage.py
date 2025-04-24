@@ -48,6 +48,31 @@ def test_fixture_spectral_images(spectral_images):
     assert isinstance(spectral_images.swir, SpectralImage)
 
 
+def test_array_interface(spectral_images):
+    """Test the NumPy array interface (__array__ method)."""
+    spectral_image_vnir = spectral_images.vnir
+
+    # Test implicit conversion to numpy array
+    array = np.asarray(spectral_image_vnir)
+    assert isinstance(array, np.ndarray)
+    assert array.shape == spectral_image_vnir.shape
+    assert np.array_equal(array, spectral_image_vnir.to_numpy(), equal_nan=True)
+
+    # Test implicit conversion with dtype specified
+    float32_array = np.asarray(spectral_image_vnir, dtype=np.float32)
+    assert float32_array.dtype == np.float32
+
+    # Test numpy operations work directly on the spectral image
+    mean_value = np.nanmean(spectral_image_vnir)
+    expected_mean = np.nanmean(spectral_image_vnir.to_numpy())
+    assert np.isclose(mean_value, expected_mean)
+
+    # Test other numpy functions
+    max_value = np.nanmax(spectral_image_vnir)
+    expected_max = np.nanmax(spectral_image_vnir.to_numpy())
+    assert np.isclose(max_value, expected_max)
+
+
 def test_repr(spectral_images):
     assert isinstance(repr(spectral_images.vnir), str)
     assert isinstance(repr(spectral_images.swir), str)
@@ -176,19 +201,19 @@ def test_to_subarray(spectral_images):
     assert np.array_equal(subarray, expected_subarray, equal_nan=True)
 
 
-def test_mean(spectral_images):
+def test_average_intensity(spectral_images):
     spectral_image_vnir = spectral_images.vnir
 
-    mean_all = spectral_image_vnir.mean()
+    mean_all = spectral_image_vnir.average_intensity()
     assert isinstance(mean_all, (float, np.floating))
     assert np.isclose(mean_all, np.nanmean(spectral_image_vnir.to_numpy()))
 
-    mean_axis0 = spectral_image_vnir.mean(axis=0)
+    mean_axis0 = spectral_image_vnir.average_intensity(axis=0)
     assert isinstance(mean_axis0, np.ndarray)
     assert mean_axis0.shape == spectral_image_vnir.to_numpy().shape[1:]
     assert np.allclose(mean_axis0, np.nanmean(spectral_image_vnir.to_numpy(), axis=0))
 
-    mean_axis1 = spectral_image_vnir.mean(axis=1)
+    mean_axis1 = spectral_image_vnir.average_intensity(axis=1)
     assert isinstance(mean_axis1, np.ndarray)
     assert mean_axis1.shape == (
         spectral_image_vnir.to_numpy().shape[0],
@@ -196,12 +221,12 @@ def test_mean(spectral_images):
     )
     assert np.allclose(mean_axis1, np.nanmean(spectral_image_vnir.to_numpy(), axis=1))
 
-    mean_axis2 = spectral_image_vnir.mean(axis=2)
+    mean_axis2 = spectral_image_vnir.average_intensity(axis=2)
     assert isinstance(mean_axis2, np.ndarray)
     assert mean_axis2.shape == spectral_image_vnir.to_numpy().shape[:2]
     assert np.allclose(mean_axis2, np.nanmean(spectral_image_vnir.to_numpy(), axis=2))
 
-    mean_axis_tuple = spectral_image_vnir.mean(axis=(0, 1))
+    mean_axis_tuple = spectral_image_vnir.average_intensity(axis=(0, 1))
     assert isinstance(mean_axis_tuple, np.ndarray)
     assert mean_axis_tuple.shape == (spectral_image_vnir.to_numpy().shape[2],)
     assert np.allclose(mean_axis_tuple, np.nanmean(spectral_image_vnir.to_numpy(), axis=(0, 1)))

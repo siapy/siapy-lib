@@ -1,10 +1,11 @@
-from typing import Any, Sequence
+from typing import Any, Iterable, Sequence
 
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 from numpy.typing import NDArray
 
-from siapy.entities.pixels import Pixels
+from siapy.entities.pixels import CoordinateInput, Pixels, validate_pixel_input
 
 __all__ = [
     "map_affine_approx_2d",
@@ -46,14 +47,16 @@ def affine_matx_2d(
 
 
 def align(
-    pixels_ref: Pixels,
-    pixels_mov: Pixels,
+    pixels_ref: Pixels | pd.DataFrame | Iterable[CoordinateInput],
+    pixels_mov: Pixels | pd.DataFrame | Iterable[CoordinateInput],
     *,
     eps: float = 1e-6,
     max_iter: int = 50,
     plot_progress: bool = False,
 ) -> tuple[NDArray[np.floating[Any]], NDArray[np.floating[Any]]]:
     """Align interactive corresponding points"""
+    pixels_ref = validate_pixel_input(pixels_ref)
+    pixels_mov = validate_pixel_input(pixels_mov)
 
     points_ref = pixels_ref.df_homogenious().to_numpy()
     points_mov = pixels_mov.df_homogenious().to_numpy()
@@ -100,8 +103,11 @@ def align(
     return matx_2d_combined, errors_np
 
 
-def transform(pixels: Pixels, transformation_matx: NDArray[np.floating[Any]]) -> Pixels:
+def transform(
+    pixels: Pixels | pd.DataFrame | Iterable[CoordinateInput], transformation_matx: NDArray[np.floating[Any]]
+) -> Pixels:
     """Transform pixels"""
+    pixels = validate_pixel_input(pixels)
     points_transformed = np.dot(pixels.df_homogenious().to_numpy(), transformation_matx.transpose())
     points_transformed = np.round(points_transformed[:, :2]).astype("int")
     return Pixels.from_iterable(points_transformed)

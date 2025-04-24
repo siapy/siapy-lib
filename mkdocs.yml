@@ -93,7 +93,6 @@ nav:
           - Image Sets: api/entities/imagesets.md
           - Pixels: api/entities/pixels.md
           - Signatures: api/entities/signatures.md
-          - Helpers: api/entities/helpers.md
       - Features:
           - Features: api/features/features.md
           - Helpers: api/features/helpers.md
@@ -110,7 +109,9 @@ nav:
           - Image: api/transformations/image.md
       - Utils:
           - Images: api/utils/images.md
+          - Images Validators: api/utils/image_validators.md
           - Plots: api/utils/plots.md
+          - Signatures: api/utils/signatures.md
   - Release Notes: changelog.md
   - License: permit.md
 

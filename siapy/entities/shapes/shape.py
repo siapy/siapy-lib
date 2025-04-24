@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any, Iterable, Optional
 
 import geopandas as gpd
 import numpy as np
@@ -11,7 +11,7 @@ from shapely.geometry import LineString, MultiLineString, MultiPoint, MultiPolyg
 from shapely.geometry.base import BaseGeometry
 
 from siapy.core.exceptions import ConfigurationError, InvalidFilepathError, InvalidInputError, InvalidTypeError
-from siapy.entities.pixels import PixelCoordinate, Pixels
+from siapy.entities.pixels import CoordinateInput, PixelCoordinate, Pixels, validate_pixel_input
 
 __all__ = [
     "Shape",
@@ -72,6 +72,13 @@ class Shape:
     def __len__(self) -> int:
         return len(self.df)
 
+    def __array__(self, dtype: np.dtype | None = None) -> NDArray[np.floating[Any]]:
+        """Convert this shape object to a numpy array when requested by NumPy."""
+        array = self.to_numpy()
+        if dtype is not None:
+            return array.astype(dtype)
+        return array
+
     @classmethod
     def open_shapefile(cls, filepath: str | Path, label: str = "") -> "Shape":
         filepath = Path(filepath)
@@ -108,30 +115,44 @@ class Shape:
         return cls(geometry=Point(x, y), label=label)
 
     @classmethod
-    def from_multipoint(cls, points: "Pixels", label: str = "") -> "Shape":
+    def from_multipoint(cls, points: Pixels | pd.DataFrame | Iterable[CoordinateInput], label: str = "") -> "Shape":
+        points = validate_pixel_input(points)
         if len(points) < 1:
             raise ConfigurationError("At least one point is required")
         coords = points.to_list()
         return cls(geometry=MultiPoint(coords), label=label)
 
     @classmethod
-    def from_line(cls, pixels: Pixels, label: str = "") -> "Shape":
+    def from_line(cls, pixels: Pixels | pd.DataFrame | Iterable[CoordinateInput], label: str = "") -> "Shape":
+        pixels = validate_pixel_input(pixels)
         if len(pixels) < 2:
             raise ConfigurationError("At least two points are required for a line")
 
         return cls(geometry=LineString(pixels.to_list()), label=label)
 
     @classmethod
-    def from_multiline(cls, line_segments: list[Pixels], label: str = "") -> "Shape":
+    def from_multiline(
+        cls, line_segments: list[Pixels | pd.DataFrame | Iterable[CoordinateInput]], label: str = ""
+    ) -> "Shape":
         if not line_segments:
             raise ConfigurationError("At least one line segment is required")
 
-        lines = [LineString(segment.to_list()) for segment in line_segments]
+        lines = []
+        for segment in line_segments:
+            validated_segment = validate_pixel_input(segment)
+            lines.append(LineString(validated_segment.to_list()))
+
         multi_line = MultiLineString(lines)
         return cls(geometry=multi_line, label=label)
 
     @classmethod
-    def from_polygon(cls, exterior: Pixels, holes: Optional[list[Pixels]] = None, label: str = "") -> "Shape":
+    def from_polygon(
+        cls,
+        exterior: Pixels | pd.DataFrame | Iterable[CoordinateInput],
+        holes: Optional[list[Pixels | pd.DataFrame | Iterable[CoordinateInput]]] = None,
+        label: str = "",
+    ) -> "Shape":
+        exterior = validate_pixel_input(exterior)
         if len(exterior) < 3:
             raise ConfigurationError("At least three points are required for a polygon")
 
@@ -144,7 +165,8 @@ class Shape:
             # Close each hole if not already closed
             closed_holes = []
             for hole in holes:
-                hole_coords = hole.to_list()
+                validated_hole = validate_pixel_input(hole)
+                hole_coords = validated_hole.to_list()
                 if hole_coords[0] != hole_coords[-1]:
                     hole_coords.append(hole_coords[0])
                 closed_holes.append(hole_coords)
@@ -155,13 +177,16 @@ class Shape:
         return cls(geometry=geometry, label=label)
 
     @classmethod
-    def from_multipolygon(cls, polygons: list[Pixels], label: str = "") -> "Shape":
+    def from_multipolygon(
+        cls, polygons: list[Pixels | pd.DataFrame | Iterable[CoordinateInput]], label: str = ""
+    ) -> "Shape":
         if not polygons:
             raise ConfigurationError("At least one polygon is required")
 
         polygon_objects = []
         for pixels in polygons:
-            coords = pixels.to_list()
+            validated_pixels = validate_pixel_input(pixels)
+            coords = validated_pixels.to_list()
             # Close the polygon if not already closed
             if coords[0] != coords[-1]:
                 coords.append(coords[0])

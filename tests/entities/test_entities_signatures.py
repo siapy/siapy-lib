@@ -6,9 +6,9 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from siapy.core.exceptions import InvalidInputError
+from siapy.core.exceptions import InvalidInputError, InvalidTypeError
 from siapy.entities import Pixels, Signatures
-from siapy.entities.signatures import Signals
+from siapy.entities.signatures import Signals, validate_signal_input
 
 ## Signals
 
@@ -58,10 +58,10 @@ def test_signals_to_numpy():
     assert np.array_equal(signals.to_numpy(), df.to_numpy())
 
 
-def test_signals_mean():
+def test_signals_average_signal():
     signals_df = pd.DataFrame([[1, 2, 4, 6], [3, 4, 3, 5]])
     signals = Signals(signals_df)
-    signals_mean = signals.mean()
+    signals_mean = signals.average_signal()
     assert np.array_equal(signals_mean, [2.0, 3.0, 3.5, 5.5])
     assert signals_mean.shape == (4,)
 
@@ -78,6 +78,78 @@ def test_signals_save_and_load_to_parquet():
         assert loaded_signals.df.equals(signals.df)
 
 
+def test_validate_signal_input():
+    # Test with Signals instance
+    signals_df = pd.DataFrame([[1, 2, 3], [4, 5, 6]])
+    signals_obj = Signals(signals_df)
+    result = validate_signal_input(signals_obj)
+    assert result is signals_obj
+
+    # Test with DataFrame
+    df = pd.DataFrame([[7, 8, 9], [10, 11, 12]])
+    result = validate_signal_input(df)
+    assert isinstance(result, Signals)
+    assert result.df.equals(df)
+
+    # Test with numpy array (2D)
+    arr_2d = np.array([[13, 14, 15], [16, 17, 18]])
+    result = validate_signal_input(arr_2d)
+    assert isinstance(result, Signals)
+    assert np.array_equal(result.to_numpy(), arr_2d)
+
+    # Test with numpy array (1D)
+    arr_1d = np.array([19, 20, 21])
+    result = validate_signal_input(arr_1d)
+    assert isinstance(result, Signals)
+    assert result.to_numpy().shape[0] == 1
+    assert np.array_equal(result.to_numpy()[0], arr_1d)
+
+    # Test with list of lists
+    list_data = [[22, 23, 24], [25, 26, 27]]
+    result = validate_signal_input(list_data)
+    assert isinstance(result, Signals)
+    assert np.array_equal(result.to_numpy(), np.array(list_data))
+
+    # Test with invalid numpy array (3D)
+    arr_3d = np.zeros((2, 3, 4))
+    with pytest.raises(InvalidInputError, match="NumPy array must be 1D or 2D"):
+        validate_signal_input(arr_3d)
+
+    # Test with invalid input type
+    with pytest.raises(InvalidTypeError, match="Unsupported input type"):
+        validate_signal_input(123)
+
+    # Test with invalid iterable that raises during conversion
+    class BadIterable:
+        def __iter__(self):
+            raise ValueError("Bad iterable")
+
+    with pytest.raises(InvalidInputError, match="Failed to convert input to Signals"):
+        validate_signal_input(BadIterable())
+
+
+def test_signals_array_interface():
+    """Test the NumPy array interface (__array__ method) for Signals."""
+    signals_data = [[1.0, 2.0, 3.0], [4.0, 5.0, 6.0], [7.0, 8.0, 9.0]]
+    signals = Signals.from_iterable(signals_data)
+
+    # Test implicit conversion to numpy array
+    array = np.asarray(signals)
+    assert isinstance(array, np.ndarray)
+    assert array.shape == (3, 3)
+    assert np.array_equal(array, signals.to_numpy())
+
+    # Test with dtype conversion
+    float32_array = np.asarray(signals, dtype=np.float32)
+    assert float32_array.dtype == np.float32
+    assert np.array_equal(float32_array, signals.to_numpy().astype(np.float32))
+
+    # Test numpy operations
+    mean_values = np.mean(signals, axis=0)
+    expected_mean = np.mean(signals.to_numpy(), axis=0)
+    assert np.array_equal(mean_values, expected_mean)
+
+
 ## Signatures
 
 
@@ -87,14 +159,8 @@ def test_signatures_create():
     pixels = Pixels(pixels_df)
     signals = Signals(signals_df)
     signatures = Signatures(pixels, signals)
-
     assert signatures.pixels == pixels
     assert signatures.signals == signals
-    assert signatures.to_dataframe().equals(pd.concat([pixels_df, signals_df], axis=1))
-    assert np.array_equal(
-        signatures.to_numpy(),
-        pd.concat([pixels_df, signals_df], axis=1).to_numpy(),
-    )
 
 
 def test_signatures_len():
@@ -208,6 +274,46 @@ def test_signatures_from_array_and_pixels_coordinate_bounds():
         Signatures.from_array_and_pixels(image, pixels)
 
 
+def test_signatures_from_signals_and_pixels():
+    # Test with Pixels and Signals objects
+    pixels_df = pd.DataFrame({"x": [0, 1, 2], "y": [3, 4, 5]})
+    signals_df = pd.DataFrame({"A": [10, 20, 30], "B": [40, 50, 60]})
+    pixels = Pixels(pixels_df)
+    signals = Signals(signals_df)
+
+    signatures = Signatures.from_signals_and_pixels(signals, pixels)
+    assert isinstance(signatures, Signatures)
+    assert signatures.pixels == pixels
+    assert signatures.signals.df.equals(signals.df)
+
+    # Test with DataFrames
+    signatures = Signatures.from_signals_and_pixels(signals_df, pixels_df)
+    assert isinstance(signatures, Signatures)
+    assert signatures.pixels.df.equals(pixels_df)
+    assert signatures.signals.df.equals(signals_df)
+
+    # Test with numpy arrays
+    pixels_array = np.array([[0, 3], [1, 4], [2, 5]])
+    signals_array = np.array([[10, 40], [20, 50], [30, 60]])
+    signatures = Signatures.from_signals_and_pixels(signals_array, pixels_array)
+    assert isinstance(signatures, Signatures)
+    assert np.array_equal(signatures.pixels.df.values, pixels_array)
+    assert np.array_equal(signatures.signals.df.values, signals_array)
+
+    # Test with lists
+    pixels_list = [[0, 3], [1, 4], [2, 5]]
+    signals_list = [[10, 40], [20, 50], [30, 60]]
+    signatures = Signatures.from_signals_and_pixels(signals_list, pixels_list)
+    assert isinstance(signatures, Signatures)
+    assert signatures.pixels.to_list() == pixels_list
+    assert np.array_equal(signatures.signals.df.values, np.array(signals_list))
+
+    # Test with mismatched lengths (should raise error)
+    signals_short = [[10, 40]]
+    with pytest.raises(InvalidInputError):
+        Signatures.from_signals_and_pixels(signals_short, pixels_list)
+
+
 def test_signatures_from_dataframe():
     df = pd.DataFrame({"x": [0, 1], "y": [0, 1], "0": [1, 2], "1": [3, 4]})
     signatures = Signatures.from_dataframe(df)
@@ -263,6 +369,27 @@ def test_signatures_from_dataframe_multiindex_invalid_input():
     regular_df = pd.DataFrame({"x": [0], "y": [0]})
     with pytest.raises(InvalidInputError):
         Signatures.from_dataframe_multiindex(regular_df)
+
+
+def test_to_dataframe():
+    pixels_df = pd.DataFrame({"x": [0, 1], "y": [0, 1]})
+    signals_df = pd.DataFrame([[1, 2], [3, 4]])
+    pixels = Pixels(pixels_df)
+    signals = Signals(signals_df)
+    signatures = Signatures(pixels, signals)
+    assert signatures.to_dataframe().equals(pd.concat([pixels_df, signals_df], axis=1))
+
+
+def test_to_numpy():
+    pixels_df = pd.DataFrame({"x": [0, 1], "y": [2, 3]})
+    signals_df = pd.DataFrame({"A": [10, 20], "B": [30, 40]})
+    pixels = Pixels(pixels_df)
+    signals = Signals(signals_df)
+    signatures = Signatures(pixels, signals)
+    result = signatures.to_numpy()
+    assert isinstance(result, tuple)
+    assert np.array_equal(result[0], pixels_df.to_numpy())
+    assert np.array_equal(result[1], signals_df.to_numpy())
 
 
 def test_signatures_to_dict():

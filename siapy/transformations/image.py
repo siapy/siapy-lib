@@ -6,7 +6,7 @@ from numpy.typing import NDArray
 from skimage import transform
 
 from siapy.core.types import ImageSizeType, ImageType
-from siapy.utils.validators import validate_image_size, validate_image_to_numpy
+from siapy.utils.image_validators import validate_image_size, validate_image_to_numpy
 
 __all__ = [
     "add_gaussian_noise",
