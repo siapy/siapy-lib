@@ -1,61 +1,45 @@
 # Entities
 
-Entities form the core data structures in SiaPy that represent fundamental elements of spectral image processing. They provide consistent interfaces for working with various kinds of spectral data and spatial information.
+Entities serve as the foundational data structures in SiaPy, representing key elements of spectral image analysis and processing workflows. They implement consistent, strongly-typed interfaces that allow seamless interaction between spectral data, spatial coordinates, and geometric information.
+Each entity follows a specialized design pattern optimized for its specific role while maintaining compatibility with the broader SiaPy ecosystem.
 
-## Overview
+## Spectral Image
 
-The SiaPy Entities module defines a set of interconnected classes that represent the foundational building blocks for spectral image analysis:
+A `SpectralImage` is the primary container for spectral image data. It's a generic class that can wrap different image backends, allowing you to work with various file formats through a unified interface.
 
-- **SpectralImage**: A generic container for different types of hyperspectral/multispectral images
-- **SpectralImageSet**: A collection of spectral images
-- **Pixels**: Spatial coordinates within an image
-- **Signatures**: Spectral signals associated with specific pixel locations
-- **Shape**: Geometric shapes associated with image locations (points, lines, polygons)
+### Image Initialization Options
 
-These entity classes are designed to work together, forming a cohesive system for analyzing spectral imagery.
+#### 1. Load from ENVI format (using spectral python)
 
-## SpectralImage
-
-A `SpectralImage` is the primary container for spectral image data. It's a generic class that can wrap different image backends:
+This is commonly used for hyperspectral imagery from airborne or satellite sensors.
 
 ```python
-from siapy.entities import SpectralImage
-
-# Load from ENVI format
-image = SpectralImage.spy_open(
-    header_path="path/to/header.hdr",
-    image_path="path/to/image.img"
-)
-
-# Load from GeoTIFF or other raster formats
-image = SpectralImage.rasterio_open(filepath="path/to/image.tif")
-
-# Create from NumPy array
-import numpy as np
-array = np.zeros((100, 100, 10))  # height, width, bands
-image = SpectralImage.from_numpy(array)
+--8<-- "docs/concepts/src/spectral_image_01.py"
 ```
 
-### Key Properties
+#### 2. Load from GeoTIFF or other geospatial formats (using rasterio)
 
-- **shape**: Dimensions as (height, width, bands)
-- **width**, **height**: Image dimensions
-- **bands**: Number of spectral bands
-- **wavelengths**: List of wavelength values for each band
-- **default_bands**: Default bands for RGB visualization
-- **metadata**: Dictionary of metadata from the image file
-- **filepath**: Path to the source file
-- **camera_id**: Camera identifier (if available)
-- **geometric_shapes**: Associated geometric shapes collection
+Perfect for georeferenced data with spatial information.
 
-### Key Methods
+```python
+--8<-- "docs/concepts/src/spectral_image_02.py"
+```
 
-- **to_numpy()**: Convert to NumPy array
-- **to_display()**: Convert to PIL Image for visualization
-- **to_xarray()**: Convert to xarray.DataArray
-- **to_signatures()**: Extract signatures at specified pixels
-- **to_subarray()**: Extract a subarray for a region of interest
-- **average_intensity()**: Calculate mean intensity across specified axes
+#### 3. Create from numpy array
+
+Useful for testing or when you already have image data in memory.
+
+```python
+--8<-- "docs/concepts/src/spectral_image_03.py"
+```
+
+#### 4. Create your own custom image class
+
+For specialized file formats or custom processing needs, you can extend the ImageBase class.
+
+```python
+--8<-- "docs/concepts/src/spectral_image_04.py"
+```
 
 ## Pixels
 

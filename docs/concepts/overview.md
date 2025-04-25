@@ -2,20 +2,7 @@
 
 ## Architecture
 
-SiaPy follows a modular architecture organized around key components that work together to provide a comprehensive toolkit for spectral image analysis:
-
-``` sh
-siapy/
-├── core/            # Core functionality
-├── datasets/        # Dataset handling and management
-├── entities/        # Key data structures and representations
-├── features/        # Feature extraction and analysis
-├── optimizers/      # Optimization algorithms and machine learning
-├── transformations/ # Transformation operations
-└── utils/           # Utility functions and helpers
-```
-
-## Core Components
+SiaPy follows a modular architecture organized around key components that work together to provide a comprehensive toolkit for spectral image analysis.
 
 ### Core (`siapy.core`)
 
@@ -30,8 +17,8 @@ The foundation of the library providing essential functionality:
 
 Fundamental data structures that represent spectral imaging data:
 
-- **SpectralImage**: An abstraction for various image formats
-- **SpectralImageSet**: Collection of spectral images with batch operations
+- **Spectral image**: An abstraction for various image formats
+- **Spectral image set**: Collection of spectral images with batch operations
 - **Pixels**: Representation of pixel coordinates and groups
 - **Shapes**: Geometric shapes for images' regions selection and masking
 - **Signatures**: Spectral signatures extracted from images
