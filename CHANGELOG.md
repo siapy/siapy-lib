@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.9.1](https://github.com/siapy/siapy-lib/compare/v0.9.0...v0.9.1) (2025-04-25)
+
+
+### Documentation
+
+* add case study and external sources documentation; remove outdated examples and update mkdocs navigation ([5d41305](https://github.com/siapy/siapy-lib/commit/5d413059446e2db80c6334aee3db4dfde935961d))
+* add design philosophy section to CONTRIBUTING.md and clean up README.md ([9372940](https://github.com/siapy/siapy-lib/commit/93729403f798782417b2c4393879a359ad3b9c4c))
+* add detailed entities and overview documentation for spectral image processing ([d29536f](https://github.com/siapy/siapy-lib/commit/d29536f84181c4d8c0533411b16d8a56d13b9735))
+* update case study documentation; remove overview section and enhance data overview ([0aa8430](https://github.com/siapy/siapy-lib/commit/0aa84306647533623b69f8017c2e78da0a56719b))
+
 ## [0.9.0](https://github.com/siapy/siapy-lib/compare/v0.8.1...v0.9.0) (2025-04-24)
 
 
