@@ -37,8 +37,6 @@ __Documentation__: <https://siapy.github.io/siapy-lib/>
 
 __SiaPy__ is a versatile Python library designed for processing and analyzing spectral images. It is particularly useful for scientific and academic purposes, but it also serves well for quick prototyping.
 
-Built on top of the well-known [spectral](https://github.com/spectralpython/spectral) library, SiaPy extends its capabilities with additional features and functionalities.
-
 ### Key Features
 
 - __Image Processing__: Easily read, display, and manipulate spectral image data.
@@ -57,7 +55,7 @@ To install the siapy library, use the following command:
 pip install siapy
 ```
 
-For detailed information and additional options, please refer to the [instructions](https://siapy.github.io/siapy-lib/install/).
+For detailed information and additional options, please refer to the [instructions](https://siapy.github.io/siapy-lib/latest/install/).
 
 ## 💻 Examples
 
