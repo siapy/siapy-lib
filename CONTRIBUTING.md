@@ -9,6 +9,7 @@
     - [Pdm](#pdm)
       - [Highlights](#highlights)
       - [Key commands](#key-commands)
+    - [Design philosophy](#design-philosophy)
     - [Testing with pytest](#testing-with-pytest)
   - [GitHub Actions workflows](#github-actions-workflows)
   - [Maintainers](#maintainers)
@@ -56,6 +57,16 @@ pdm run COMMAND  # Run a command within the PDM environment
 pdm shell  # Activate the PDM environment, similar to activating a virtualenv
 pdm sync  # Synchronize the project's dependencies
 ```
+
+### Design philosophy
+
+SiaPy is built with several key design principles:
+
+1. **Type Safety**: Comprehensive type hints throughout the codebase
+2. **Modular Design**: Composable components that can be used independently
+3. **Consistent APIs**: Uniform interface patterns across the library
+4. **Pythonic Interfaces**: Following Python best practices and conventions
+5. **Error Handling**: Structured exception hierarchy for clear error reporting
 
 ### Testing with pytest
 
