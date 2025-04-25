@@ -43,31 +43,11 @@ For specialized file formats or custom processing needs, you can extend the Imag
 
 ## Pixels
 
-The `Pixels` class represents spatial coordinates within an image, typically stored as x,y pairs.
+The `Pixels` class represents spatial coordinates within spectral image, providing a container for *(x, y)* coordinate pairs. It uses pandas DataFrame internally for storage, enabling high-performance operations. The class provides multiple initialization methods and conversion functions to work with different data representations (i.e. dataframes, list, arrays)
 
 ```python
-from siapy.entities import Pixels
-
-# Create from list of coordinates
-pixels = Pixels.from_iterable([(10, 20), (30, 40), (50, 60)])
-
-# Load from parquet file
-pixels = Pixels.load_from_parquet("pixels.parquet")
+--8<-- "docs/concepts/src/pixels_01.py"
 ```
-
-### Key Properties
-
-- **df**: Underlying pandas DataFrame with x,y coordinates
-- **coords**: Coordinate system definition
-
-### Key Methods
-
-- **x()**, **y()**: Access x and y coordinates as pandas Series
-- **to_numpy()**: Convert to NumPy array
-- **to_list()**: Convert to list of coordinates
-- **as_type()**: Convert coordinates to a specific data type
-- **get_coordinate()**: Get a specific coordinate pair
-- **df_homogenious()**: Get homogeneous coordinates (x,y,1)
 
 ## Signatures
 
