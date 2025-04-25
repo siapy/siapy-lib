@@ -43,68 +43,27 @@ For specialized file formats or custom processing needs, you can extend the Imag
 
 ## Pixels
 
-The `Pixels` class represents spatial coordinates within spectral image, providing a container for *(x, y)* coordinate pairs. It uses pandas DataFrame internally for storage, enabling high-performance operations. The class provides multiple initialization methods and conversion functions to work with different data representations (i.e. dataframes, list, arrays)
+The `Pixels` class represents spatial coordinates within spectral image, providing a container for *(x, y)* coordinate pairs. It uses pandas DataFrame internally for storage, enabling high-performance operations. The class provides multiple initialization methods and conversion functions to work with different data representations (i.e. DataFrames, list, arrays)
 
 ```python
 --8<-- "docs/concepts/src/pixels_01.py"
 ```
 
-## Signatures
-
-The `Signatures` class combines `Pixels` with their corresponding spectral signals.
-
-```python
-from siapy.entities import Signatures, Pixels, Signals
-
-# Create from pixels and signals
-pixels = Pixels.from_iterable([(10, 20), (30, 40)])
-signals_df = pd.DataFrame([[0.1, 0.2, 0.3], [0.4, 0.5, 0.6]])  # 2 pixels, 3 bands
-signals = Signals(signals_df)
-signatures = Signatures(pixels, signals)
-
-# Extract signatures from an image at specific pixels
-pixels = Pixels.from_iterable([(10, 20), (30, 40)])
-signatures = spectral_image.to_signatures(pixels)
-```
-
-### Key Properties
-
-- **pixels**: The `Pixels` object with coordinate information
-- **signals**: The `Signals` object with spectral values
-
-### Key Methods
-
-- **to_dataframe()**: Convert to a pandas DataFrame
-- **to_dataframe_multiindex()**: Convert to a DataFrame with MultiIndex columns
-- **to_numpy()**: Convert to tuple of NumPy arrays (pixels, signals)
-- **to_dict()**: Convert to dictionary representation
-- **reset_index()**: Reset DataFrame indices
-- **copy()**: Create a deep copy
-
 ## Signals
 
-The `Signals` class represents spectral values associated with pixels.
+The `Signals` class stores spectral data for each pixel in a pandas DataFrame, allowing you to use any column names you choose (e.g. "band_1", "nir", "red_edge"). You can initialize it from a DataFrame, lists, dicts or NumPy arrays.
 
 ```python
-from siapy.entities.signatures import Signals
-
-# Create from DataFrame
-signals_df = pd.DataFrame([[0.1, 0.2, 0.3], [0.4, 0.5, 0.6]])  # 2 pixels, 3 bands
-signals = Signals(signals_df)
-
-# Create from iterable
-signals = Signals.from_iterable([[0.1, 0.2, 0.3], [0.4, 0.5, 0.6]])
+--8<-- "docs/concepts/src/signals_01.py"
 ```
 
-### Key Properties
+## Signatures
 
-- **df**: Underlying pandas DataFrame with spectral values
+The `Signatures` class represents spectral data collections by combining spatial coordinates (`Pixels`) with their corresponding spectral values (`Signals`). It provides a unified container that maintains the spatial-spectral relationship, allowing for analysis of spectral information at specific image locations. Internally, the data is stored as pandas DataFrames for efficient operations and indexing.
 
-### Key Methods
-
-- **to_numpy()**: Convert to NumPy array
-- **average_signal()**: Calculate mean signal across specified axis
-- **save_to_parquet()**: Save to parquet file
+```python
+--8<-- "docs/concepts/src/signatures_01.py"
+```
 
 ## Shape
 
