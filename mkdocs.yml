@@ -64,17 +64,17 @@ nav:
       - Welcome to SiaPy: index.md
       - Installation: install.md
       - Contributing: contributing.md
-  # - Concepts:
-  #     - Overview: concepts/overview.md
-  #     - Entities: concepts/entities.md
-  #     - Datasets: concepts/datasets.md
-  #     - Features: concepts/features.md
-  #     - Optimizers: concepts/optimizers.md
-  #     - Transformations: concepts/transformations.md
-  #     - Utilities:
-  #         - Image: concepts/utils/image.md
-  #         - Signature: concepts/utils/signature.md
-  #         - Plotting: concepts/utils/plotting.md
+  - Concepts:
+      - Overview: concepts/overview.md
+      - Entities: concepts/entities.md
+      # - Datasets: concepts/datasets.md
+      # - Features: concepts/features.md
+      # - Optimizers: concepts/optimizers.md
+      # - Transformations: concepts/transformations.md
+      # - Utilities:
+      #     - Image: concepts/utils/image.md
+      #     - Signature: concepts/utils/signature.md
+      #     - Plotting: concepts/utils/plotting.md
   - Examples:
       - Case Study: examples/case_study.md
       - External repositories: examples/external_sources.md
