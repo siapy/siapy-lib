@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.9.2](https://github.com/siapy/siapy-lib/compare/v0.9.1...v0.9.2) (2025-04-27)
+
+
+### Documentation
+
+* add example scripts for Shape and SpectralImageSet classes ([4a0fcf7](https://github.com/siapy/siapy-lib/commit/4a0fcf7294ef77f96276dbbca2b93676786086db))
+* add examples for Pixels and Signatures classes in documentation ([28f8093](https://github.com/siapy/siapy-lib/commit/28f809348fb584f0254e131b3bc66479be634efa))
+* add Geometric Shapes documentation and update navigation structure ([85cd79b](https://github.com/siapy/siapy-lib/commit/85cd79b637417f482498953a71adcda69e7a3da0))
+* enhance Pixels class documentation and add example usage ([f77d376](https://github.com/siapy/siapy-lib/commit/f77d3767e049e446880125fad0a40976d127359a))
+* expand entities documentation with design principles and add schematic diagram ([1005e2b](https://github.com/siapy/siapy-lib/commit/1005e2b617a4dbb44c2dc1b80ca30f0aff0eebf1))
+* update entities documentation and add spectral image examples ([a416e82](https://github.com/siapy/siapy-lib/commit/a416e8237a5c2379839dd43fe284a08597ecbf9e))
+* update links in README for documentation and contribution guidelines ([10ffb5d](https://github.com/siapy/siapy-lib/commit/10ffb5d19bbcf091ef94ff15d1d8b0528a13cb67))
+
 ## [0.9.1](https://github.com/siapy/siapy-lib/compare/v0.9.0...v0.9.1) (2025-04-25)
 
 
