@@ -91,111 +91,13 @@ The `Signatures` class represents spectral data collections by combining spatial
 The `Shape` class represents geometric shapes that can be associated with images, such as points, lines, and polygons.
 
 ```python
-from siapy.entities import Shape
-from siapy.entities import Pixels
-
-# Create a point
-point = Shape.from_point(10, 20)
-
-# Create a polygon from pixels
-pixels = Pixels.from_iterable([(0, 0), (10, 0), (10, 10), (0, 10)])
-polygon = Shape.from_polygon(pixels)
-
-# Load from shapefile
-shape = Shape.open_shapefile("path/to/shapefile.shp")
+--8<-- "docs/concepts/src/shapes_01.py"
 ```
-
-### Shape Types
-
-- **Point**: Single coordinate point (x,y)
-- **LineString**: Series of connected points forming a line
-- **Polygon**: Closed shape with interior area
-- **MultiPoint**: Collection of independent points
-- **MultiLineString**: Collection of independent lines
-- **MultiPolygon**: Collection of independent polygons
-
-### Key Properties
-
-- **geometry**: The underlying shapely geometry
-- **label**: Optional label for the shape
-- **shape_type**: Type of geometry (point, line, polygon, etc.)
-- **bounds**: Bounding box of the shape
-- **centroid**: Centroid point of the shape
-
-### Key Methods
-
-- **buffer()**: Create a buffered version of the shape
-- **intersection()**: Find intersection with another shape
-- **union()**: Combine with another shape
-- **to_file()**: Save to a shapefile
-
-## GeometricShapes
-
-The `GeometricShapes` class manages a collection of shapes associated with a spectral image.
-
-```python
-# Access shapes associated with an image
-image = SpectralImage.spy_open(header_path="...", image_path="...")
-shapes = image.geometric_shapes
-
-# Add a shape
-polygon = Shape.from_rectangle(10, 20, 30, 40)
-shapes.append(polygon)
-
-# Find a shape by name
-shape = shapes.get_by_name("vegetation")
-```
-
-### Key Methods
-
-- **append()**, **extend()**: Add shapes to the collection
-- **remove()**, **pop()**, **clear()**: Remove shapes
-- **index()**, **count()**: Find and count shapes
-- **get_by_name()**: Find a shape by its label
 
 ## SpectralImageSet
 
 The `SpectralImageSet` class manages a collection of spectral images.
 
 ```python
-from siapy.entities import SpectralImageSet
-from pathlib import Path
-
-# Load multiple images
-header_paths = list(Path("data_dir").glob("*.hdr"))
-image_paths = list(Path("data_dir").glob("*.img"))
-image_set = SpectralImageSet.spy_open(
-    header_paths=header_paths,
-    image_paths=image_paths
-)
-
-# Access images
-first_image = image_set[0]
-
-# Sort images
-image_set.sort()
+--8<-- "docs/concepts/src/spectral_image_set_01.py"
 ```
-
-### Key Properties
-
-- **images**: List of SpectralImage objects
-- **cameras_id**: List of unique camera IDs
-
-### Key Methods
-
-- **images_by_camera_id()**: Get images from a specific camera
-- **sort()**: Sort the images
-
-## Relationship Between Entities
-
-The entities in SiaPy form a cohesive system:
-
-1. A `SpectralImage` contains pixel data across multiple spectral bands
-2. `Pixels` represent spatial coordinates within that image
-3. `Signals` contain spectral values at those coordinates
-4. `Signatures` combine pixels and signals to represent spectral signatures at specific locations
-5. `Shape` objects define geometric regions in the image
-6. `GeometricShapes` organize multiple shapes associated with an image
-7. `SpectralImageSet` manages multiple related spectral images
-
-This modular design allows for flexible workflows in spectral image analysis - from loading image data, to selecting regions of interest, to extracting and analyzing spectral signatures.
