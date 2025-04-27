@@ -1,7 +1,28 @@
 # Entities
 
 Entities serve as the foundational data structures in SiaPy, representing key elements of spectral image analysis and processing workflows. They implement consistent, strongly-typed interfaces that allow seamless interaction between spectral data, spatial coordinates, and geometric information.
-Each entity follows a specialized design pattern optimized for its specific role while maintaining compatibility with the broader SiaPy ecosystem.
+
+## Design principles
+
+SiaPy's architecture follows several key design principles:
+
+**Specialized yet compatible**: Each entity is optimized for its specific role while maintaining compatibility with the broader SiaPy ecosystem
+
+**Independence**: Most entities can function independently (with the exception of abstract base classes)
+
+**Composition over inheritance**:
+
+- The composition is preferred, so that one class can leverage another by injecting it into its architecture
+- Inheritance is primarily used to implement common interfaces through base classes
+
+**Extensibility**:
+
+- The `SpectralImage` class supports multiple data sources through *spectral* or *rasterio* libraries, however, custom data loading can be implemented by creating your own driver
+- Basic geometric shapes (e.g. points, lines, polygons) are implemented using the *shapely* library, which could also be extended through base abstraction
+
+The class structure is depicted in the following diagram:
+
+![Entities Schematics](images/entities_schematics.png)
 
 ## Spectral Image
 
