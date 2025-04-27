@@ -95,7 +95,9 @@ nav:
               - Spectral Library: api/entities/images/spectral_lib.md
               - Mock Image: api/entities/images/mock.md
               - Spectral Images: api/entities/images/spimage.md
-          - Shape: api/entities/shapes/shape.md
+          - Shapes:
+              - Shape: api/entities/shapes/shape.md
+              - Geometric Shapes: api/entities/shapes/geometric_shapes.md
           - Image Sets: api/entities/imagesets.md
           - Pixels: api/entities/pixels.md
           - Signatures: api/entities/signatures.md
