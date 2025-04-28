@@ -202,6 +202,29 @@ def test_signatures_getitem():
     assert list_sig.signals.df.equals(pd.DataFrame([[1, 2], [7, 8]], index=[0, 3]))
 
 
+def test_signatures_eq():
+    # Create two identical signature objects
+    pixels1 = Pixels(pd.DataFrame({"x": [0, 1], "y": [2, 3]}))
+    signals1 = Signals(pd.DataFrame([[10, 20], [30, 40]]))
+    signatures1 = Signatures(pixels1, signals1)
+
+    pixels2 = Pixels(pd.DataFrame({"x": [0, 1], "y": [2, 3]}))
+    signals2 = Signals(pd.DataFrame([[10, 20], [30, 40]]))
+    signatures2 = Signatures(pixels2, signals2)
+
+    # Create a different signature object
+    pixels3 = Pixels(pd.DataFrame({"x": [5, 6], "y": [7, 8]}))
+    signals3 = Signals(pd.DataFrame([[50, 60], [70, 80]]))
+    signatures3 = Signatures(pixels3, signals3)
+
+    # Test equality with identical objects
+    assert signatures1 == signatures2
+    # Test inequality with different objects
+    assert signatures1 != signatures3
+    # Test inequality with non-Signatures object
+    assert signatures1 != "not a signatures object"
+
+
 def test_validate_inputs():
     # Test successful validation with matching row counts
     pixels_df = pd.DataFrame({"x": [0, 1], "y": [0, 1]})
