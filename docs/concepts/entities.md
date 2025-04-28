@@ -26,6 +26,9 @@ The class structure is depicted in the following diagram:
 
 ## Pixels
 
+??? api "API Documentation"
+    [`siapy.entities.Pixels`][siapy.entities.Pixels]<br>
+
 The `Pixels` class represents spatial coordinates within spectral image, providing a container for *(x, y)* coordinate pairs. It uses pandas DataFrame internally for storage, enabling high-performance operations. The class provides multiple initialization methods and conversion functions to work with different data representations (i.e. DataFrames, list, arrays)
 
 ```python
@@ -33,6 +36,9 @@ The `Pixels` class represents spatial coordinates within spectral image, providi
 ```
 
 ## Signals
+
+??? api "API Documentation"
+    [`siapy.entities.signatures.Signals`][siapy.entities.signatures.Signals]<br>
 
 The `Signals` class stores spectral data for each pixel in a pandas DataFrame, allowing you to use any column names you choose (e.g. "band_1", "nir", "red_edge"). You can initialize it from a DataFrame, lists, dicts or NumPy arrays.
 
@@ -43,6 +49,9 @@ The `Signals` class stores spectral data for each pixel in a pandas DataFrame, a
 However, direct initialization of `Signals` is typically not necessary in practice. When you create a `Signatures` instance, the underlying `Signals` object is automatically generated and managed for you. This section demonstrates the `Signals` class primarily to illustrate how the `Signatures` class (discussed next) is composed internally and to provide insight into the data structure that powers spectral analysis.
 
 ## Signatures
+
+??? api "API Documentation"
+    [`siapy.entities.Signatures`][siapy.entities.Signatures]<br>
 
 The `Signatures` class represents spectral data collections by combining spatial coordinates (`Pixels`) with their corresponding spectral values (`Signals`). It provides a unified container that maintains the spatial-spectral relationship, allowing for analysis of spectral information at specific image locations. Internally, the data is stored as pandas DataFrames for efficient operations and indexing.
 
@@ -66,6 +75,9 @@ Both approaches yield equivalent results when initialized with the same data. Yo
 
 ## Shape
 
+??? api "API Documentation"
+    [`siapy.entities.Shape`][siapy.entities.Shape]<br>
+
 The `Shape` class represents geometric shapes that can be associated with images, such as points, lines, and polygons.
 
 ```python
@@ -73,6 +85,9 @@ The `Shape` class represents geometric shapes that can be associated with images
 ```
 
 ## Spectral Image
+
+??? api "API Documentation"
+    [`siapy.entities.SpectralImage`][siapy.entities.SpectralImage]<br>
 
 A `SpectralImage` is the primary container for spectral image data. It's a generic class that can wrap different image backends, allowing you to work with various file formats through a unified interface.
 
@@ -111,6 +126,9 @@ For specialized file formats or custom processing needs, you can extend the Imag
 ```
 
 ## Spectral Image Set
+
+??? api "API Documentation"
+    [`siapy.entities.SpectralImageSet`][siapy.entities.SpectralImageSet]<br>
 
 The `SpectralImageSet` class manages a collection of spectral images.
 
