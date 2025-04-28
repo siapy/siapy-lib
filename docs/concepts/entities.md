@@ -22,7 +22,7 @@ SiaPy's architecture follows several key design principles:
 
 The class structure is depicted in the following diagram:
 
-![Entities Schematics](images/entities_schematics.png)
+![Entities Schematics](images/entities_schematics.svg)
 
 ## Spectral Image
 
