@@ -1,6 +1,8 @@
 This section offers an overview of a case study based on real-world data.
 
+/// Note
 > 💡 **All code snippets** used in this case study are available in the [GitHub repository](https://github.com/siapy/siapy-lib/tree/main/docs/examples/src).
+///
 
 To follow along:
 
@@ -16,7 +18,9 @@ The hyperspectral dataset used in this case study was acquired using Hyspex push
 | VNIR-1600  | Visible to near-infrared (400–988 nm) | 160   | 3.6 nm     |
 | SWIR-384   | Short-wave infrared (950–2500 nm)    | 288   | 5.4 nm     |
 
-> **Note**: All hyperspectral data is provided as calibrated reflectance values, ensuring accuracy and reliability for your analysis.
+/// Note
+All hyperspectral data is provided as calibrated reflectance values, ensuring accuracy and reliability for your analysis.
+///
 
 ### 📁 File Naming Convention
 
@@ -47,12 +51,12 @@ Before diving into the examples, verify that your SiaPy installation and data ar
 ```
 
 /// Warning
+If you encounter issues:
 
-    If you encounter issues:
-    - Check that SiaPy is properly installed and your environment is activated
-    - Verify that you've downloaded the example data
-    - Ensure the `data_dir` variable points to the correct location of your dataset
-    - Make sure both `.img` and `.hdr` files are present in your data directory
+- Check that SiaPy is properly installed and your environment is activated
+- Verify that you've downloaded the example data
+- Ensure the `data_dir` variable points to the correct location of your dataset
+- Make sure both `.img` and `.hdr` files are present in your data directory
 ///
 
 ## 🧪 Source Code Examples
@@ -78,7 +82,8 @@ Before diving into the examples, verify that your SiaPy installation and data ar
   - File metadata and path information
   - Camera identification and associated geometric data
 
-> 💡 **Implementation Note**: This script uses SiaPy's property decorators for read-only access to image attributes, following the library's design pattern for consistent data access.
+??? note "Implementation Details"
+    This script uses decorators for read-only access to image attributes, following the library's design pattern for consistent data access.
 
 **Example:**
 
@@ -96,7 +101,8 @@ Before diving into the examples, verify that your SiaPy installation and data ar
 - **Data Extraction**: Methods for extracting spectral signatures and subarrays from specific image regions
 - **Visualization**: Converting hyperspectral data to displayable RGB images with optional histogram equalization
 
-> 💡 **Implementation Note**: Notice how methods follow SiaPy's naming convention: converters use `to_` prefix (e.g., `to_numpy()`, `to_signatures()`, `to_display()`), while calculation methods use descriptive verbs.
+??? note "Implementation Details"
+    Notice how methods follow SiaPy's naming convention: converters use `to_` prefix (e.g., `to_numpy()`, `to_signatures()`, `to_display()`), while calculation methods use descriptive verbs.
 
 ### Managing Image Collections
 
@@ -116,7 +122,8 @@ Before diving into the examples, verify that your SiaPy installation and data ar
 - **Iteration Patterns**: Iterating through the image collection with standard Python iteration
 - **Filtering and Selection**: Selecting images by specific criteria (e.g., camera ID)
 
-> 💡 **Implementation Note**: SpectralImageSet implements standard Python container interfaces, making it behave like a familiar collection type with additional hyperspectral-specific functionality.
+??? note "Implementation Details"
+    `SpectralImageSet` implements standard Python container interfaces, making it behave like a familiar collection type with additional hyperspectral-specific functionality.
 
 ### Interactive Pixel and Area Selection
 
@@ -139,7 +146,8 @@ The selected pixels are highlighted in the image below.
 - **User Interaction**: Simple keyboard-based interaction model (press Enter to finish selection)
 - **Results Access**: Accessing the resulting Pixels object and its DataFrame representation
 
-> 💡 **Implementation Note**: The `pixels_select_click` function handles the display, interaction, and collection of pixel coordinates in a single operation, simplifying user interaction code.
+??? note "Implementation Details"
+    The `pixels_select_click` function handles the display, interaction, and collection of pixel coordinates in a single operation, simplifying user interaction code.
 
 **Example:**
 
@@ -160,7 +168,8 @@ The selected areas are highlighted in the image below.
 - **Polygon-Based Selection**: Defining complex shapes for region-based analysis
 - **Selection Management**: Organized representation of selected areas for further processing
 
-> 💡 **Implementation Note**: Selected areas are returned as a list of Pixels objects, each representing a distinct region that can be separately analyzed or processed.
+??? note "Implementation Details"
+    Selected areas are returned as a list of `Pixels` objects, each representing a distinct region that can be separately analyzed or processed.
 
 ### Image Transformation and Processing
 
@@ -179,7 +188,8 @@ The selected areas are highlighted in the image below.
 - **Transformation Calculation**: Computing the mathematical transformation between coordinate systems
 - **Spatial Alignment**: Creating a foundation for aligning multi-sensor hyperspectral data
 
-> 💡 **Implementation Note**: The `corregistrator.align()` function computes a transformation matrix that can transform coordinates from one image space to another, essential for multi-sensor data fusion.
+??? note "Implementation Details"
+    The `corregistrator.align()` function computes a transformation matrix that can transform coordinates from one image space to another, essential for multi-sensor data fusion.
 
 **Example:**
 
@@ -196,7 +206,8 @@ The selected areas are highlighted in the image below.
 - **Cross-Spectral Analysis**: Enabling analysis of the same physical regions across different spectral data
 - **Visual Verification**: Displaying both images with highlighted areas to verify correct transformation
 
-> 💡 **Implementation Note**: The transformation is applied to the Pixels objects directly, allowing selected regions to be mapped between different spectral ranges while preserving their shape relationships.
+??? note "Implementation Details"
+    The transformation is applied to the `Pixels` objects directly, allowing selected regions to be mapped between different spectral ranges while preserving their shape relationships.
 
 **Example:**
 
@@ -213,7 +224,8 @@ The selected areas are highlighted in the image below.
 - **Normalization**: Area-based normalization for standardizing image intensity distributions
 - **Data Augmentation**: Creating modified versions of images for machine learning training
 
-> 💡 **Implementation Note**: All transformation functions follow a consistent input/output pattern, taking NumPy arrays as input and returning the transformed arrays, making them easily composable for complex processing pipelines.
+??? note "Implementation Details"
+    All transformation functions follow a consistent input/output pattern, taking NumPy arrays as input and returning the transformed arrays, making them easily composable for complex processing pipelines.
 
 ---
 
