@@ -78,12 +78,28 @@ The `Signals` class stores spectral data for each pixel in a pandas DataFrame, a
 --8<-- "docs/concepts/src/signals_01.py"
 ```
 
+However, direct initialization of `Signals` is typically not necessary in practice. When you create a `Signatures` instance, the underlying `Signals` object is automatically generated and managed for you. This section demonstrates the `Signals` class primarily to illustrate how the `Signatures` class (discussed next) is composed internally and to provide insight into the data structure that powers spectral analysis.
+
 ## Signatures
 
 The `Signatures` class represents spectral data collections by combining spatial coordinates (`Pixels`) with their corresponding spectral values (`Signals`). It provides a unified container that maintains the spatial-spectral relationship, allowing for analysis of spectral information at specific image locations. Internally, the data is stored as pandas DataFrames for efficient operations and indexing.
 
+`Signatures` can be initialized in multiple ways. The explicit approach creates each component separately before combining them, providing clarity about the composition:
+
 ```python
---8<-- "docs/concepts/src/signatures_01.py"
+--8<-- "docs/concepts/src/signatures_01.py:long"
+```
+
+For more concise code, you can initialize a `Signatures` object directly from coordinate and signal values:
+
+```python
+--8<-- "docs/concepts/src/signatures_01.py:short"
+```
+
+Both approaches yield equivalent results when initialized with the same data. You can access and work with the data using various DataFrame operations and conversion methods:
+
+```python
+--8<-- "docs/concepts/src/signatures_01.py:assert"
 ```
 
 ## Shape
@@ -94,7 +110,7 @@ The `Shape` class represents geometric shapes that can be associated with images
 --8<-- "docs/concepts/src/shapes_01.py"
 ```
 
-## SpectralImageSet
+## Spectral Image Set
 
 The `SpectralImageSet` class manages a collection of spectral images.
 
