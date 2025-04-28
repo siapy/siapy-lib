@@ -24,44 +24,6 @@ The class structure is depicted in the following diagram:
 
 ![Entities Schematics](images/entities_schematics.svg)
 
-## Spectral Image
-
-A `SpectralImage` is the primary container for spectral image data. It's a generic class that can wrap different image backends, allowing you to work with various file formats through a unified interface.
-
-### Image Initialization Options
-
-#### 1. Load from ENVI format (using spectral python)
-
-This is commonly used for hyperspectral imagery from airborne or satellite sensors.
-
-```python
---8<-- "docs/concepts/src/spectral_image_01.py"
-```
-
-#### 2. Load from GeoTIFF or other geospatial formats (using rasterio)
-
-Perfect for georeferenced data with spatial information.
-
-```python
---8<-- "docs/concepts/src/spectral_image_02.py"
-```
-
-#### 3. Create from numpy array
-
-Useful for testing or when you already have image data in memory.
-
-```python
---8<-- "docs/concepts/src/spectral_image_03.py"
-```
-
-#### 4. Create your own custom image class
-
-For specialized file formats or custom processing needs, you can extend the ImageBase class.
-
-```python
---8<-- "docs/concepts/src/spectral_image_04.py"
-```
-
 ## Pixels
 
 The `Pixels` class represents spatial coordinates within spectral image, providing a container for *(x, y)* coordinate pairs. It uses pandas DataFrame internally for storage, enabling high-performance operations. The class provides multiple initialization methods and conversion functions to work with different data representations (i.e. DataFrames, list, arrays)
@@ -108,6 +70,44 @@ The `Shape` class represents geometric shapes that can be associated with images
 
 ```python
 --8<-- "docs/concepts/src/shapes_01.py"
+```
+
+## Spectral Image
+
+A `SpectralImage` is the primary container for spectral image data. It's a generic class that can wrap different image backends, allowing you to work with various file formats through a unified interface.
+
+### Image Initialization Options
+
+#### 1. Load from ENVI format (using spectral python)
+
+This is commonly used for hyperspectral imagery from airborne or satellite sensors.
+
+```python
+--8<-- "docs/concepts/src/spectral_image_01.py"
+```
+
+#### 2. Load from GeoTIFF or other geospatial formats (using rasterio)
+
+Perfect for georeferenced data with spatial information.
+
+```python
+--8<-- "docs/concepts/src/spectral_image_02.py"
+```
+
+#### 3. Create from numpy array
+
+Useful for testing or when you already have image data in memory.
+
+```python
+--8<-- "docs/concepts/src/spectral_image_03.py"
+```
+
+#### 4. Create your own custom image class
+
+For specialized file formats or custom processing needs, you can extend the ImageBase class.
+
+```python
+--8<-- "docs/concepts/src/spectral_image_04.py"
 ```
 
 ## Spectral Image Set
