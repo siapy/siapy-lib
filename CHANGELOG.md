@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.9.3](https://github.com/siapy/siapy-lib/compare/v0.9.2...v0.9.3) (2025-04-29)
+
+
+### Bug Fixes
+
+* implement equality comparison method and add corresponding tests ([9c19f07](https://github.com/siapy/siapy-lib/commit/9c19f07ed23c123177adef202e1a08054ecedba9))
+
+
+### Documentation
+
+* add API documentation links for Pixels, Signals, Signatures, Shape, SpectralImage, and SpectralImageSet classes ([45fce51](https://github.com/siapy/siapy-lib/commit/45fce51940d441df0619095931867aadbbca666f))
+* add API documentation notes for core components in overview.md ([e2ae548](https://github.com/siapy/siapy-lib/commit/e2ae5489c575cabb225ee506c8d1d4086641232d))
+* enhance case study documentation with additional notes and formatting improvements ([602494b](https://github.com/siapy/siapy-lib/commit/602494b7acc620b41ec5eec8b9e8ddc1ba8df1ae))
+* enhance documentation for Signals and Signatures classes with initialization examples ([703adbf](https://github.com/siapy/siapy-lib/commit/703adbf7bfbe5c7533ecf656dcd7795e31d258b4))
+* reorganize and enhance SpectralImage section with initialization options ([8929a4c](https://github.com/siapy/siapy-lib/commit/8929a4cb8b3dbdc979d473f0b40df469b0eb6c22))
+* Replace PNG diagram with SVG format for entities schematics and remove the old PNG file. ([6d5783f](https://github.com/siapy/siapy-lib/commit/6d5783fd58261dee42e055b5b851618542155ef0))
+* restructure CONTRIBUTING.md to enhance clarity and organization ([d25cdfb](https://github.com/siapy/siapy-lib/commit/d25cdfb0737be087cfbddd4639f1a4151977c17a))
+
 ## [0.9.2](https://github.com/siapy/siapy-lib/compare/v0.9.1...v0.9.2) (2025-04-27)
 
 
