@@ -120,6 +120,11 @@ class Signatures:
         signals = self.signals[indices]
         return Signatures(pixels, signals)
 
+    def __eq__(self, other: Any) -> bool:
+        if not isinstance(other, Signatures):
+            return False
+        return self.pixels.df.equals(other.pixels.df) and self.signals.df.equals(other.signals.df)
+
     def __post_init__(self) -> None:
         validate_inputs(self.pixels, self.signals)
 

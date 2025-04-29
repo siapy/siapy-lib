@@ -4,7 +4,10 @@
 
 SiaPy follows a modular architecture organized around key components that work together to provide a comprehensive toolkit for spectral image analysis.
 
-### Core (`siapy.core`)
+### Core
+
+??? note "API Documentation"
+    `siapy.core`
 
 The foundation of the library providing essential functionality:
 
@@ -13,7 +16,10 @@ The foundation of the library providing essential functionality:
 - **Type definitions**: Common types used throughout the library
 - **Configuration**: System paths and global configuration settings
 
-### Entities (`siapy.entities`)
+### Entities
+
+??? note "API Documentation"
+    `siapy.entities`
 
 Fundamental data structures that represent spectral imaging data:
 
@@ -23,34 +29,49 @@ Fundamental data structures that represent spectral imaging data:
 - **Shapes**: Geometric shapes for images' regions selection and masking
 - **Signatures**: Spectral signatures extracted from images
 
-### Datasets (`siapy.datasets`)
+### Datasets
+
+??? note "API Documentation"
+    `siapy.datasets`
 
 Tools for managing and working with datasets:
 
 - **Tabular datasets**: Handling tabular data with spectral information
 
-### Features (`siapy.features`)
+### Features
+
+??? note "API Documentation"
+    `siapy.features`
 
 Functionality for working with spectral features:
 
 - **Features**: Abstractions for feature extraction and selection
 - **Spectral indices**: Calculation of various spectral indices
 
-### Transformations (`siapy.transformations`)
+### Transformations
+
+??? note "API Documentation"
+    `siapy.transformations`
 
 Transformation capabilities:
 
 - **Co-registration**: Aligning images from different sources
 - **Image processing**: Functions for image manipulation
 
-### Optimizers (`siapy.optimizers`)
+### Optimizers
+
+??? note "API Documentation"
+    `siapy.optimizers`
 
 Optimization, hyperparameter tuning and evaluation:
 
 - **Optimization**: Machine learning training and optimization of hyperparameters
 - **Evaluation metrics and scoring mechanisms**: Tools for assessing model performance
 
-### Utils (`siapy.utils`)
+### Utils
+
+??? note "API Documentation"
+    `siapy.utils`
 
 Utility and plotting functions:
 
