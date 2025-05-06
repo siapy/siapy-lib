@@ -100,6 +100,10 @@ Most commands use PDM (Python package and dependency manager) internally, which 
 
 ## Development
 
+### Quick design pattern guide
+
+For consistent code quality across the project, refer to [copilot-instructions](https://github.com/siapy/siapy-lib/blob/main/.github/copilot-instructions.md), which concisely describes key design patterns.
+
 ### Git
 
 _[Why use Git?](https://www.git-scm.com/about)_ Git enables creation of multiple versions of a code repository called branches, with the ability to track and undo changes in detail.
@@ -113,16 +117,14 @@ Contribute by following:
 - Commit your changes with a [properly-formatted Git commit message](https://chris.beams.io/posts/git-commit/).
 - Create a [pull request (PR)](https://docs.github.com/en/github/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests) to incorporate your changes into the upstream project you forked.
 
-### Project organization around git
-
-### Branch Structure
+### Branch structure
 
 | Branch    | Purpose                     | Protection Rules                |
 |-----------|-----------------------------|---------------------------------|
 | `main`    | Stable production code      | • Signed commits required<br>• No force pushing<br>• Status checks required<br>• Admin included |
 | `develop` | Integration branch          | • Signed commits required<br>• Force pushing allowed<br>• Admin included |
 
-### Workflow Rules
+### Workflow rules
 
 - The default branch is `main`
 - Feature branches must target `develop` for pull requests
@@ -149,7 +151,7 @@ _Type_ must be one of the following:
 - `build`: Changes that affect the build system or external dependencies (example scopes: gulp, broccoli, npm), hidden
 - `ci`: Changes to our CI configuration files and scripts (example scopes: Travis, Circle, BrowserStack, SauceLabs), hidden
 
-## GitHub Actions workflows
+## GitHub actions workflows
 
 [GitHub Actions](https://github.com/features/actions) is a continuous integration/continuous deployment (CI/CD) service that runs on GitHub repos. Actions are grouped into workflows and stored in _.github/workflows_.
 
