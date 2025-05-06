@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.9.4](https://github.com/siapy/siapy-lib/compare/v0.9.3...v0.9.4) (2025-05-06)
+
+
+### Bug Fixes
+
+* update codespell skip patterns to include SVG files ([c1f3cac](https://github.com/siapy/siapy-lib/commit/c1f3cace7944c8318dcd94d2fd72e37649357cb5))
+
+
+### Documentation
+
+* add data conversion methods for SpectralImage in documentation ([92c09c0](https://github.com/siapy/siapy-lib/commit/92c09c01ff071c5905826666d7f8359f90b3f314))
+* add entities schematics and relationships image ([be4527d](https://github.com/siapy/siapy-lib/commit/be4527defde3cd7f925f671b93b05ff7c47b0b98))
+* enhance contributing guidelines and API design principles overview ([407a786](https://github.com/siapy/siapy-lib/commit/407a786392f9edab9c059c2c0e346a7d07b5ad8a))
+
 ## [0.9.3](https://github.com/siapy/siapy-lib/compare/v0.9.2...v0.9.3) (2025-04-29)
 
 
