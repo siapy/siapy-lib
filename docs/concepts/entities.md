@@ -1,8 +1,17 @@
 # Entities
 
+??? note "API Documentation"
+    `siapy.entities`
+
 Entities serve as the foundational data structures in SiaPy, representing key elements of spectral image analysis and processing workflows. They implement consistent, strongly-typed interfaces that allow seamless interaction between spectral data, spatial coordinates, and geometric information.
 
-## Design principles
+## Module architecture
+
+The relationships between components are shown in the following diagram:
+
+![Entities Schematics](images/entities_schematics.svg)
+
+### Design principles
 
 SiaPy's architecture follows several key design principles:
 
@@ -20,9 +29,23 @@ SiaPy's architecture follows several key design principles:
 - The `SpectralImage` class supports multiple data sources through *spectral* or *rasterio* libraries, however, custom data loading can be implemented by creating your own driver
 - Basic geometric shapes (e.g. points, lines, polygons) are implemented using the *shapely* library, which could also be extended through base abstraction
 
-The class structure is depicted in the following diagram:
+### Visual representation of spectral entities
 
-![Entities Schematics](images/entities_schematics.svg)
+The components follow standard naming conventions for spectral image analysis. A `SpectralImage` represents a three-dimensional data cube (height × width × bands). Each pixel in this cube has spatial coordinates *(x, y)* and a corresponding spectral signal with values across all bands.
+
+A signature combines a pixel's spatial location with its spectral signal, creating a complete spatial-spectral data point. The `Signatures` class serves as a container for multiple such data points, enabling analysis across collections of pixels.
+
+Since spectral images often contain distinct objects with different spectral properties, `Shapes` (regions of connected pixels) allow for extraction and analysis of specific areas. The `SpectralImage` class therefore integrates all primitive structures: `Pixels` and `Signals` by definition, and `Shapes` when attached to the image.
+
+![Entities Relations](images/entities_relations.png)
+
+| Name                            | What it represents                                                                                                                                    | Shape / size                               |
+| ------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
+| **`Spectral image`**             | A single hyperspectral or multispectral data cube.                                                                     | **`(H, W, B)`** → *height × width × bands* |
+| **`Spectral image set`**          | An ordered collection of `SpectralImage` objects. Think of it as a “dataset” with convenience methods that loop internally instead of in user code.   | *N* × `SpectralImage` for *N* spectral images |
+| **`Pixels`** | One Cartesian coordinate **`(x, y)`**.                                | **`(N, 2)`** for *N* pixels                |
+| **`Shapes`**                     | A geometric region of interest (e.g. rectangle, polygon, circle), serving as a *container of pixels*. | Vector geometry                            |
+| **`Signatures`**         | A collection of 1-D spectral signals **`(B,)`** tied to pixel values **`(x, y)`** or aggregated over a shape.                                                        |   **`(N, B + 2)`** → *N* signatures, each with *B* spectral bands plus **`(x, y)`** coordinates |
 
 ## Pixels
 
