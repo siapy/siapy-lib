@@ -148,6 +148,19 @@ For specialized file formats or custom processing needs, you can extend the Imag
 --8<-- "docs/concepts/src/spectral_image_04.py"
 ```
 
+### Data conversion methods
+
+The example below demonstrates two key conversion methods of `SpectralImage` instance:
+
+1. `to_signatures()`: Extracts spectral data from specific pixel coordinates and returns a `Signatures` object that maintains the spatial-spectral relationship
+2. `to_subarray()`: Converts selected pixel data to a NumPy array for numerical processing or integration with other scientific libraries
+
+```python
+--8<-- "docs/concepts/src/spectral_image_05.py"
+```
+
+<!-- ### Manipulation of shapes -->
+
 ## Spectral Image Set
 
 ??? api "API Documentation"
