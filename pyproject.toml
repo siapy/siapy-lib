@@ -147,6 +147,6 @@ keep-runtime-typing = true
 
 [tool.codespell]
 ignore-words-list = "janezlapajne"
-skip = 'dist/*, ./docs/images/*, htmlcov, LICENCE, *.lock, *.toml, CHANGELOG.md, *.cff'
+skip = 'dist/*, htmlcov, LICENCE, *.lock, *.toml, CHANGELOG.md, *.cff, *.svg'
 count = true
 check-hidden = false
