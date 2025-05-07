@@ -26,6 +26,9 @@ class GeometricShapes:
         self._geometric_shapes = geometric_shapes if geometric_shapes is not None else []
         _check_shape_type(self._geometric_shapes, is_list=True)
 
+    def __repr__(self) -> str:
+        return f"GeometricShapes(\n{self._geometric_shapes}\n)"
+
     def __iter__(self) -> Iterator["Shape"]:
         return iter(self.shapes)
 
