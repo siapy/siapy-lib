@@ -159,7 +159,21 @@ The example below demonstrates two key conversion methods of `SpectralImage` ins
 --8<-- "docs/concepts/src/spectral_image_05.py"
 ```
 
-<!-- ### Manipulation of shapes -->
+### Manipulation of Shapes
+
+Each `SpectralImage` instance automatically initializes a `GeometricShapes` object as a property called `geometric_shapes`. This property provides a container for managing shape objects associated with the image. It lets you work with image regions while maintaining the connection between spatial geometries and their spectral data. This is particularly useful for region-based analysis, masking, and feature extraction from specific areas of interest.
+
+The `GeometricShapes` class provides a list-like interface that wraps a standard Python list, enhancing it with specialized functionality for manipulating geometric shapes while preserving standard list behavior. The list of shapes can be accessed via the `image.geometric_shapes.shapes` property.
+
+```python
+--8<-- "docs/concepts/src/spectral_image_shapes_01.py:init"
+```
+
+As a result, shapes can be added to the spectral image using standard list operations. The example below demonstrates how this can be done:
+
+```python
+--8<-- "docs/concepts/src/spectral_image_shapes_01.py:operations"
+```
 
 ## Spectral Image Set
 
