@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.9.5](https://github.com/siapy/siapy-lib/compare/v0.9.4...v0.9.5) (2025-05-07)
+
+
+### Documentation
+
+* add datasets module documentation and example usage ([ec2d469](https://github.com/siapy/siapy-lib/commit/ec2d4693d70cdb0ebb695792dd59063e599e2c64))
+* enhance SpectralImage documentation with GeometricShapes usage examples ([f7c82cc](https://github.com/siapy/siapy-lib/commit/f7c82cc03faa28f1bd1d66d70981314fd4551be2))
+
 ## [0.9.4](https://github.com/siapy/siapy-lib/compare/v0.9.3...v0.9.4) (2025-05-06)
 
 
