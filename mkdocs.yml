@@ -68,7 +68,7 @@ nav:
       - Overview: concepts/overview.md
       - Entities: concepts/entities.md
       - Datasets: concepts/datasets.md
-      # - Features: concepts/features.md
+      - Features: concepts/features.md
       # - Optimizers: concepts/optimizers.md
       # - Transformations: concepts/transformations.md
       # - Utilities:
