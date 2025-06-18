@@ -6,7 +6,6 @@ import xarray as xr
 from numpy.typing import NDArray
 from PIL import Image
 
-from siapy.core import logger
 from siapy.core.exceptions import InvalidFilepathError
 from siapy.entities import SpectralImage
 from siapy.entities.images import ImageBase
