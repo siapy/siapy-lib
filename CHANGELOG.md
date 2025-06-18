@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.9.6](https://github.com/siapy/siapy-lib/compare/v0.9.5...v0.9.6) (2025-06-18)
+
+
+### Documentation
+
+* add cross-validation and hold-out scorer examples to optimizers documentation ([606dc29](https://github.com/siapy/siapy-lib/commit/606dc295fdd465b360e1bcf0dfb30d2f02641648))
+* add features module with automated feature engineering and spectral indices computation ([950bdaf](https://github.com/siapy/siapy-lib/commit/950bdaf6ded9753c96628350c2b7faa333787882))
+* add optimizers documentation and example for hyperparameter optimization ([4471b1a](https://github.com/siapy/siapy-lib/commit/4471b1a51efefd8b7a6ead452ce19ab697654a60))
+* improve comments for clarity in features_06.py ([c6bb864](https://github.com/siapy/siapy-lib/commit/c6bb864e5bc3756ad63a492f049f37e74e250618))
+* remove unused logger import from spectral_image_04.py ([8c8b6f9](https://github.com/siapy/siapy-lib/commit/8c8b6f9adc315ebabf0a24b1fbabdb6d3adf9b99))
+* update features documentation and add example for automated spectral indices classification ([6dda2ee](https://github.com/siapy/siapy-lib/commit/6dda2ee213058b5e7a68a3a063b237cf7cd267fd))
+* update optimizers documentation and add example for trial parameters setup ([20b73c8](https://github.com/siapy/siapy-lib/commit/20b73c81f2768433c3e61ccfe3a863d501b962a2))
+* update optimizers documentation to include scorers and evaluation functions ([231b8bd](https://github.com/siapy/siapy-lib/commit/231b8bdc3a5a63dc0a7f7b86ed3a1d0e73cbaccd))
+
 ## [0.9.5](https://github.com/siapy/siapy-lib/compare/v0.9.4...v0.9.5) (2025-05-07)
 
 
