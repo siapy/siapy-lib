@@ -13,8 +13,6 @@ The optimizers module provides hyperparameter optimization capabilities for mach
 
 The `TabularOptimizer` class provides automated hyperparameter optimization for sklearn-compatible models using tabular spectral data.
 
-### Basic optimization setup
-
 ```python
 --8<-- "docs/concepts/src/optimizers_01.py"
 ```
@@ -33,11 +31,10 @@ Trial parameters define the hyperparameter search space for optimization. You ca
 --8<-- "docs/concepts/src/optimizers_02.py"
 ```
 
-<!--
 ## Scorers
 
 ??? api "API Documentation"
-    [`siapy.optimizers.Scorer`][siapy.optimizers.Scorer]
+    [`siapy.optimizers.scorers.Scorer`][siapy.optimizers.scorers.Scorer]
 
 Scorers define how model performance is evaluated during optimization. The module provides two main scoring strategies:
 
@@ -46,7 +43,7 @@ Scorers define how model performance is evaluated during optimization. The modul
 Use cross-validation for robust model evaluation:
 
 ```python
---8<-- "docs/concepts/src/optimizers_05.py"
+--8<-- "docs/concepts/src/optimizers_03.py"
 ```
 
 ### Hold-out scorer
@@ -54,8 +51,10 @@ Use cross-validation for robust model evaluation:
 Use hold-out validation for faster evaluation:
 
 ```python
---8<-- "docs/concepts/src/optimizers_06.py"
+--8<-- "docs/concepts/src/optimizers_04.py"
 ```
+
+<!--
 
 ## Evaluation Functions
 
