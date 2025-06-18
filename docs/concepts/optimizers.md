@@ -36,7 +36,7 @@ Trial parameters define the hyperparameter search space for optimization. You ca
 ??? api "API Documentation"
     [`siapy.optimizers.scorers.Scorer`][siapy.optimizers.scorers.Scorer]
 
-Scorers define how model performance is evaluated during optimization. The module provides two main scoring strategies:
+Scorers define how model performance is evaluated during optimization.
 
 ### Cross-validation scorer
 
@@ -54,54 +54,10 @@ Use hold-out validation for faster evaluation:
 --8<-- "docs/concepts/src/optimizers_04.py"
 ```
 
-<!--
-
-## Evaluation Functions
-
-??? api "API Documentation"
-    [`siapy.optimizers.cross_validation`][siapy.optimizers.cross_validation]
-    [`siapy.optimizers.hold_out_validation`][siapy.optimizers.hold_out_validation]
-
-The evaluation functions can be used independently for model assessment:
-
-### Cross-validation
-
-```python
---8<-- "docs/concepts/src/optimizers_07.py"
-```
-
-### Hold-out validation
-
-```python
---8<-- "docs/concepts/src/optimizers_08.py"
-```
-
-## Metrics
-
-??? api "API Documentation"
-    [`siapy.optimizers.calculate_classification_metrics`][siapy.optimizers.calculate_classification_metrics]
-    [`siapy.optimizers.calculate_regression_metrics`][siapy.optimizers.calculate_regression_metrics]
-    [`siapy.optimizers.ClassificationMetrics`][siapy.optimizers.ClassificationMetrics]
-    [`siapy.optimizers.RegressionMetrics`][siapy.optimizers.RegressionMetrics]
-
-Calculate comprehensive metrics for model evaluation:
-
-### Classification metrics
-
-```python
---8<-- "docs/concepts/src/optimizers_09.py"
-```
-
-### Regression metrics
-
-```python
---8<-- "docs/concepts/src/optimizers_10.py"
-```
-
 ## Integration with siapy entities
 
-The optimizers module integrates seamlessly with the siapy entity system:
+The optimizers module integrates seamlessly with the siapy entity system.
 
 ```python
---8<-- "docs/concepts/src/optimizers_11.py"
-``` -->
+--8<-- "docs/concepts/src/optimizers_05.py"
+```
