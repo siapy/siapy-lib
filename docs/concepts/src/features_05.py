@@ -17,7 +17,7 @@ print(f"Available indices: {len(available_indices)}")
 # Configure feature selection
 config = FeatureSelectorConfig(
     k_features=(5, 20),  # Select 5-20 best indices
-    cv=5,
+    cv=5,  # Cross-validation for feature selection
     verbose=1,
 )
 

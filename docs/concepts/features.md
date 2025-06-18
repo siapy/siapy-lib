@@ -39,9 +39,9 @@ When your data uses non-standard column names, use the `bands_map` parameter:
 ## Automatic features generation
 
 ??? api "API Documentation"
-    [`siapy.features.AutoFeatClassification`][siapy.features.AutoFeatClassification]
-    [`siapy.features.AutoFeatRegression`][siapy.features.AutoFeatRegression]
-    [`siapy.features.AutoSpectralIndicesClassification`][siapy.features.AutoSpectralIndicesClassification]
+    [`siapy.features.AutoFeatClassification`][siapy.features.AutoFeatClassification]<br>
+    [`siapy.features.AutoFeatRegression`][siapy.features.AutoFeatRegression]<br>
+    [`siapy.features.AutoSpectralIndicesClassification`][siapy.features.AutoSpectralIndicesClassification]<br>
     [`siapy.features.AutoSpectralIndicesRegression`][siapy.features.AutoSpectralIndicesRegression]
 
 ### Mathematically extracted features
@@ -60,10 +60,10 @@ These classes integrate spectral index computation with automated feature select
 --8<-- "docs/concepts/src/features_05.py"
 ```
 
-<!-- ## Integration with SiaPy Entities
+## Integration with siapy enitites
 
-The features module integrates seamlessly with SiaPy's entity system: -->
+The features module integrates seamlessly with siapy entity system.
 
-<!-- ```python
+```python
 --8<-- "docs/concepts/src/features_06.py"
-``` -->
+```
