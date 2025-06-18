@@ -8,7 +8,7 @@ The optimizers module provides hyperparameter optimization capabilities for mach
 ## Tabular Optimizer
 
 ??? api "API Documentation"
-    [`siapy.optimizers.optimizers.TabularOptimizer`][siapy.optimizers.optimizers.TabularOptimizer]
+    [`siapy.optimizers.optimizers.TabularOptimizer`][siapy.optimizers.optimizers.TabularOptimizer]<br>
     [`siapy.optimizers.configs.TabularOptimizerConfig`][siapy.optimizers.configs.TabularOptimizerConfig]
 
 The `TabularOptimizer` class provides automated hyperparameter optimization for sklearn-compatible models using tabular spectral data.
@@ -19,20 +19,21 @@ The `TabularOptimizer` class provides automated hyperparameter optimization for 
 --8<-- "docs/concepts/src/optimizers_01.py"
 ```
 
-<!-- ## Trial Parameters
+## Trial Parameters
 
 ??? api "API Documentation"
-    [`siapy.optimizers.TrialParameters`][siapy.optimizers.TrialParameters]
-    [`siapy.optimizers.IntParameter`][siapy.optimizers.IntParameter]
-    [`siapy.optimizers.FloatParameter`][siapy.optimizers.FloatParameter]
-    [`siapy.optimizers.CategoricalParameter`][siapy.optimizers.CategoricalParameter]
+    [`siapy.optimizers.parameters.TrialParameters`][siapy.optimizers.parameters.TrialParameters]<br>
+    [`siapy.optimizers.parameters.IntParameter`][siapy.optimizers.parameters.IntParameter]<br>
+    [`siapy.optimizers.parameters.FloatParameter`][siapy.optimizers.parameters.FloatParameter]<br>
+    [`siapy.optimizers.parameters.CategoricalParameter`][siapy.optimizers.parameters.CategoricalParameter]
 
 Trial parameters define the hyperparameter search space for optimization. You can specify integer, float, and categorical parameters:
 
 ```python
---8<-- "docs/concepts/src/optimizers_04.py"
+--8<-- "docs/concepts/src/optimizers_02.py"
 ```
 
+<!--
 ## Scorers
 
 ??? api "API Documentation"
