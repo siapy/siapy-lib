@@ -1,3 +1,9 @@
+"""Configuration constants and paths for SiaPy library.
+
+This module defines important directory paths and configuration constants
+used throughout the SiaPy library, including base directories and test data locations.
+"""
+
 from pathlib import Path
 
 __all__ = [

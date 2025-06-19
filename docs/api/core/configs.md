@@ -1,2 +1,0 @@
-
-::: siapy.core.configs
