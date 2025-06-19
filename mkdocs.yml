@@ -71,10 +71,10 @@ nav:
       - Features: concepts/features.md
       - Optimizers: concepts/optimizers.md
       - Transformations: concepts/transformations.md
-      # - Utilities:
-      #     - Image: concepts/utils/image.md
-      #     - Signature: concepts/utils/signature.md
-      #     - Plotting: concepts/utils/plotting.md
+      - Utilities:
+          - Image: concepts/utils_image.md
+          - Signature: concepts/utils_signature.md
+          - Plotting: concepts/utils_plotting.md
   - Examples:
       - Case Study: examples/case_study.md
       - External repositories: examples/external_sources.md
