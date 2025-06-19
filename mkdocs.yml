@@ -70,7 +70,7 @@ nav:
       - Datasets: concepts/datasets.md
       - Features: concepts/features.md
       - Optimizers: concepts/optimizers.md
-      # - Transformations: concepts/transformations.md
+      - Transformations: concepts/transformations.md
       # - Utilities:
       #     - Image: concepts/utils/image.md
       #     - Signature: concepts/utils/signature.md
