@@ -1,3 +1,10 @@
+"""Type definitions and aliases for SiaPy library.
+
+This module defines common type aliases used throughout the SiaPy library
+for spectral images, arrays, and data containers to ensure type safety
+and consistency across the codebase.
+"""
+
 from typing import Any, Sequence
 
 import numpy as np
