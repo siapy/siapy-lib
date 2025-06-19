@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.9.7](https://github.com/siapy/siapy-lib/compare/v0.9.6...v0.9.7) (2025-06-19)
+
+
+### Documentation
+
+* add image utilities and update mkdocs navigation for better documentation structure ([29b2ae1](https://github.com/siapy/siapy-lib/commit/29b2ae1d55144ddd46e2908b9a7ff8d277bc9585))
+* add plotting utilities for interactive pixel and area selection, and update documentation ([e28c830](https://github.com/siapy/siapy-lib/commit/e28c83020a79bae18f2374fc1814a7b62e4e77b1))
+* add transformation examples and update documentation for image processing ([97a0144](https://github.com/siapy/siapy-lib/commit/97a0144fdd2ec1009a268861400ff554ceb3840c))
+* enhance docstrings across image classes for improved clarity and usability ([e5c1a56](https://github.com/siapy/siapy-lib/commit/e5c1a5681aa2c6547446da7f145a5c7dc6c9c051))
+* enhance docstrings for target generation functions and tabular dataset class for improved clarity and usability ([c6cc3e6](https://github.com/siapy/siapy-lib/commit/c6cc3e694d2b3dda28c45a10456140b20606d63d))
+* remove obsolete configs documentation and enhance module docstrings for clarity ([9858402](https://github.com/siapy/siapy-lib/commit/985840205a0fe76369337200d16194a1b48ce7fd))
+
 ## [0.9.6](https://github.com/siapy/siapy-lib/compare/v0.9.5...v0.9.6) (2025-06-18)
 
 
