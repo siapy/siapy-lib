@@ -33,7 +33,7 @@ jobs:
         # run: pdm run pytest --cov=./ --cov-report=html -m "not manual"
         run: ./scripts/test.sh "Coverage for ${{ github.sha }}"
       - name: Store coverage files
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         # Only upload for Python 3.12
         if: matrix.python-version == '3.12'
         with:
