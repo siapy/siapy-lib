@@ -19,7 +19,7 @@ jobs:
     name: Test Python ${{ matrix.python-version }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Setup PDM
         uses: pdm-project/setup-pdm@v4
         with:
