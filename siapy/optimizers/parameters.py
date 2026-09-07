@@ -1,12 +1,13 @@
+from collections.abc import Sequence
 from dataclasses import dataclass
-from typing import Annotated, Any, Sequence
+from typing import Annotated, Any
 
 from pydantic import BaseModel
 
 __all__ = [
+    "CategoricalParameter",
     "FloatParameter",
     "IntParameter",
-    "CategoricalParameter",
     "TrialParameters",
 ]
 

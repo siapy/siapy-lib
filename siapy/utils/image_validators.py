@@ -9,9 +9,9 @@ from siapy.core.types import ImageSizeType, ImageType
 from siapy.entities import SpectralImage
 
 __all__ = [
-    "validate_image_to_numpy_3channels",
-    "validate_image_to_numpy",
     "validate_image_size",
+    "validate_image_to_numpy",
+    "validate_image_to_numpy_3channels",
 ]
 
 

@@ -1,6 +1,7 @@
 import sys
+from collections.abc import Iterable, Iterator
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Any, Iterable, Iterator, Optional
+from typing import TYPE_CHECKING, Any, Optional
 
 from siapy.core.exceptions import InvalidInputError
 
@@ -42,7 +43,7 @@ class GeometricShapes:
     def __len__(self) -> int:
         return len(self._geometric_shapes)
 
-    def __eq__(self, other: Any) -> bool:
+    def __eq__(self, other: object) -> bool:
         if not isinstance(other, GeometricShapes):
             raise InvalidInputError(
                 {

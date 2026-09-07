@@ -18,12 +18,12 @@ from siapy.entities import Pixels
 from siapy.utils.image_validators import validate_image_to_numpy_3channels
 
 __all__ = [
-    "pixels_select_click",
-    "pixels_select_lasso",
+    "InteractiveButtonsEnum",
     "display_image_with_areas",
     "display_multiple_images_with_areas",
     "display_signals",
-    "InteractiveButtonsEnum",
+    "pixels_select_click",
+    "pixels_select_lasso",
 ]
 
 

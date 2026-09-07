@@ -5,7 +5,7 @@ from .spimage import SpectralImage
 
 __all__ = [
     "ImageBase",
-    "SpectralLibImage",
     "RasterioLibImage",
     "SpectralImage",
+    "SpectralLibImage",
 ]

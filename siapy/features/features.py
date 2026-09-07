@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from typing import Any, Iterable, Literal
+from collections.abc import Iterable
+from typing import Any, Literal
 
 import numpy as np
 import pandas as pd
@@ -66,7 +67,7 @@ class AutoFeatClassification(AutoFeatClassifier):
 
     def fit(
         self, data: np.ndarray[Any, Any] | pd.DataFrame, target: np.ndarray[Any, Any] | pd.DataFrame
-    ) -> "AutoFeatClassification":
+    ) -> AutoFeatClassification:
         set_random_seed(self.random_seed)
         super().fit(data, target)
         return self
@@ -127,7 +128,7 @@ class AutoFeatRegression(AutoFeatRegressor):
 
     def fit(
         self, data: np.ndarray[Any, Any] | pd.DataFrame, target: np.ndarray[Any, Any] | pd.DataFrame
-    ) -> "AutoFeatRegression":
+    ) -> AutoFeatRegression:
         set_random_seed(self.random_seed)
         super().fit(data, target)
         return self
@@ -160,7 +161,7 @@ class AutoSpectralIndices(BaseEstimator, TransformerMixin):
         self.bands_map = bands_map
         self.merge_with_original = merge_with_original
 
-    def fit(self, data: pd.DataFrame, target: "pd.Series[Any]") -> BaseEstimator:
+    def fit(self, data: pd.DataFrame, target: pd.Series[Any]) -> BaseEstimator:
         df_indices = compute_spectral_indices(
             data=data,
             spectral_indices=self.spectral_indices,
@@ -184,7 +185,7 @@ class AutoSpectralIndices(BaseEstimator, TransformerMixin):
             return pd.concat([data, df_indices], axis=1)
         return df_indices
 
-    def fit_transform(self, data: pd.DataFrame, target: "pd.Series[Any]") -> pd.DataFrame:
+    def fit_transform(self, data: pd.DataFrame, target: pd.Series[Any]) -> pd.DataFrame:
         self.fit(data, target)
         return self.transform(data)
 

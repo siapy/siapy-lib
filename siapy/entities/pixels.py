@@ -1,8 +1,9 @@
 from __future__ import annotations
 
+from collections.abc import Iterable, Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, ClassVar, Iterable, NamedTuple, Sequence, TypeAlias
+from typing import Any, ClassVar, NamedTuple, TypeAlias
 
 import numpy as np
 import pandas as pd
@@ -11,10 +12,10 @@ from numpy.typing import NDArray
 from siapy.core.exceptions import InvalidInputError, InvalidTypeError
 
 __all__ = [
-    "Pixels",
-    "PixelCoordinate",
     "CoordinateInput",
     "HomogeneousCoordinate",
+    "PixelCoordinate",
+    "Pixels",
     "validate_pixel_input",
 ]
 
@@ -45,13 +46,13 @@ class Pixels:
     def __repr__(self) -> str:
         return f"Pixels(\n{self.df}\n)"
 
-    def __getitem__(self, indices: Any) -> "Pixels":
+    def __getitem__(self, indices: Any) -> Pixels:
         df_slice = self.df.iloc[indices]
         if isinstance(df_slice, pd.Series):
             df_slice = df_slice.to_frame().T
         return Pixels(df_slice)
 
-    def __eq__(self, other: Any) -> bool:
+    def __eq__(self, other: object) -> bool:
         if not isinstance(other, Pixels):
             return False
         return self.df.equals(other.df)
@@ -67,13 +68,13 @@ class Pixels:
         validate_pixel_input_dimensions(self._data)
 
     @classmethod
-    def from_iterable(cls, iterable: Iterable[CoordinateInput]) -> "Pixels":
+    def from_iterable(cls, iterable: Iterable[CoordinateInput]) -> Pixels:
         df = pd.DataFrame(iterable, columns=[cls.coords.X, cls.coords.Y])
         validate_pixel_input_dimensions(df)
         return cls(df)
 
     @classmethod
-    def load_from_parquet(cls, filepath: str | Path) -> "Pixels":
+    def load_from_parquet(cls, filepath: str | Path) -> Pixels:
         df = pd.read_parquet(filepath)
         validate_pixel_input_dimensions(df)
         return cls(df)
@@ -87,10 +88,10 @@ class Pixels:
         df_homo[self.coords.H] = 1
         return df_homo
 
-    def x(self) -> "pd.Series[float]":
+    def x(self) -> pd.Series[float]:
         return self.df[self.coords.X]
 
-    def y(self) -> "pd.Series[float]":
+    def y(self) -> pd.Series[float]:
         return self.df[self.coords.Y]
 
     def to_numpy(self) -> NDArray[np.floating[Any]]:
@@ -102,7 +103,7 @@ class Pixels:
     def save_to_parquet(self, filepath: str | Path) -> None:
         self.df.to_parquet(filepath, index=True)
 
-    def as_type(self, dtype: type) -> "Pixels":
+    def as_type(self, dtype: type) -> Pixels:
         converted_df = self.df.copy()
         converted_df[self.coords.X] = converted_df[self.coords.X].astype(dtype)
         converted_df[self.coords.Y] = converted_df[self.coords.Y].astype(dtype)
@@ -173,7 +174,7 @@ def validate_pixel_input(input_data: Pixels | pd.DataFrame | Iterable[Coordinate
 
         raise InvalidInputError(
             input_value=input_data,
-            message=f"Failed to convert input to Pixels: {str(e)}"
+            message=f"Failed to convert input to Pixels: {e!s}"
             f"\nExpected a Pixels instance or an iterable (e.g. list, np.array, tuple, pd.DataFrame)."
             f"\nThe input must contain 2D coordinates with x and y values.",
         )

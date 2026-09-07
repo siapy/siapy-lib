@@ -5,7 +5,8 @@ for spectral images, arrays, and data containers to ensure type safety
 and consistency across the codebase.
 """
 
-from typing import Any, Sequence
+from collections.abc import Sequence
+from typing import Any
 
 import numpy as np
 import pandas as pd
@@ -17,14 +18,14 @@ from PIL.Image import Image
 from siapy.entities import SpectralImage, SpectralImageSet
 
 __all__ = [
-    "SpectralLibType",
-    "XarrayType",
-    "ImageType",
-    "ImageSizeType",
-    "ImageDataType",
-    "ImageContainerType",
     "ArrayLike1dType",
     "ArrayLike2dType",
+    "ImageContainerType",
+    "ImageDataType",
+    "ImageSizeType",
+    "ImageType",
+    "SpectralLibType",
+    "XarrayType",
 ]
 
 SpectralLibType = sp.io.envi.BilFile | sp.io.envi.BipFile | sp.io.envi.BsqFile
