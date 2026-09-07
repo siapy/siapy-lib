@@ -41,7 +41,6 @@ class ImageBase(ABC):
             Each implementation defines its own signature for this method
             based on the specific requirements of the underlying library.
         """
-        pass
 
     @property
     @abstractmethod
@@ -51,7 +50,6 @@ class ImageBase(ABC):
         Returns:
             A Path object representing the location of the image file. For in-memory images, this may return an empty Path.
         """
-        pass
 
     @property
     @abstractmethod
@@ -61,7 +59,6 @@ class ImageBase(ABC):
         Returns:
             A dictionary containing image metadata such as coordinate reference system, geotransform information, wavelength data, and other image properties. The specific contents depend on the underlying format and library.
         """
-        pass
 
     @property
     @abstractmethod
@@ -71,7 +68,6 @@ class ImageBase(ABC):
         Returns:
             A tuple (height, width, bands) representing the image dimensions.
         """
-        pass
 
     @property
     @abstractmethod
@@ -81,7 +77,6 @@ class ImageBase(ABC):
         Returns:
             The number of spectral bands (channels) in the image.
         """
-        pass
 
     @property
     @abstractmethod
@@ -91,7 +86,6 @@ class ImageBase(ABC):
         Returns:
             A list of band indices typically used for red, green, and blue channels when displaying the image as an RGB composite.
         """
-        pass
 
     @property
     @abstractmethod
@@ -101,7 +95,6 @@ class ImageBase(ABC):
         Returns:
             A list of wavelength values (typically in nanometers) for each band. For non-spectral data, this may return band numbers or other identifiers.
         """
-        pass
 
     @property
     @abstractmethod
@@ -111,7 +104,6 @@ class ImageBase(ABC):
         Returns:
             A string identifying the camera or sensor used to capture the image. May return an empty string if no camera information is available.
         """
-        pass
 
     @abstractmethod
     def to_display(self, equalize: bool = True) -> Image.Image:
@@ -123,7 +115,6 @@ class ImageBase(ABC):
         Returns:
             A PIL Image object suitable for display, typically as an RGB composite created from the default bands with appropriate scaling and normalization.
         """
-        pass
 
     @abstractmethod
     def to_numpy(self, nan_value: float | None = None) -> NDArray[np.floating[Any]]:
@@ -135,7 +126,6 @@ class ImageBase(ABC):
         Returns:
             A 3D numpy array with shape (height, width, bands) containing the image data. The array dtype should be a floating-point type.
         """
-        pass
 
     @abstractmethod
     def to_xarray(self) -> "XarrayType":
@@ -144,4 +134,3 @@ class ImageBase(ABC):
         Returns:
             An xarray DataArray with labeled dimensions and coordinates, suitable for advanced analysis and visualization. The array should include appropriate coordinate information and metadata attributes.
         """
-        pass

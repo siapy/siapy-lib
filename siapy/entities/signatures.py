@@ -1,6 +1,7 @@
+from collections.abc import Iterable, Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Iterable, Sequence
+from typing import Any
 
 import numpy as np
 import pandas as pd
@@ -12,8 +13,8 @@ from siapy.core.exceptions import InvalidInputError, InvalidTypeError
 from .pixels import CoordinateInput, Pixels, validate_pixel_input
 
 __all__ = [
-    "Signatures",
     "Signals",
+    "Signatures",
 ]
 
 
@@ -98,7 +99,7 @@ def validate_signal_input(input_data: Signals | pd.DataFrame | Iterable[Sequence
 
         raise InvalidInputError(
             input_value=input_data,
-            message=f"Failed to convert input to Signals: {str(e)}"
+            message=f"Failed to convert input to Signals: {e!s}"
             f"\nExpected a Signals instance or an iterable (e.g. list, np.array, pd.DataFrame)."
             f"\nThe input must contain spectral signal values.",
         )
@@ -120,7 +121,7 @@ class Signatures:
         signals = self.signals[indices]
         return Signatures(pixels, signals)
 
-    def __eq__(self, other: Any) -> bool:
+    def __eq__(self, other: object) -> bool:
         if not isinstance(other, Signatures):
             return False
         return self.pixels.df.equals(other.pixels.df) and self.signals.df.equals(other.signals.df)

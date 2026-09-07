@@ -3,9 +3,10 @@ import multiprocessing
 import random
 import re
 import types
+from collections.abc import Callable, Generator, Iterable
 from functools import partial
 from pathlib import Path
-from typing import Any, Callable, Generator, Iterable, Optional
+from typing import Any
 
 import numpy as np
 
@@ -13,22 +14,22 @@ from siapy.core import logger
 from siapy.core.exceptions import InvalidInputError
 
 __all__ = [
-    "initialize_object",
-    "initialize_function",
-    "ensure_dir",
-    "get_number_cpus",
     "dict_zip",
-    "get_increasing_seq_indices",
-    "set_random_seed",
+    "ensure_dir",
     "get_classmethods",
+    "get_increasing_seq_indices",
+    "get_number_cpus",
+    "initialize_function",
+    "initialize_object",
     "match_iterable_items_by_regex",
+    "set_random_seed",
 ]
 
 
 def initialize_object(
     module: types.ModuleType | Any,
     module_name: str,
-    module_args: Optional[dict[str, Any]] = None,
+    module_args: dict[str, Any] | None = None,
     *args: Any,
     **kwargs: Any,
 ) -> Any:
@@ -41,7 +42,7 @@ def initialize_object(
 def initialize_function(
     module: types.ModuleType | Any,
     module_name: str,
-    module_args: Optional[dict[str, Any]] = None,
+    module_args: dict[str, Any] | None = None,
     *args: Any,
     **kwargs: Any,
 ) -> Callable[..., Any]:

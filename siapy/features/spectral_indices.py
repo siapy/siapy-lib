@@ -1,5 +1,6 @@
 import warnings
-from typing import Any, Iterable
+from collections.abc import Iterable
+from typing import Any
 
 import numpy as np
 import pandas as pd
@@ -15,8 +16,8 @@ with warnings.catch_warnings():
     import spyndex  # type: ignore
 
 __all__ = [
-    "get_spectral_indices",
     "compute_spectral_indices",
+    "get_spectral_indices",
 ]
 
 

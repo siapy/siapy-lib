@@ -72,14 +72,14 @@ def feature_selector_factory(
         )
     sfs = SequentialFeatureSelector(
         estimator=algo,
-        k_features=k_features,  # type: ignore # noqa
+        k_features=k_features,  # type: ignore
         forward=forward,
         floating=floating,
         verbose=verbose,
         scoring=scoring,
         cv=cv,
         n_jobs=n_jobs,
-        pre_dispatch=pre_dispatch,  # type: ignore # noqa
+        pre_dispatch=pre_dispatch,  # type: ignore
     )
     return make_pipeline(RobustScaler(), sfs, memory=None)
 

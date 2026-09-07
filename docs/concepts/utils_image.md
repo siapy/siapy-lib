@@ -12,7 +12,7 @@ The image utilities module provides functions for saving, loading, and processin
 The SPy backend saves images in ENVI format.
 
 ```python
---8<-- "docs/concepts/src/utils_image_01.py"
+--8 < --"docs/concepts/src/utils_image_01.py"
 ```
 
 ### Rasterio backend
@@ -20,7 +20,7 @@ The SPy backend saves images in ENVI format.
 The Rasterio backend provides geospatial capabilities and supports various formats.
 
 ```python
---8<-- "docs/concepts/src/utils_image_02.py"
+--8 < --"docs/concepts/src/utils_image_02.py"
 ```
 
 ## Radiance to Reflectance Conversion
@@ -28,11 +28,11 @@ The Rasterio backend provides geospatial capabilities and supports various forma
 Converting radiance measurements to reflectance using reference panels is essential for quantitative spectral analysis.
 
 ```python
---8<-- "docs/concepts/src/utils_image_03.py"
+--8 < --"docs/concepts/src/utils_image_03.py"
 ```
 
 ## Additional Utility Functions
 
 ```python
---8<-- "docs/concepts/src/utils_image_04.py"
+--8 < --"docs/concepts/src/utils_image_04.py"
 ```

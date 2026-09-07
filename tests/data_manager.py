@@ -42,8 +42,7 @@ def download_file(url: str, save_path: Path) -> None:
     response.raise_for_status()
 
     with open(save_path, "wb") as f:
-        for chunk in response.iter_content(chunk_size=8192):
-            f.write(chunk)
+        f.writelines(response.iter_content(chunk_size=8192))
 
 
 def extract_archive(archive_path: Path, extract_dir: Path) -> None:
