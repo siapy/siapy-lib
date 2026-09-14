@@ -5,9 +5,9 @@ from .shapes import Shape
 from .signatures import Signatures
 
 __all__ = [
+    "Pixels",
+    "Shape",
+    "Signatures",
     "SpectralImage",
     "SpectralImageSet",
-    "Pixels",
-    "Signatures",
-    "Shape",
 ]

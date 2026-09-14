@@ -5,7 +5,7 @@ from tempfile import TemporaryDirectory
 
 import numpy as np
 import pytest
-import rioxarray  # noqa
+import rioxarray
 import spectral as sp
 
 from siapy.core.exceptions import InvalidInputError
