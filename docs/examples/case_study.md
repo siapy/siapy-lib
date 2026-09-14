@@ -47,7 +47,7 @@ The file names encode important metadata:
 Before diving into the examples, verify that your SiaPy installation and data are correctly configured:
 
 ```python
---8<-- "docs/examples/src/spectral_imageset_load_01.py"
+--8 < --"docs/examples/src/spectral_imageset_load_01.py"
 ```
 
 /// Warning
@@ -66,7 +66,7 @@ If you encounter issues:
 **Example:**
 
 ```python
---8<-- "docs/examples/src/spectral_image_01.py"
+--8 < --"docs/examples/src/spectral_image_01.py"
 ```
 
 **Source: `spectral_image_01.py`**
@@ -88,7 +88,7 @@ If you encounter issues:
 **Example:**
 
 ```python
---8<-- "docs/examples/src/spectral_image_02.py"
+--8 < --"docs/examples/src/spectral_image_02.py"
 ```
 
 **Source: `spectral_image_02.py`**
@@ -109,7 +109,7 @@ If you encounter issues:
 **Example:**
 
 ```python
---8<-- "docs/examples/src/spectral_imageset_01.py"
+--8 < --"docs/examples/src/spectral_imageset_01.py"
 ```
 
 **Source: `spectral_imageset_01.py`**
@@ -130,7 +130,7 @@ If you encounter issues:
 **Example:**
 
 ```python
---8<-- "docs/examples/src/visualization_01.py"
+--8 < --"docs/examples/src/visualization_01.py"
 ```
 
 **Source: `visualization_01.py`**
@@ -152,7 +152,7 @@ The selected pixels are highlighted in the image below.
 **Example:**
 
 ```python
---8<-- "docs/examples/src/visualization_02.py"
+--8 < --"docs/examples/src/visualization_02.py"
 ```
 
 **Source: `visualization_02.py`**
@@ -176,7 +176,7 @@ The selected areas are highlighted in the image below.
 **Example:**
 
 ```python
---8<-- "docs/examples/src/transformations_01.py"
+--8 < --"docs/examples/src/transformations_01.py"
 ```
 
 **Source: `transformations_01.py`**
@@ -194,7 +194,7 @@ The selected areas are highlighted in the image below.
 **Example:**
 
 ```python
---8<-- "docs/examples/src/transformations_02.py"
+--8 < --"docs/examples/src/transformations_02.py"
 ```
 
 **Source: `transformations_02.py`**
@@ -212,7 +212,7 @@ The selected areas are highlighted in the image below.
 **Example:**
 
 ```python
---8<-- "docs/examples/src/transformations_03.py"
+--8 < --"docs/examples/src/transformations_03.py"
 ```
 
 **Source: `transformations_03.py`**

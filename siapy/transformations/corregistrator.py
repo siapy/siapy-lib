@@ -1,4 +1,5 @@
-from typing import Any, Iterable, Sequence
+from collections.abc import Iterable, Sequence
+from typing import Any
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -8,9 +9,9 @@ from numpy.typing import NDArray
 from siapy.entities.pixels import CoordinateInput, Pixels, validate_pixel_input
 
 __all__ = [
-    "map_affine_approx_2d",
     "affine_matx_2d",
     "align",
+    "map_affine_approx_2d",
     "transform",
 ]
 

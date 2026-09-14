@@ -17,7 +17,7 @@ Spectral indices are mathematical combinations of spectral bands that highlight 
 The `get_spectral_indices()` function returns all spectral indices that can be computed from the available bands:
 
 ```python
---8<-- "docs/concepts/src/features_01.py"
+--8 < --"docs/concepts/src/features_01.py"
 ```
 
 ### Computing spectral indices
@@ -25,7 +25,7 @@ The `get_spectral_indices()` function returns all spectral indices that can be c
 The `compute_spectral_indices()` function calculates spectral indices from DataFrame data:
 
 ```python
---8<-- "docs/concepts/src/features_02.py"
+--8 < --"docs/concepts/src/features_02.py"
 ```
 
 ### Band mapping
@@ -33,7 +33,7 @@ The `compute_spectral_indices()` function calculates spectral indices from DataF
 When your data uses non-standard column names, use the `bands_map` parameter:
 
 ```python
---8<-- "docs/concepts/src/features_03.py:map"
+--8 < --"docs/concepts/src/features_03.py:map"
 ```
 
 ## Automatic features generation
@@ -49,7 +49,7 @@ When your data uses non-standard column names, use the `bands_map` parameter:
 The AutoFeat classes provide deterministic wrappers around the AutoFeat library, which automatically generates and selects engineered features through symbolic regression.
 
 ```python
---8<-- "docs/concepts/src/features_04.py"
+--8 < --"docs/concepts/src/features_04.py"
 ```
 
 ### Features extracted using spectral indices
@@ -57,7 +57,7 @@ The AutoFeat classes provide deterministic wrappers around the AutoFeat library,
 These classes integrate spectral index computation with automated feature selection, offering end-to-end pipelines for identifying the most relevant spectral indices.
 
 ```python
---8<-- "docs/concepts/src/features_05.py"
+--8 < --"docs/concepts/src/features_05.py"
 ```
 
 ## Integration with siapy enitites
@@ -65,5 +65,5 @@ These classes integrate spectral index computation with automated feature select
 The features module integrates seamlessly with siapy entity system.
 
 ```python
---8<-- "docs/concepts/src/features_06.py"
+--8 < --"docs/concepts/src/features_06.py"
 ```

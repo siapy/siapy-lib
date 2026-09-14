@@ -1,6 +1,7 @@
+from collections.abc import Iterable, Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Generic, Iterable, Sequence, TypeVar
+from typing import TYPE_CHECKING, Any, Generic, TypeVar
 
 import numpy as np
 import pandas as pd
@@ -61,7 +62,7 @@ class SpectralImage(Generic[T]):
         """
         return self.filepath.name < other.filepath.name
 
-    def __eq__(self, other: Any) -> bool:
+    def __eq__(self, other: object) -> bool:
         """Check equality between two SpectralImage instances.
 
         Args:
