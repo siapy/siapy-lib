@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
+from collections.abc import Iterable
 from dataclasses import dataclass
-from typing import Any, Iterable, Optional
+from typing import Any
 
 import pandas as pd
 from pydantic import BaseModel, ConfigDict
@@ -368,7 +369,7 @@ class TabularDatasetData:
         return cls(signatures=signatures, metadata=metadata, target=target)
 
     @staticmethod
-    def target_from_dict(data: dict[str, Any] | None = None) -> Optional[Target]:
+    def target_from_dict(data: dict[str, Any] | None = None) -> Target | None:
         """Create an appropriate Target instance from a dictionary.
 
         Automatically determines whether to create a ClassificationTarget or
