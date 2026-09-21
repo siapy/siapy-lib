@@ -13,7 +13,7 @@ The transformations module provides essential image processing and co-registrati
 ### Basic transformations
 
 ```python
---8<-- "docs/concepts/src/transformations_01.py"
+--8 < --"docs/concepts/src/transformations_01.py"
 ```
 
 ### Data augmentation
@@ -21,7 +21,7 @@ The transformations module provides essential image processing and co-registrati
 Data augmentation transformations are useful for expanding training datasets and testing algorithm robustness.
 
 ```python
---8<-- "docs/concepts/src/transformations_02.py"
+--8 < --"docs/concepts/src/transformations_02.py"
 ```
 
 ### Normalization
@@ -29,7 +29,7 @@ Data augmentation transformations are useful for expanding training datasets and
 The `area_normalization` function normalizes spectral signals by their area under the curve, which is particularly useful for comparing spectral shapes regardless of overall intensity.
 
 ```python
---8<-- "docs/concepts/src/transformations_03.py"
+--8 < --"docs/concepts/src/transformations_03.py"
 ```
 
 ## Co-registration
@@ -44,7 +44,7 @@ Co-registration enables alignment and coordinate transformation between differen
 The typical co-registration workflow involves selecting corresponding points in both images and computing a transformation matrix:
 
 ```python
---8<-- "docs/concepts/src/transformations_04.py"
+--8 < --"docs/concepts/src/transformations_04.py"
 ```
 
 ### Applying transformations
@@ -52,5 +52,5 @@ The typical co-registration workflow involves selecting corresponding points in 
 Once you have a transformation matrix, you can transform pixel coordinates between image spaces:
 
 ```python
---8<-- "docs/concepts/src/transformations_05.py"
+--8 < --"docs/concepts/src/transformations_05.py"
 ```

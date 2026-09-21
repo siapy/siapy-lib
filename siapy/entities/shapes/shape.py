@@ -1,7 +1,8 @@
+from collections.abc import Iterable
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
-from typing import Any, Iterable, Optional
+from typing import Any
 
 import geopandas as gpd
 import numpy as np
@@ -50,8 +51,8 @@ class Shape:
     def __init__(
         self,
         label: str = "",
-        geometry: Optional[BaseGeometry] = None,
-        geo_dataframe: Optional[gpd.GeoDataFrame] = None,
+        geometry: BaseGeometry | None = None,
+        geo_dataframe: gpd.GeoDataFrame | None = None,
     ):
         """Initialize Shape with either a geometry or geodataframe"""
         self._label = label
@@ -149,7 +150,7 @@ class Shape:
     def from_polygon(
         cls,
         exterior: Pixels | pd.DataFrame | Iterable[CoordinateInput],
-        holes: Optional[list[Pixels | pd.DataFrame | Iterable[CoordinateInput]]] = None,
+        holes: list[Pixels | pd.DataFrame | Iterable[CoordinateInput]] | None = None,
         label: str = "",
     ) -> "Shape":
         exterior = validate_pixel_input(exterior)
