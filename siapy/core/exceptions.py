@@ -9,14 +9,14 @@ from pathlib import Path
 from typing import Any
 
 __all__ = [
-    "SiapyError",
+    "ConfigurationError",
+    "DirectInitializationError",
     "InvalidFilepathError",
     "InvalidInputError",
     "InvalidTypeError",
-    "ProcessingError",
-    "ConfigurationError",
     "MethodNotImplementedError",
-    "DirectInitializationError",
+    "ProcessingError",
+    "SiapyError",
 ]
 
 

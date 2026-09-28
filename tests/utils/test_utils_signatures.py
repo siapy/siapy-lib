@@ -2,8 +2,8 @@ import numpy as np
 import pytest
 
 from siapy.entities import Pixels, Shape, SpectralImage
-from siapy.utils.signatures import get_signatures_within_convex_hull
 from siapy.utils.plots import display_image_with_areas
+from siapy.utils.signatures import get_signatures_within_convex_hull
 
 
 def test_get_signatures_within_convex_hull(configs):
