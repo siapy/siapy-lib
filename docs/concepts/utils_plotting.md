@@ -12,7 +12,7 @@ The plotting utilities module provides interactive tools for pixel and area sele
 Select individual pixels from an image by clicking on them.
 
 ```python
---8<-- "docs/concepts/src/utils_plotting_01.py"
+--8 < --"docs/concepts/src/utils_plotting_01.py"
 ```
 
 ### Area-based Selection
@@ -20,7 +20,7 @@ Select individual pixels from an image by clicking on them.
 Select irregular areas from an image using lasso selection tool.
 
 ```python
---8<-- "docs/concepts/src/utils_plotting_02.py"
+--8 < --"docs/concepts/src/utils_plotting_02.py"
 ```
 
 ## Image Visualization
@@ -30,7 +30,7 @@ Select irregular areas from an image using lasso selection tool.
 Visualize spectral images with overlaid selected pixels or areas.
 
 ```python
---8<-- "docs/concepts/src/utils_plotting_03.py"
+--8 < --"docs/concepts/src/utils_plotting_03.py"
 ```
 
 ### Multiple Image Comparison
@@ -38,7 +38,7 @@ Visualize spectral images with overlaid selected pixels or areas.
 Display multiple images side by side with their corresponding selected areas.
 
 ```python
---8<-- "docs/concepts/src/utils_plotting_04.py"
+--8 < --"docs/concepts/src/utils_plotting_04.py"
 ```
 
 ## Signal Visualization
@@ -46,5 +46,5 @@ Display multiple images side by side with their corresponding selected areas.
 Plot mean spectral signatures with standard deviation bands for different classes.
 
 ```python
---8<-- "docs/concepts/src/utils_plotting_05.py"
+--8 < --"docs/concepts/src/utils_plotting_05.py"
 ```
