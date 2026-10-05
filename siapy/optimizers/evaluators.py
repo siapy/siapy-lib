@@ -1,4 +1,5 @@
-from typing import Annotated, Any, Callable, Iterable, Literal
+from collections.abc import Callable, Iterable
+from typing import Annotated, Any, Literal
 
 import numpy as np
 from numpy.typing import NDArray

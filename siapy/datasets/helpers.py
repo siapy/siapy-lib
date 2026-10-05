@@ -126,4 +126,3 @@ def merge_signals_from_multiple_cameras(data: "TabularDatasetData") -> None:
         Implement the actual merging logic based on camera specifications
         and data alignment requirements.
     """
-    pass
