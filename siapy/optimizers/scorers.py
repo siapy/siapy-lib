@@ -1,5 +1,6 @@
+from collections.abc import Callable, Iterable
 from functools import partial
-from typing import Annotated, Callable, Iterable, Literal, Any
+from typing import Annotated, Any, Literal
 
 import numpy as np
 from numpy.typing import NDArray

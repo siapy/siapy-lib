@@ -1,5 +1,6 @@
 import random
-from typing import Any, Callable
+from collections.abc import Callable
+from typing import Any
 
 import numpy as np
 from numpy.typing import NDArray
@@ -10,11 +11,11 @@ from siapy.utils.image_validators import validate_image_size, validate_image_to_
 
 __all__ = [
     "add_gaussian_noise",
+    "area_normalization",
     "random_crop",
     "random_mirror",
     "random_rotation",
     "rescale",
-    "area_normalization",
 ]
 
 
